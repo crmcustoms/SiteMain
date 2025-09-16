@@ -1,0 +1,114 @@
+# Анализ рендеринга данных из Notion в приложении
+
+## Текущая реализация: Server-Side Rendering (SSR)
+
+В вашем приложении используется **серверный рендеринг** (SSR), а не клиентский. Вот доказательства:
+
+1. **Загрузка данных на сервере:**
+   ```typescript
+   // app/[lang]/cases/page.tsx - серверный компонент
+   export default async function CasesPage({ params }) {
+     // ...
+     const articles = await getBlogArticles().catch(() => []) || [];
+     // ...
+   }
+   ```
+
+2. **Метаданные генерируются на сервере:**
+   ```typescript
+   // Функция generateMetadata запускается на сервере
+   export async function generateMetadata({ params }) {
+     // ...
+     return { title, description, keywords, ... };
+   }
+   ```
+
+3. **Клиентские компоненты получают данные с сервера:**
+   ```typescript
+   // Компоненты с "use client" получают готовые данные
+   return <TypedStaticCases casesData={adaptedPosts} lang={safeLocale} />;
+   ```
+
+## Влияние на SEO
+
+Текущая реализация **положительно влияет на SEO**, поскольку:
+
+1. ✅ **HTML-контент доступен сразу** для поисковых роботов
+2. ✅ **Метаданные правильно настроены** (title, description, keywords)
+3. ✅ **Структурированные данные** (JSON-LD) добавляются для страниц кейсов
+4. ✅ **OpenGraph и Twitter-метатеги** для улучшения представления в соцсетях
+5. ✅ **Канонические ссылки** для предотвращения дублирования контента
+
+## Оптимизация текущей реализации
+
+Хотя текущая реализация уже использует SSR, для дальнейшей оптимизации SEO можно:
+
+1. **Добавить статическую генерацию (SSG)** для часто просматриваемых, но редко меняющихся страниц:
+
+```typescript
+// Добавьте в файл app/[lang]/cases/[slug]/page.tsx
+export async function generateStaticParams() {
+  // Получите все доступные кейсы
+  const articles = await getBlogArticles().catch(() => []);
+  
+  // Создайте параметры для всех кейсов и языков
+  return articles.flatMap((article) => 
+    i18n.locales.map((lang) => ({
+      lang,
+      slug: article.property_slug
+    }))
+  );
+}
+```
+
+2. **Внедрите Incremental Static Regeneration (ISR)** для периодического обновления контента:
+
+```typescript
+// В файле next.config.js
+module.exports = {
+  // ...
+  experimental: {
+    serverActions: true,
+  }
+}
+
+// В серверном компоненте добавьте опцию revalidate
+export const revalidate = 3600; // перестроение раз в час
+```
+
+3. **Переместите JSON-LD на сервер** для надежности:
+
+```typescript
+// В файле app/[lang]/cases/[slug]/page.tsx
+import { jsonLdScriptProps } from 'react-schemaorg';
+import { Article } from 'schema-dts';
+
+export default async function CaseArticlePage({ params }) {
+  // ...
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": articleData.property_name,
+    // ... остальные поля
+  };
+  
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <StaticCaseDetail ... />
+    </>
+  );
+}
+```
+
+## Рекомендации
+
+1. Исправьте ошибки с параметрами маршрутизации в других компонентах (как вы уже сделали в кейсах)
+2. Применяйте SSG для редко изменяемых страниц 
+3. Используйте ISR для динамического контента с периодическим обновлением
+4. Реализуйте структурированные данные на стороне сервера
+
+В целом, ваша текущая реализация уже правильно использует серверный рендеринг в Next.js, что обеспечивает хорошую поддержку SEO. 

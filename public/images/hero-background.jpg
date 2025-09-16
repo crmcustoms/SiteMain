@@ -1,0 +1,249 @@
+<div class="crm-landing-page">
+  <!-- Background Image -->
+  <div class="background-container">
+    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/photo_2025-05-06_16-09-27.jpg-EASTrFwUYo1wXnUVUuSSomAHofScVV.jpeg" alt="Футуристический фон" class="background-image">
+    <div class="background-overlay"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Social Media Sidebar -->
+    <div class="social-sidebar">
+      <a href="#" class="social-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+      </a>
+      <a href="#" class="social-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+      <a href="#" class="social-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </a>
+      <a href="#" class="social-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-container">
+      <div class="content-wrapper">
+        <div class="text-content">
+          <h1 class="main-heading">
+            Розробка та впровадження <span class="heading-crm">CRM</span> під задачі вашого бізнесу
+          </h1>
+          <p class="description">
+            Автоматизуємо ваш бізнес за допомогою сучасних CRM-рішень, розроблених спеціально під ваші потреби
+          </p>
+          <button class="cta-button">
+            Замовити консультацію
+          </button>
+        </div>
+
+        <!-- Bullet Points -->
+        <div class="bullet-points">
+          <ul class="features-list">
+            <li class="feature-item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(255,184,0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>Підберем CRM та навчим персонал</span>
+            </li>
+            <li class="feature-item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(255,184,0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>Впровадимо штучний інтелект в процесси</span>
+            </li>
+            <li class="feature-item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(255,184,0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>Налагодим аналітику</span>
+            </li>
+            <li class="feature-item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(255,184,0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>Розробимо додаток для бізнесу</span>
+            </li>
+            <li class="feature-item">
+              <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(255,184,0)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+              <span>Зробимо усі потрібні інтеграції</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+  /* Reset and Base Styles */
+  .crm-landing-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+  }
+
+  /* Background */
+  .background-container {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    filter: brightness(0.75);
+    transform: scaleX(-1);
+  }
+
+  .background-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Main Container */
+  .main-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* Social Sidebar */
+  .social-sidebar {
+    position: fixed;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    padding-right: 1rem;
+    border-right: 1px solid white;
+  }
+
+  .social-link {
+    color: white;
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+  }
+
+  .social-link:hover {
+    color: rgb(255, 184, 0);
+  }
+
+  /* Content */
+  .content-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+  }
+
+  .content-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-top: 2rem;
+  }
+
+  .text-content {
+    width: 100%;
+  }
+
+  .main-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .heading-crm {
+    color: rgb(255, 184, 0);
+  }
+
+  .description {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    max-width: 36rem;
+  }
+
+  .cta-button {
+    background-color: rgba(255, 184, 0, 0.8);
+    color: white;
+    border: none;
+    padding: 1.5rem 2rem;
+    font-size: 1.125rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .cta-button:hover {
+    background-color: rgb(255, 184, 0);
+  }
+
+  /* Bullet Points */
+  .bullet-points {
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .features-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .check-icon {
+    margin-right: 0.75rem;
+  }
+
+  /* Responsive Styles */
+  @media (min-width: 768px) {
+    .content-container {
+      padding: 0 3rem;
+    }
+
+    .content-wrapper {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .text-content {
+      width: 50%;
+    }
+
+    .bullet-points {
+      width: 50%;
+      margin-top: 0;
+    }
+
+    .main-heading {
+      font-size: 3rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .main-heading {
+      font-size: 3.5rem;
+    }
+
+    .content-container {
+      padding: 0 6rem;
+    }
+  }
+</style>

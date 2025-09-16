@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Embed-контента</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .embed-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .embed-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        iframe {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Тестирование Embed-контента</h1>
+    
+    <div class="embed-container">
+        <div class="embed-title">1. SoundCloud Audio Embed</div>
+        <iframe 
+            width="100%" 
+            height="166" 
+            scrolling="no" 
+            frameborder="no" 
+            allow="autoplay" 
+            src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/293&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
+        ></iframe>
+    </div>
+    
+    <div class="embed-container">
+        <div class="embed-title">2. YouTube Video Embed</div>
+        <iframe 
+            width="100%" 
+            height="315" 
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowfullscreen
+        ></iframe>
+    </div>
+    
+    <div class="embed-container">
+        <div class="embed-title">3. Spotify Embed</div>
+        <iframe 
+            src="https://open.spotify.com/embed/track/4iV5W9uYEdYUVa79Axb7Rh" 
+            width="100%" 
+            height="352" 
+            frameborder="0" 
+            allowtransparency="true" 
+            allow="encrypted-media"
+        ></iframe>
+    </div>
+    
+    <div class="embed-container">
+        <div class="embed-title">4. CodePen Embed</div>
+        <iframe 
+            height="300" 
+            style="width: 100%;" 
+            scrolling="no" 
+            title="CSS Grid Layout" 
+            src="https://codepen.io/pen/debug/abcd123" 
+            frameborder="no" 
+            loading="lazy" 
+            allowtransparency="true" 
+            allowfullscreen="true"
+        ></iframe>
+    </div>
+    
+    <script>
+        console.log('Embed test page loaded');
+        
+        // Проверяем загрузку всех iframe'ов
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframes = document.querySelectorAll('iframe');
+            console.log(`Найдено ${iframes.length} iframe'ов`);
+            
+            iframes.forEach((iframe, index) => {
+                iframe.onload = function() {
+                    console.log(`iframe ${index + 1} загружен успешно`);
+                };
+                
+                iframe.onerror = function() {
+                    console.error(`Ошибка загрузки iframe ${index + 1}`);
+                };
+            });
+        });
+    </script>
+</body>
+</html>

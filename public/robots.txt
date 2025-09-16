@@ -1,0 +1,44 @@
+# robots.txt для CRM Customs
+
+User-agent: *
+Allow: /
+
+# Разрешить доступ ко всем важным страницам
+Allow: /cases
+Allow: /cases/*
+Allow: /landing/*
+Allow: /api/rss
+
+# Запретить доступ к служебным файлам
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+
+# Разрешить доступ к sitemap
+Allow: /sitemap.xml
+Allow: /sitemap-*.xml
+
+# Указать расположение sitemap
+Sitemap: https://crmcustoms.com/sitemap.xml
+
+# Настройки для основных поисковых ботов
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# Запретить доступ к некоторым ботам
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: / 

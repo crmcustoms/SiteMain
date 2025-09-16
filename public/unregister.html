@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Отмена регистрации сервис-воркера</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .info {
+      color: #666;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      height: 150px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Отмена регистрации сервис-воркера</h1>
+    <p>Эта страница предназначена для отмены регистрации сервис-воркера и очистки кеша.</p>
+    <p class="success">Скрипт отмены регистрации запущен автоматически.</p>
+    <button id="refreshButton">Обновить страницу</button>
+    <button id="clearButton">Очистить кеш вручную</button>
+    <div id="log">
+      <p>Журнал действий:</p>
+    </div>
+    <p class="info">После завершения процесса вы можете вернуться на <a href="/">главную страницу</a>.</p>
+  </div>
+
+  <script src="/unregister-sw.js"></script>
+  <script>
+    // Функция для добавления записи в лог
+    function log(message) {
+      const logElement = document.getElementById('log');
+      const entry = document.createElement('p');
+      entry.textContent = message;
+      logElement.appendChild(entry);
+      logElement.scrollTop = logElement.scrollHeight;
+    }
+
+    // Логирование действий
+    log('Страница загружена');
+    log('Запущен скрипт отмены регистрации сервис-воркера');
+
+    // Обработчик кнопки обновления
+    document.getElementById('refreshButton').addEventListener('click', function() {
+      log('Обновление страницы...');
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 500);
+    });
+
+    // Обработчик кнопки очистки кеша
+    document.getElementById('clearButton').addEventListener('click', function() {
+      log('Ручная очистка кеша...');
+      if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName);
+            log(`Кеш ${cacheName} удален`);
+          });
+          log('Очистка кеша завершена');
+        });
+      } else {
+        log('API кеширования не поддерживается в этом браузере');
+      }
+    });
+
+    // Проверка наличия сервис-воркеров
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        if (registrations.length === 0) {
+          log('Сервис-воркеры не обнаружены');
+        } else {
+          log(`Обнаружено сервис-воркеров: ${registrations.length}`);
+          registrations.forEach(function(registration, index) {
+            log(`Отмена регистрации сервис-воркера ${index + 1}: ${registration.scope}`);
+            registration.unregister().then(function(success) {
+              if (success) {
+                log(`Сервис-воркер ${index + 1} успешно отменен`);
+              } else {
+                log(`Не удалось отменить регистрацию сервис-воркера ${index + 1}`);
+              }
+            });
+          });
+        }
+      });
+    } else {
+      log('API сервис-воркеров не поддерживается в этом браузере');
+    }
+  </script>
+</body>
+</html> 

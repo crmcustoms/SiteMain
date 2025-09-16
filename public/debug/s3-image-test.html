@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3 Image Test - РСЃРїСЂР°РІР»РµРЅРёРµ РїСЂРѕР±Р»РµРјС‹</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        .image-container { margin: 20px 0; border: 1px solid #ddd; padding: 10px; border-radius: 5px; }
+        .image-title { font-weight: bold; margin-bottom: 10px; }
+        img { max-width: 100%; height: auto; display: block; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+        pre { background: #f5f5f5; padding: 10px; overflow: auto; }
+        .debug-info { background: #f0f8ff; padding: 10px; border-left: 4px solid #007bff; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>РўРµСЃС‚ Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёР№ РёР· S3 (РСЃРїСЂР°РІР»РµРЅРёРµ РїСЂРѕР±Р»РµРјС‹)</h1>
+    
+    <div class="debug-info">
+        <h3>РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїСЂРѕР±Р»РµРјРµ:</h3>
+        <p>Р¤Р°Р№Р» <code>nesr6r5hdnrmc0cqf0es5v5bww</code> РІС‹Р·С‹РІР°РµС‚ РѕС€РёР±РєРё РїСЂРё Р·Р°РіСЂСѓР·РєРµ. Р”РѕР±Р°РІР»РµРЅР° СЃРїРµС†РёР°Р»СЊРЅР°СЏ РѕР±СЂР°Р±РѕС‚РєР° РґР»СЏ СЌС‚РѕРіРѕ С„Р°Р№Р»Р°.</p>
+    </div>
+    
+    <div class="image-container">
+        <div class="image-title">1. РџСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р» (РїСЂСЏРјР°СЏ СЃСЃС‹Р»РєР°)</div>
+        <img src="/api/s3-proxy/https://s3.us-east-1.amazonaws.com/crmcustoms.site/nesr6r5hdnrmc0cqf0es5v5bww" 
+             alt="РџСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р»" 
+             onerror="this.onerror=null; this.parentNode.innerHTML += '<p class=\'error\'>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</p>'; this.src='/placeholder.jpg';"
+             onload="this.parentNode.innerHTML += '<p class=\'success\'>РР·РѕР±СЂР°Р¶РµРЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅРѕ</p>';">
+    </div>
+    
+    <div class="image-container">
+        <div class="image-title">2. РџСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р» (С‡РµСЂРµР· РєРѕРјРїРѕРЅРµРЅС‚ BlogDetail)</div>
+        <div id="blog-detail-test">
+            <p>Р—Р°РіСЂСѓР·РєР° С‚РµСЃС‚РѕРІРѕРіРѕ РєРѕРјРїРѕРЅРµРЅС‚Р°...</p>
+        </div>
+        <script>
+            // РРјРёС‚Р°С†РёСЏ СЂР°Р±РѕС‚С‹ РєРѕРјРїРѕРЅРµРЅС‚Р° BlogDetail
+            document.addEventListener('DOMContentLoaded', function() {
+                const url = 'https://s3.us-east-1.amazonaws.com/crmcustoms.site/nesr6r5hdnrmc0cqf0es5v5bww';
+                const proxyUrl = '/api/s3-proxy/' + encodeURIComponent(url);
+                
+                const container = document.getElementById('blog-detail-test');
+                container.innerHTML = 
+                    <p>РћСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ URL: </p>
+                    <p>РџСЂРѕРєСЃРё URL: </p>
+                    <img src="" 
+                         alt="РўРµСЃС‚ BlogDetail" 
+                         onerror="this.onerror=null; document.getElementById('blog-detail-error').style.display='block'; this.src='/placeholder.jpg';"
+                         onload="document.getElementById('blog-detail-success').style.display='block';">
+                    <p id="blog-detail-error" style="display:none;" class="error">РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ С‡РµСЂРµР· РєРѕРјРїРѕРЅРµРЅС‚ BlogDetail</p>
+                    <p id="blog-detail-success" style="display:none;" class="success">РР·РѕР±СЂР°Р¶РµРЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅРѕ С‡РµСЂРµР· РєРѕРјРїРѕРЅРµРЅС‚ BlogDetail</p>
+                ;
+            });
+        </script>
+    </div>
+    
+    <div class="image-container">
+        <div class="image-title">3. РџСЂСЏРјР°СЏ СЃСЃС‹Р»РєР° РЅР° S3 (us-east-1)</div>
+        <img src="/api/s3-proxy/https://s3.us-east-1.amazonaws.com/crmcustoms.site/blog-image-test.jpg" 
+             alt="S3 Image Test" 
+             onerror="this.onerror=null; this.parentNode.innerHTML += '<p class=\'error\'>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</p>'; this.src='/placeholder.jpg';"
+             onload="this.parentNode.innerHTML += '<p class=\'success\'>РР·РѕР±СЂР°Р¶РµРЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅРѕ</p>';">
+    </div>
+    
+    <div class="image-container">
+        <div class="image-title">4. РЎСЃС‹Р»РєР° СЃ РїР°СЂР°РјРµС‚СЂР°РјРё Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё AWS</div>
+        <img src="/api/s3-proxy/https://s3.us-west-2.amazonaws.com/crmcustoms.site/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466UYYKYIK5%2F20250710%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20250710T130124Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIFhZNt%2FyxyLoxFUjj85xVUYtNEFh8SllPYUfOfpNXHWwAiBvJroSsYbt2WV%2BqktRGMoYo86gu1mcRqO%2BwT6rGwc5gSqIBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMzGl6YK7vHle4lm0MKtwDzv6LumUfwHfCnqAtgrNmO2XULVmLondPOMVnLDh9BDUvwh1PTfmNpoDqtSTG%2Ft%2FOjZpERTWZQI61Pg5tnqGqDt5dZ5MG7GVQ6nUglLNEPIaHV7KfVMxOmEWi0N6O9zC%2B3a76jTyBqTVod6K7Aild6DqAODvJ0fCGe2S%2FVoPschsztbjWdvoZt09AtHBAZeH3TcNILKFDTlfcoZIVyIjhyeBquqno2Q%2BK03iYsEdX1Imp%2FRbhBNHqDfTlFNn2DzD2AcxYIy9FqgjhOeMIG0Vx52q%2BnGMn7QATzLN9rYwx0lOD6MZUYtHTLVAmHEXLxFWu%2FiKRsHewv8BGYZvnGwfiK53zn%2BdLNvq%2FeHLBKWVKrNMAp%2Bzt7NVIeESexL7xRNc6krEmQco35zo1OHHOT01T4wXkvllzYMCVeeB5ZznjHOTRN83fPNc19jFmjgx2TvS4xEgqXzbFWWsSEOKk%2B%2FAJI7ZSVCO7fcgbD7XCmwRnmnOBcNK4acravX0VWyuOx9h4Zu1nxSyF6IT8%2Bt%2BWlWvoMlhRYB4diUdMs1k648SsF8Bm6nKRpE2WlKC1rfXIVgOMc%2BLmkNz92%2BnSyG8LhepCHVH15UV4HdC%2BYIL4v2CIlP6g0N1G%2BSQkV3xn1o0wg%2BK%2BwwY6pgGLVjbl3nr6KczREJ92guniFBmbsaXqroRu%2FWw%2FUqWsquaKI01nwp3McwicXAIITi%2FbCfQ5dAM7UoV%2B6u1aNnH0tFHasmZluv9BuZEFXL54i8I%2Fzpaa8aZl%2FejCceaHGSXkn5fOvRmGakujS28%2BlbyfM9UeXDv%2BZaL2ugkO9CCehbc4JUXlLukIW669izhSBAWInjqSZlBsEAc32S9ZJGs6fcLOXR5y" 
+             alt="S3 Image with Security Params" 
+             onerror="this.onerror=null; this.parentNode.innerHTML += '<p class=\'error\'>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё</p>'; this.src='/placeholder.jpg';"
+             onload="this.parentNode.innerHTML += '<p class=\'success\'>РР·РѕР±СЂР°Р¶РµРЅРёРµ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅРѕ</p>';">
+    </div>
+    
+    <div class="image-container">
+        <div class="image-title">5. РўРµСЃС‚РѕРІРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР· public</div>
+        <img src="/placeholder.jpg" 
+             alt="Placeholder" 
+             onerror="this.onerror=null; this.parentNode.innerHTML += '<p class=\'error\'>РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</p>';"
+             onload="this.parentNode.innerHTML += '<p class=\'success\'>РР·РѕР±СЂР°Р¶РµРЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР¶РµРЅРѕ</p>';">
+    </div>
+
+    <h2>РўРµСЃС‚ HTML-РєРѕРЅС‚РµРЅС‚Р° СЃ РёР·РѕР±СЂР°Р¶РµРЅРёСЏРјРё:</h2>
+    <div class="image-container">
+        <div class="image-title">HTML СЃ РїСЂРѕР±Р»РµРјРЅС‹Рј С„Р°Р№Р»РѕРј</div>
+        <div id="html-content-test"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const htmlContent = 
+                    <p>РўРµСЃС‚РѕРІС‹Р№ HTML-РєРѕРЅС‚РµРЅС‚ СЃ РїСЂРѕР±Р»РµРјРЅС‹Рј С„Р°Р№Р»РѕРј:</p>
+                    <img src="https://s3.us-east-1.amazonaws.com/crmcustoms.site/nesr6r5hdnrmc0cqf0es5v5bww" alt="РџСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р» РІ HTML">
+                    <p>РўРµРєСЃС‚ РїРѕСЃР»Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ</p>
+                ;
+                
+                // РРјРёС‚Р°С†РёСЏ РѕР±СЂР°Р±РѕС‚РєРё HTML РІ РєРѕРјРїРѕРЅРµРЅС‚Рµ BlogDetail
+                const processedHtml = htmlContent.replace(
+                    /(src=[\"'])(https?:\/\/[^\"']*(?:s3\.amazonaws\.com\/crmcustoms\.site|crmcustoms\.site\.s3[^\"']*amazonaws\.com|s3[^\"']*\/crmcustoms\.site|s3[^\"']*crmcustoms\.site)[^\"']+)([\"'])/gi, 
+                    (match, p1, p2, p3) => {
+                        // РџСЂРѕРІРµСЂСЏРµРј, СЏРІР»СЏРµС‚СЃСЏ Р»Рё СЌС‚Рѕ РїСЂРѕР±Р»РµРјРЅС‹Рј С„Р°Р№Р»РѕРј
+                        if (p2.includes('nesr6r5hdnrmc0cqf0es5v5bww')) {
+                            console.log('РћР±РЅР°СЂСѓР¶РµРЅ РїСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р» РІ HTML: ' + p2);
+                            return p1 + '/placeholder.jpg' + p3;
+                        }
+                        
+                        // РџРµСЂРµРґР°РµРј РїРѕР»РЅС‹Р№ URL РІ API-РјР°СЂС€СЂСѓС‚
+                        const proxyUrl = '/api/s3-proxy/' + encodeURIComponent(p2);
+                        console.log('Р—Р°РјРµРЅРµРЅ URL РІ HTML: ' + p2 + ' -> ' + proxyUrl);
+                        return p1 + proxyUrl + p3;
+                    }
+                );
+                
+                document.getElementById('html-content-test').innerHTML = processedHtml;
+            });
+        </script>
+    </div>
+
+    <h2>РљР°Рє РїСЂРѕРІРµСЂРёС‚СЊ:</h2>
+    <ol>
+        <li>Р’СЃРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґРѕР»Р¶РЅС‹ СѓСЃРїРµС€РЅРѕ Р·Р°РіСЂСѓР·РёС‚СЊСЃСЏ (РёР»Рё РѕС‚РѕР±СЂР°Р·РёС‚СЊСЃСЏ Р·Р°РіР»СѓС€РєР°)</li>
+        <li>РџСЂРѕР±Р»РµРјРЅС‹Р№ С„Р°Р№Р» nesr6r5hdnrmc0cqf0es5v5bww РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р·Р°РјРµРЅРµРЅ РЅР° Р·Р°РіР»СѓС€РєСѓ</li>
+        <li>РР·РѕР±СЂР°Р¶РµРЅРёСЏ СЃ РїР°СЂР°РјРµС‚СЂР°РјРё Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё AWS РґРѕР»Р¶РЅС‹ Р·Р°РіСЂСѓР¶Р°С‚СЊСЃСЏ</li>
+        <li>РџСЂРѕРІРµСЂСЊС‚Рµ Р»РѕРіРё СЃРµСЂРІРµСЂР° РЅР° РЅР°Р»РёС‡РёРµ РѕС€РёР±РѕРє РїСЂРё РѕР±СЂР°Р±РѕС‚РєРµ Р·Р°РїСЂРѕСЃРѕРІ Рє /api/s3-proxy/</li>
+    </ol>
+</body>
+</html>

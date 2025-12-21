@@ -59,41 +59,40 @@ COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 # Копируем package.json для информации о версии
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/package.json /app/
 
+# Пытаемся скопировать server.js
+RUN cp /app/.next/server.js /app/server.js 2>/dev/null || true
+
 # Создаем server.js если он не был скопирован
 RUN if [ ! -f /app/server.js ]; then \
-    echo "Creating server.js from Next.js standalone server" && \
-    cp /app/.next/server.js /app/server.js 2>/dev/null || \
-    cat > /app/server.js << 'SERVEREOF'\
-const { createServer } = require('http')\
-const { parse } = require('url')\
-const next = require('next')\
-\
-const dev = process.env.NODE_ENV !== 'production'\
-const hostname = process.env.HOSTNAME || 'localhost'\
-const port = parseInt(process.env.PORT || '3000', 10)\
-\
-const app = next({ dev, hostname, port })\
-const handle = app.getRequestHandler()\
-\
-app.prepare().then(() => {\
-  createServer(async (req, res) => {\
-    try {\
-      const parsedUrl = parse(req.url, true)\
-      await handle(req, res, parsedUrl)\
-    } catch (err) {\
-      console.error(err)\
-      res.statusCode = 500\
-      res.end('Internal server error')\
-    }\
-  }).listen(port, (err) => {\
-    if (err) throw err\
-    console.log(`Ready on http://${hostname}:${port}`)\
-  })\
-})\
-SERVEREOF\
-  fi && \
-  ls -la /app/server.js && \
-  [ -f /app/server.js ] && echo "✓ server.js готов" || echo "✗ ошибка server.js"
+  cat > /app/server.js << 'EOF'
+const { createServer } = require('http')
+const { parse } = require('url')
+const next = require('next')
+
+const dev = process.env.NODE_ENV !== 'production'
+const hostname = process.env.HOSTNAME || 'localhost'
+const port = parseInt(process.env.PORT || '3000', 10)
+
+const app = next({ dev, hostname, port })
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {
+  createServer(async (req, res) => {
+    try {
+      const parsedUrl = parse(req.url, true)
+      await handle(req, res, parsedUrl)
+    } catch (err) {
+      console.error(err)
+      res.statusCode = 500
+      res.end('Internal server error')
+    }
+  }).listen(port, (err) => {
+    if (err) throw err
+    console.log(`Ready on http://${hostname}:${port}`)
+  })
+})
+EOF
+fi && ls -la /app/server.js && [ -f /app/server.js ] && echo "✓ server.js готов" || echo "✗ ошибка server.js"
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

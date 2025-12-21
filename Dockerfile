@@ -46,12 +46,12 @@ RUN adduser --system --uid 1001 nextjs
 # Копируем публичные файлы
 COPY --from=builder /app/public ./public
 
-# Копируем standalone output Next.js
-# При использовании output: 'standalone' все необходимые файлы включены
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# Копируем всё содержимое standalone output Next.js в корень контейнера
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ ./
 
 # Убеждаемся что .next директория существует и имеет правильные разрешения
-RUN mkdir -p .next && chown -R nextjs:nodejs .next
+RUN [ -f server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден" && \
+    mkdir -p .next && chown -R nextjs:nodejs .
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

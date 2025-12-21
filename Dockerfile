@@ -25,7 +25,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Модифицируем скрипт сборки для Linux-окружения
 RUN npm cache clean --force && \
-    next build && \
+    npx next build && \
     echo "=== Builder stage - После next build ===" && \
     ls -la .next/standalone/ | head -20 && \
     [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \

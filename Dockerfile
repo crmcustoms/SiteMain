@@ -63,7 +63,7 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Устанавливаем максимальный размер старого поколения для оптимизации GC
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 
 # server.js создается при сборке next из standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

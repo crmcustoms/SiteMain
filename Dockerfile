@@ -1,8 +1,8 @@
 # Використовуємо Alpine версію Node.js для менших розмірів
 FROM node:22-alpine AS base
 
-# Встановлюємо libc6-compat для сумісності з Alpine
-RUN apk add --no-cache libc6-compat
+# Встановлюємо libc6-compat для сумісності з Alpine та curl для healthcheck
+RUN apk add --no-cache libc6-compat curl
 WORKDIR /app
 
 # Install dependencies only when needed

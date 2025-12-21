@@ -47,15 +47,21 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем полный standalone директорий от builder
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone /app
+# Копируем .next директорий для статики и конфига
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/.next /app/.next
 
-# Копируем публичные файлы поверх (для переопределения если нужно)
+# Копируем node_modules (необходимо для работы)
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /app/node_modules
+
+# Копируем публичные файлы
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
-# Проверяем что server.js существует
-RUN [ -f /app/server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден" && \
-    chown -R nextjs:nodejs /app
+# Копируем server.js явно
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/server.js /app/
+
+# Убеждаемся что все файлы скопировались
+RUN ls -la /app/ | grep -E "server.js|\.next|node_modules|public" && \
+    [ -f /app/server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден"
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

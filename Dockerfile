@@ -24,11 +24,12 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Модифицируем скрипт сборки для Linux-окружения
-RUN npm cache clean --force && \
-    next build && \
-    mkdir -p .next/standalone/public .next/static && \
-    cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
-    cp express-server.js .next/standalone/ 2>/dev/null || true && \
+RUN npm cache clean --force; \
+    next build; \
+    mkdir -p .next/standalone/public .next/static; \
+    [ -d .next/static ] && echo "Static dir created" || echo "Static dir missing"; \
+    cp -r public/* .next/standalone/public/ 2>/dev/null || true; \
+    cp express-server.js .next/standalone/ 2>/dev/null || true; \
     cp api-routes.js .next/standalone/ 2>/dev/null || true
 
 # Production image, copy all the files and run next
@@ -45,14 +46,12 @@ RUN adduser --system --uid 1001 nextjs
 # Копируем публичные файлы
 COPY --from=builder /app/public ./public
 
-# Устанавливаем правильные разрешения для кеша предрендеринга
-RUN mkdir -p .next
-RUN chown nextjs:nodejs .next
-
-# Автоматически используем output traces для уменьшения размера образа
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# Копируем standalone output Next.js
+# При использовании output: 'standalone' все необходимые файлы включены
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Убеждаемся что .next директория существует и имеет правильные разрешения
+RUN mkdir -p .next && chown -R nextjs:nodejs .next
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

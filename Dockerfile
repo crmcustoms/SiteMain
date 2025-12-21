@@ -25,15 +25,15 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Модифицируем скрипт сборки для Linux-окружения
 RUN npm cache clean --force && \
-    npx next build && \
+    next build && \
     echo "=== Builder stage - После next build ===" && \
     ls -la .next/standalone/ | head -20 && \
     [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \
-    [ -d .next/static ] && echo "✓ .next/static найдена" || echo "✗ .next/static НЕ найдена" && \
-    [ -d .next/standalone/.next ] && echo "✓ .next/standalone/.next найдена" || echo "✗ .next/standalone/.next НЕ найдена" && \
-    echo "=== Builder stage - Содержимое .next/standalone/.next/static/ ===" && \
-    ls -la .next/standalone/.next/static/ 2>/dev/null | head -10 || echo "Не найдена" && \
-    echo "=== Builder stage - После проверки файлов ===" && \
+    mkdir -p .next/standalone/public .next/static && \
+    cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
+    cp express-server.js .next/standalone/ 2>/dev/null || true && \
+    cp api-routes.js .next/standalone/ 2>/dev/null || true && \
+    echo "=== Builder stage - После копирования файлов ===" && \
     ls -la .next/standalone/ | head -20
 
 # Production image, copy all the files and run next
@@ -47,22 +47,57 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем файлы из standalone build
-# Сначала копируем .next директорию (содержит static файлы)
+# Копируем .next директорий для статики и конфига
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/.next /app/.next
 
-# Копируем node_modules
+# Копируем node_modules (необходимо для работы)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /app/node_modules
 
-# Копируем публичные файлы (с самого源 builder, чтобы они были свежие)
+# Копируем публичные файлы
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
-# Используем встроенный server.js из .next/standalone
-# Это правильный способ для standalone режима
-RUN echo "=== Runner stage - Проверка файлов ===" && \
-    ls -la /app/.next/ | head -10 && \
-    [ -f /app/.next/server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден" && \
-    [ -d /app/node_modules ] && echo "✓ node_modules найдена" || echo "✗ node_modules НЕ найдена"
+# Копируем package.json для информации о версии
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/package.json /app/
+
+# Копируем или создаем server.js для запуска приложения
+RUN sh << 'SETUPSCRIPT'
+if [ -f /app/.next/server.js ]; then
+  cp /app/.next/server.js /app/server.js
+  echo "✓ server.js скопирован из .next"
+else
+  cat > /app/server.js << 'JSEOF'
+const { createServer } = require('http')
+const { parse } = require('url')
+const next = require('next')
+
+const dev = process.env.NODE_ENV !== 'production'
+const hostname = process.env.HOSTNAME || 'localhost'
+const port = parseInt(process.env.PORT || '3000', 10)
+
+const app = next({ dev, hostname, port })
+const handle = app.getRequestHandler()
+
+app.prepare().then(() => {
+  createServer(async (req, res) => {
+    try {
+      const parsedUrl = parse(req.url, true)
+      await handle(req, res, parsedUrl)
+    } catch (err) {
+      console.error(err)
+      res.statusCode = 500
+      res.end('Internal server error')
+    }
+  }).listen(port, (err) => {
+    if (err) throw err
+    console.log(`Ready on http://${hostname}:${port}`)
+  })
+})
+JSEOF
+  echo "✓ server.js создан"
+fi
+ls -la /app/server.js
+[ -f /app/server.js ] && echo "✓ Готово к запуску" || (echo "✗ Ошибка" && exit 1)
+SETUPSCRIPT
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs
@@ -76,6 +111,6 @@ ENV HOSTNAME "0.0.0.0"
 # Устанавливаем максимальный размер старого поколения для оптимизации GC
 ENV NODE_OPTIONS="--max-old-space-size=1024"
 
-# Используем встроенный server.js из Next.js standalone build
+# server.js создается при сборке next из standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", ".next/server.js"]
+CMD ["node", "server.js"]

@@ -24,13 +24,17 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Модифицируем скрипт сборки для Linux-окружения
-RUN npm cache clean --force; \
-    next build; \
-    mkdir -p .next/standalone/public .next/static; \
-    [ -d .next/static ] && echo "Static dir created" || echo "Static dir missing"; \
-    cp -r public/* .next/standalone/public/ 2>/dev/null || true; \
-    cp express-server.js .next/standalone/ 2>/dev/null || true; \
-    cp api-routes.js .next/standalone/ 2>/dev/null || true
+RUN npm cache clean --force && \
+    next build && \
+    echo "=== Builder stage - После next build ===" && \
+    ls -la .next/standalone/ | head -20 && \
+    [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \
+    mkdir -p .next/standalone/public .next/static && \
+    cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
+    cp express-server.js .next/standalone/ 2>/dev/null || true && \
+    cp api-routes.js .next/standalone/ 2>/dev/null || true && \
+    echo "=== Builder stage - После копирования файлов ===" && \
+    ls -la .next/standalone/ | head -20
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -49,8 +53,11 @@ COPY --from=builder /app/public ./public
 # Копируем всё содержимое standalone output Next.js в корень контейнера
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ ./
 
-# Убеждаемся что .next директория существует и имеет правильные разрешения
-RUN [ -f server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден" && \
+# Проверяем что файлы скопировались правильно
+RUN echo "=== Runner stage - После COPY ===" && \
+    ls -la . | head -30 && \
+    echo "=== Проверка server.js ===" && \
+    [ -f server.js ] && echo "✓ server.js найден в runner" || (echo "✗ server.js НЕ найден в runner" && ls -la | grep -i server || echo "Нет файлов с 'server' в названии") && \
     mkdir -p .next && chown -R nextjs:nodejs .
 
 # Переключаемся на непривилегированного пользователя

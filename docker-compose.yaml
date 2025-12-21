@@ -11,10 +11,4 @@ services:
       - NODE_ENV=production
       - NOTION_SECRET=${NOTION_SECRET}
       - NOTION_DATABASE_ID=${NOTION_DATABASE_ID}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 15s
-      retries: 5
-      start_period: 60s
     restart: unless-stopped

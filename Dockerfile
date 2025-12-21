@@ -56,9 +56,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /ap
 # Копируем публичные файлы
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
-# Копируем package.json для информации о версии
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/package.json /app/
-
 # Копируем или создаем server.js для запуска приложения
 RUN sh << 'SETUPSCRIPT'
 if [ -f /app/.next/server.js ]; then

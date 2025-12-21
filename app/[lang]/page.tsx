@@ -5,6 +5,7 @@ import { i18n } from "@/lib/i18n-config"
 // Заменяем динамический импорт на обычный импорт для компонента Services
 import StaticServices from "@/components/landing/static-services"
 import StaticFinalCta from "@/components/landing/static-final-cta"
+import CrmServicesBlocks from "@/components/landing/crm-services-blocks"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
@@ -38,6 +39,7 @@ export default async function Home({
   return (
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} />
+      <CrmServicesBlocks />
       <WhyAutomation dict={dict.landing.whyAutomation} />
       <Features dict={dict.landing.features} commonDict={dict.common} />
       <Industries dict={dict.landing.industries} />

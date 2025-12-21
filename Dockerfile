@@ -57,44 +57,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /ap
 # Копируем публичные файлы (с самого源 builder, чтобы они были свежие)
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
-# Копируем или создаем server.js для запуска приложения
-RUN sh << 'SETUPSCRIPT'
-if [ -f /app/server.js ]; then
-  echo "✓ server.js уже существует"
-else
-  cat > /app/server.js << 'JSEOF'
-const { createServer } = require('http')
-const { parse } = require('url')
-const next = require('next')
-
-const dev = process.env.NODE_ENV !== 'production'
-const hostname = process.env.HOSTNAME || 'localhost'
-const port = parseInt(process.env.PORT || '3000', 10)
-
-const app = next({ dev, hostname, port })
-const handle = app.getRequestHandler()
-
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true)
-      await handle(req, res, parsedUrl)
-    } catch (err) {
-      console.error(err)
-      res.statusCode = 500
-      res.end('Internal server error')
-    }
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`Ready on http://${hostname}:${port}`)
-  })
-})
-JSEOF
-  echo "✓ server.js создан"
-fi
-ls -la /app/server.js
-[ -f /app/server.js ] && echo "✓ Готово к запуску" || (echo "✗ Ошибка" && exit 1)
-SETUPSCRIPT
+# Используем встроенный server.js из .next/standalone
+# Это правильный способ для standalone режима
+RUN echo "=== Runner stage - Проверка файлов ===" && \
+    ls -la /app/.next/ | head -10 && \
+    [ -f /app/.next/server.js ] && echo "✓ server.js найден" || echo "✗ server.js НЕ найден" && \
+    [ -d /app/node_modules ] && echo "✓ node_modules найдена" || echo "✗ node_modules НЕ найдена"
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs
@@ -108,6 +76,6 @@ ENV HOSTNAME "0.0.0.0"
 # Устанавливаем максимальный размер старого поколения для оптимизации GC
 ENV NODE_OPTIONS="--max-old-space-size=1024"
 
-# server.js создается при сборке next из standalone output
+# Используем встроенный server.js из Next.js standalone build
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "server.js"]
+CMD ["node", ".next/server.js"]

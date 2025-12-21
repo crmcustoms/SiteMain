@@ -47,20 +47,16 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем .next директорий для статики и конфига
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/.next /app/.next
+# Копируем всё из standalone build - это содержит .next, node_modules и всё необходимое
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
 
-# Копируем node_modules (необходимо для работы)
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /app/node_modules
-
-# Копируем публичные файлы
+# Копируем публичные файлы (переписываем из исходного, чтобы они были свежие)
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
 # Копируем или создаем server.js для запуска приложения
 RUN sh << 'SETUPSCRIPT'
-if [ -f /app/.next/server.js ]; then
-  cp /app/.next/server.js /app/server.js
-  echo "✓ server.js скопирован из .next"
+if [ -f /app/server.js ]; then
+  echo "✓ server.js уже существует"
 else
   cat > /app/server.js << 'JSEOF'
 const { createServer } = require('http')

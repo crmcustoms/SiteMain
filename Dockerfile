@@ -26,10 +26,10 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Модифицируем скрипт сборки для Linux-окружения
 RUN npm cache clean --force && \
     next build && \
-    mkdir -p .next/standalone/public && \
-    cp -r public/* .next/standalone/public/ && \
-    cp express-server.js .next/standalone/ && \
-    cp api-routes.js .next/standalone/ || true
+    mkdir -p .next/standalone/public .next/static && \
+    cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
+    cp express-server.js .next/standalone/ 2>/dev/null || true && \
+    cp api-routes.js .next/standalone/ 2>/dev/null || true
 
 # Production image, copy all the files and run next
 FROM base AS runner

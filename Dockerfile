@@ -59,12 +59,13 @@ COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 # Копируем package.json для информации о версии
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/package.json /app/
 
-# Пытаемся скопировать server.js
-RUN cp /app/.next/server.js /app/server.js 2>/dev/null || true
-
-# Создаем server.js если он не был скопирован
-RUN if [ ! -f /app/server.js ]; then \
-  cat > /app/server.js << 'EOF'
+# Копируем или создаем server.js для запуска приложения
+RUN sh << 'SETUPSCRIPT'
+if [ -f /app/.next/server.js ]; then
+  cp /app/.next/server.js /app/server.js
+  echo "✓ server.js скопирован из .next"
+else
+  cat > /app/server.js << 'JSEOF'
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
@@ -91,8 +92,12 @@ app.prepare().then(() => {
     console.log(`Ready on http://${hostname}:${port}`)
   })
 })
-EOF
-fi && ls -la /app/server.js && [ -f /app/server.js ] && echo "✓ server.js готов" || echo "✗ ошибка server.js"
+JSEOF
+  echo "✓ server.js создан"
+fi
+ls -la /app/server.js
+[ -f /app/server.js ] && echo "✓ Готово к запуску" || (echo "✗ Ошибка" && exit 1)
+SETUPSCRIPT
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

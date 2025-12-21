@@ -29,11 +29,11 @@ RUN npm cache clean --force && \
     echo "=== Builder stage - После next build ===" && \
     ls -la .next/standalone/ | head -20 && \
     [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \
-    mkdir -p .next/standalone/public .next/static && \
-    cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
-    cp express-server.js .next/standalone/ 2>/dev/null || true && \
-    cp api-routes.js .next/standalone/ 2>/dev/null || true && \
-    echo "=== Builder stage - После копирования файлов ===" && \
+    [ -d .next/static ] && echo "✓ .next/static найдена" || echo "✗ .next/static НЕ найдена" && \
+    [ -d .next/standalone/.next ] && echo "✓ .next/standalone/.next найдена" || echo "✗ .next/standalone/.next НЕ найдена" && \
+    echo "=== Builder stage - Содержимое .next/standalone/.next/static/ ===" && \
+    ls -la .next/standalone/.next/static/ 2>/dev/null | head -10 || echo "Не найдена" && \
+    echo "=== Builder stage - После проверки файлов ===" && \
     ls -la .next/standalone/ | head -20
 
 # Production image, copy all the files and run next
@@ -47,10 +47,14 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем всё из standalone build - это содержит .next, node_modules и всё необходимое
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
+# Копируем файлы из standalone build
+# Сначала копируем .next директорию (содержит static файлы)
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/.next /app/.next
 
-# Копируем публичные файлы (переписываем из исходного, чтобы они были свежие)
+# Копируем node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/node_modules /app/node_modules
+
+# Копируем публичные файлы (с самого源 builder, чтобы они были свежие)
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
 # Копируем или создаем server.js для запуска приложения

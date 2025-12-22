@@ -44,7 +44,7 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
               className="object-cover object-center brightness-75 w-full h-full"
               onError={() => setImageError(true)}
             />
-            <div className="absolute inset-0 bg-black/30 bg-gradient-to-r from-black/60 to-transparent"></div>
+            <div className="absolute inset-0 bg-black/10 bg-gradient-to-r from-black/20 to-transparent"></div>
           </>
         )}
       </div>

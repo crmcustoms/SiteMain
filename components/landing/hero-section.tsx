@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { Facebook, Youtube, Send, MessageSquare, CheckCircle } from "@/components/icons"
 import { AnimatedElement } from "@/components/ui/animated-element"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
@@ -169,9 +168,9 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
               <div className="flex flex-col sm:flex-row gap-4">
                 <ContactFormDialog
                   trigger={
-                    <Button className="bg-amber hover:bg-amber-hover text-black px-8 py-6 text-lg">
+                    <button className="btn-brackets">
                       {dict.ctaButton}
-                    </Button>
+                    </button>
                   }
                   title={commonDict.form.auditFormTitle}
                   description={commonDict.form.auditFormDescription}

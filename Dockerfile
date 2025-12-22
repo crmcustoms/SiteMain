@@ -31,7 +31,7 @@ RUN npm cache clean --force && \
     ls -la .next/standalone/ | head -20 && \
     [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \
     [ -d .next/standalone/.next/static ] && echo "✓ .next/standalone/.next/static найдена" || echo "✗ .next/standalone/.next/static НЕ найдена" && \
-    [ -d .next/standalone/.next/static ] && ls -la .next/standalone/.next/static/ | head -10 || echo "static dir not found" && \
+    [ -d .next/static ] && echo "✓ .next/static найдена в корне" && ls -la .next/static/ | head -5 || echo "✗ .next/static НЕ найдена в корне" && \
     mkdir -p .next/standalone/public .next/static && \
     cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
     cp express-server.js .next/standalone/ 2>/dev/null || true && \

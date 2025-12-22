@@ -39,7 +39,7 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
         ) : (
           <>
             <img
-              src="/images/ai-robot-background.jpeg"
+              src="/images/hero.png"
               alt="Футуристичний робот ШІ"
               className="object-cover object-center brightness-75 w-full h-full"
               onError={() => setImageError(true)}

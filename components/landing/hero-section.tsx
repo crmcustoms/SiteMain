@@ -96,7 +96,7 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
       </div>
 
       {/* Logo Carousel - Full width layer */}
-      <div className="absolute inset-0 z-5 flex items-start justify-center pt-20 pointer-events-none">
+      <div className="absolute inset-0 z-5 flex items-start justify-center pt-20 pointer-events-none w-screen">
         <style>{`
           @keyframes scroll {
             0% {
@@ -114,14 +114,14 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
           }
         `}</style>
 
-        <div className="w-full max-w-5xl pointer-events-auto">
+        <div className="w-screen pointer-events-auto">
           <AnimatedElement delay={0}>
-            <div className="overflow-hidden bg-transparent py-4">
+            <div className="overflow-hidden bg-white py-4">
               <div className="carousel-scroll flex gap-6 justify-center">
                 {/* First set of logos */}
                 {logos.map((logo) => (
-                  <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-32 h-24 flex items-center justify-center">
-                    <div className="flex h-24 w-32 items-center justify-center rounded-lg border-2 border-white/30 bg-white/5 backdrop-blur-sm p-2 hover:border-amber hover:shadow-md transition-all hover:bg-white/10">
+                  <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-32 h-16 flex items-center justify-center">
+                    <div className="flex h-16 w-32 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-amber hover:shadow-md transition-all">
                       <img
                         src={logo.src}
                         alt={logo.name}
@@ -133,8 +133,8 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
 
                 {/* Duplicate set for continuous scroll */}
                 {logos.map((logo) => (
-                  <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-32 h-24 flex items-center justify-center">
-                    <div className="flex h-24 w-32 items-center justify-center rounded-lg border-2 border-white/30 bg-white/5 backdrop-blur-sm p-2 hover:border-amber hover:shadow-md transition-all hover:bg-white/10">
+                  <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-32 h-16 flex items-center justify-center">
+                    <div className="flex h-16 w-32 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-2 hover:border-amber hover:shadow-md transition-all">
                       <img
                         src={logo.src}
                         alt={logo.name}

@@ -24,6 +24,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Модифицируем скрипт сборки для Linux-окружения
+# Invalidate cache to force rebuild - 2025-12-22
 RUN npm cache clean --force && \
     npx next build && \
     echo "=== Builder stage - После next build ===" && \

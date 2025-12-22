@@ -4,22 +4,6 @@ import { CheckCircle2 } from "@/components/icons"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function CrmServicesBlocks() {
-
-  const logos = [
-    { id: 1, name: "Logo 1", src: "/images/logo_servises/2.png" },
-    { id: 2, name: "Logo 2", src: "/images/logo_servises/5.png" },
-    { id: 3, name: "Logo 3", src: "/images/logo_servises/6.png" },
-    { id: 4, name: "Logo 4", src: "/images/logo_servises/7.png" },
-    { id: 5, name: "Logo 5", src: "/images/logo_servises/9.png" },
-    { id: 6, name: "Logo 6", src: "/images/logo_servises/10.png" },
-    { id: 7, name: "Logo 7", src: "/images/logo_servises/11.png" },
-    { id: 8, name: "Logo 8", src: "/images/logo_servises/13.png" },
-    { id: 9, name: "Logo 9", src: "/images/logo_servises/14.png" },
-    { id: 10, name: "Logo 10", src: "/images/logo_servises/21.png" },
-    { id: 11, name: "Logo 11", src: "/images/logo_servises/24.png" },
-    { id: 12, name: "Logo 12", src: "/images/logo_servises/images.png" },
-  ]
-
   const services = [
     {
       title: "Якщо CRM ще немає",
@@ -68,54 +52,6 @@ export default function CrmServicesBlocks() {
 
   return (
     <section className="w-full pt-4 md:pt-6 pb-12 md:pb-24 lg:pb-32">
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .carousel-scroll {
-          animation: scroll 40s linear infinite;
-        }
-        .carousel-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-
-      {/* Карусель логотипов - полная ширина */}
-      <div className="w-screen relative left-[50%] right-[50%] -mx-[50vw] mb-12 overflow-hidden bg-white py-8">
-        <div className="carousel-scroll flex gap-4">
-          {/* Первый набор логотипов */}
-          {logos.map((logo) => (
-            <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-40 h-28 flex items-center justify-center">
-              <div className="flex h-28 w-40 items-center justify-center rounded-lg border-2 border-muted bg-white p-3 hover:border-amber hover:shadow-md transition-all">
-                <img
-                  src={logo.src}
-                  alt={logo.name}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </div>
-            </div>
-          ))}
-
-          {/* Дублированный набор для непрерывного скролла */}
-          {logos.map((logo) => (
-            <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-40 h-28 flex items-center justify-center">
-              <div className="flex h-28 w-40 items-center justify-center rounded-lg border-2 border-muted bg-white p-3 hover:border-amber hover:shadow-md transition-all">
-                <img
-                  src={logo.src}
-                  alt={logo.name}
-                  className="max-w-full max-h-full object-contain"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="flex flex-col items-center justify-center space-y-4 text-center">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">

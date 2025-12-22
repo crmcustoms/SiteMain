@@ -53,7 +53,10 @@ RUN adduser --system --uid 1001 nextjs
 # Копируем всё из standalone build - это содержит .next, node_modules и всё необходимое
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
 
-# Копируем static файлы из .next/static (они находятся в корне, не в standalone)
+# ⚠️ CRITICAL: Копируем static файлы из .next/static
+# Next.js создаёт статику в /app/.next/static/, но это НЕ входит в /app/.next/standalone/
+# Без этой строки будут 404 на все CSS/JS/шрифты!
+# Смотри DOCKER_BUILD_TROUBLESHOOTING.md для деталей
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static /app/.next/static
 
 # Копируем публичные файлы (переписываем из исходного, чтобы они были свежие)

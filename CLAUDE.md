@@ -26,6 +26,13 @@ npm run copy-files-linux     # Copy public files and express-server.js to .next/
 npm run start:express        # Run standalone server with Express wrapper
 ```
 
+## Common Issues & Solutions
+
+⚠️ **Missing CSS/JS/Fonts (404 errors)?** → See [DOCKER_BUILD_TROUBLESHOOTING.md](./DOCKER_BUILD_TROUBLESHOOTING.md)
+- This is a known Next.js standalone build issue
+- Happens when static files aren't copied to Docker container
+- Solution already implemented in Dockerfile, but good to know for future reference
+
 ## Project Structure
 
 This is a **Next.js 15 + TypeScript B2B SaaS marketing website** for CRM Customs, a business automation service provider.

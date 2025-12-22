@@ -23,21 +23,13 @@ COPY . .
 # Next.js збирає телеметрію за замовчуванням. Відключаємо її.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Модифицируем скрипт сборки для Linux-окружения
-# Invalidate cache to force rebuild - 2025-12-22
+# Build Next.js application
 RUN npm cache clean --force && \
     npx next build && \
-    echo "=== Builder stage - После next build ===" && \
-    ls -la .next/standalone/ | head -20 && \
-    [ -f .next/standalone/server.js ] && echo "✓ server.js найден в builder" || echo "✗ server.js НЕ найден в builder" && \
-    [ -d .next/standalone/.next/static ] && echo "✓ .next/standalone/.next/static найдена" || echo "✗ .next/standalone/.next/static НЕ найдена" && \
-    [ -d .next/static ] && echo "✓ .next/static найдена в корне" && ls -la .next/static/ | head -5 || echo "✗ .next/static НЕ найдена в корне" && \
-    mkdir -p .next/standalone/public .next/static && \
+    mkdir -p .next/standalone/public && \
     cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
     cp express-server.js .next/standalone/ 2>/dev/null || true && \
-    cp api-routes.js .next/standalone/ 2>/dev/null || true && \
-    echo "=== Builder stage - После копирования файлов ===" && \
-    ls -la .next/standalone/ | head -20
+    cp api-routes.js .next/standalone/ 2>/dev/null || true
 
 # Production image, copy all the files and run next
 FROM base AS runner

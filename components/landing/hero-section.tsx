@@ -11,6 +11,21 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
   const [isScrolled, setIsScrolled] = useState(false)
   const [imageError, setImageError] = useState(false)
 
+  const logos = [
+    { id: 1, name: "Logo 1", src: "/images/logo_servises/2.png" },
+    { id: 2, name: "Logo 2", src: "/images/logo_servises/5.png" },
+    { id: 3, name: "Logo 3", src: "/images/logo_servises/6.png" },
+    { id: 4, name: "Logo 4", src: "/images/logo_servises/7.png" },
+    { id: 5, name: "Logo 5", src: "/images/logo_servises/9.png" },
+    { id: 6, name: "Logo 6", src: "/images/logo_servises/10.png" },
+    { id: 7, name: "Logo 7", src: "/images/logo_servises/11.png" },
+    { id: 8, name: "Logo 8", src: "/images/logo_servises/13.png" },
+    { id: 9, name: "Logo 9", src: "/images/logo_servises/14.png" },
+    { id: 10, name: "Logo 10", src: "/images/logo_servises/21.png" },
+    { id: 11, name: "Logo 11", src: "/images/logo_servises/24.png" },
+    { id: 12, name: "Logo 12", src: "/images/logo_servises/images.png" },
+  ]
+
   useEffect(() => {
     const handleScroll = () => {
       // Проверяем, прокручена ли страница ниже высоты экрана (главной секции)
@@ -51,33 +66,87 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
 
       {/* Social Sidebar */}
       <div className={`fixed left-4 top-1/2 -translate-y-1/2 flex flex-col z-20 pr-4 border-r ${isScrolled ? 'border-gray-300' : 'border-white'} hidden md:flex`}>
-        <a 
-          href="https://www.youtube.com/@crmcustomsua" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://www.youtube.com/@crmcustomsua"
+          target="_blank"
+          rel="noopener noreferrer"
           className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
           title="YouTube"
         >
           <Youtube className="h-6 w-6 stroke-[1.5]" />
         </a>
-        <a 
-          href="https://www.facebook.com/crmcustom" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://www.facebook.com/crmcustom"
+          target="_blank"
+          rel="noopener noreferrer"
           className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
           title="Facebook"
         >
           <Facebook className="h-6 w-6 stroke-[1.5]" />
         </a>
-        <a 
-          href="https://t.me/prodayslonakume" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://t.me/prodayslonakume"
+          target="_blank"
+          rel="noopener noreferrer"
           className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
           title="Telegram"
         >
           <Send className="h-6 w-6 stroke-[1.5]" />
         </a>
+      </div>
+
+      {/* Logo Carousel - Full width layer */}
+      <div className="absolute inset-0 z-5 flex items-start justify-center pt-20 pointer-events-none">
+        <style>{`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          .carousel-scroll {
+            animation: scroll 40s linear infinite;
+          }
+          .carousel-scroll:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+
+        <div className="w-full max-w-5xl pointer-events-auto">
+          <AnimatedElement delay={0}>
+            <div className="overflow-hidden bg-transparent py-4">
+              <div className="carousel-scroll flex gap-6 justify-center">
+                {/* First set of logos */}
+                {logos.map((logo) => (
+                  <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-32 h-24 flex items-center justify-center">
+                    <div className="flex h-24 w-32 items-center justify-center rounded-lg border-2 border-white/30 bg-white/5 backdrop-blur-sm p-2 hover:border-amber hover:shadow-md transition-all hover:bg-white/10">
+                      <img
+                        src={logo.src}
+                        alt={logo.name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+
+                {/* Duplicate set for continuous scroll */}
+                {logos.map((logo) => (
+                  <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-32 h-24 flex items-center justify-center">
+                    <div className="flex h-24 w-32 items-center justify-center rounded-lg border-2 border-white/30 bg-white/5 backdrop-blur-sm p-2 hover:border-amber hover:shadow-md transition-all hover:bg-white/10">
+                      <img
+                        src={logo.src}
+                        alt={logo.name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AnimatedElement>
+        </div>
       </div>
 
       {/* Main Content */}

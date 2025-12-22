@@ -87,17 +87,18 @@
   justify-content: center;
   gap: 0.5rem;
   white-space: nowrap;
-  padding: 12px 40px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  padding: 18px 70px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgb(220, 38, 38);
+  color: rgb(255, 255, 255);
   background: transparent;
   border: none;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.3s ease;
+  -webkit-text-stroke: 1px rgb(255, 255, 255);
 }
 
 .btn-brackets::before,
@@ -107,7 +108,7 @@
   top: 0;
   width: 12px;
   height: 100%;
-  border: 2px solid rgb(220, 38, 38);
+  border: 3px solid rgb(220, 38, 38);
   transition: all 0.4s ease;
 }
 
@@ -121,19 +122,20 @@
   border-left: none;
 }
 
+.btn-brackets:hover {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
 .btn-brackets:hover::before,
 .btn-brackets:hover::after {
   width: 100%;
 }
 
 .btn-brackets:hover::before {
-  border-right: 2px solid rgb(220, 38, 38);
+  border-right: 3px solid rgb(220, 38, 38);
 }
 
 .btn-brackets:hover::after {
-  border-left: 2px solid rgb(220, 38, 38);
-}
-
-.btn-brackets:hover {
-  color: rgb(220, 38, 38);
+  border-left: 3px solid rgb(220, 38, 38);
 }

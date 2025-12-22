@@ -53,6 +53,9 @@ RUN adduser --system --uid 1001 nextjs
 # Копируем всё из standalone build - это содержит .next, node_modules и всё необходимое
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
 
+# Копируем static файлы из .next/static (они находятся в корне, не в standalone)
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static /app/.next/static
+
 # Копируем публичные файлы (переписываем из исходного, чтобы они были свежие)
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 

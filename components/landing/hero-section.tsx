@@ -116,7 +116,7 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
 
         <div className="w-screen pointer-events-auto">
           <AnimatedElement delay={0}>
-            <div className="overflow-hidden bg-white py-4">
+            <div className="overflow-hidden bg-transparent py-4">
               <div className="carousel-scroll flex gap-6 justify-center">
                 {/* First set of logos */}
                 {logos.map((logo) => (

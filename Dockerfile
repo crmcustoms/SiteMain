@@ -51,8 +51,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
 # Смотри DOCKER_BUILD_TROUBLESHOOTING.md для деталей
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static /app/.next/static
 
-# Копируем публичные файлы (переписываем из исходного, чтобы они были свежие)
-COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
+# Копируем публичные файлы из standalone (они скопированы туда в builder stage)
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/public /app/public
 
 # Копируем или создаем server.js для запуска приложения
 RUN sh << 'SETUPSCRIPT'

@@ -12,45 +12,14 @@ export default function TeamSection() {
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Team member card */}
+          {/* Left side - Team image */}
           <AnimatedElement delay={0}>
-            <div className="relative h-96 md:h-full min-h-96 flex flex-col items-center justify-center">
-              {/* Profile card */}
-              <div className="relative z-10">
-                {/* Circular photo */}
-                <div className="mb-6 relative">
-                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
-                    <img
-                      src="/images/Tkachenko.jpg"
-                      alt="Ткаченко Максим"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  {/* Decorative circle background */}
-                  <div className="absolute -inset-6 bg-amber/10 rounded-full -z-10"></div>
-                </div>
-
-                {/* Business card */}
-                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-md text-center max-w-xs">
-                  <h3 className="text-2xl font-bold text-black mb-1">
-                    Ткаченко Максим
-                  </h3>
-                  <p className="text-sm text-amber font-semibold mb-3">
-                    Засновник
-                  </p>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Бізнес аналітик та проект менеджер
-                  </p>
-
-                  {/* Divider */}
-                  <div className="border-t border-gray-100 my-4"></div>
-
-                  {/* Additional info */}
-                  <p className="text-xs text-gray-500">
-                    CRM Customs — якісні рішення для бізнесу
-                  </p>
-                </div>
-              </div>
+            <div className="relative flex items-center justify-center">
+              <img
+                src="/images/komanda.png"
+                alt="Команда CRM Customs"
+                className="w-full h-auto rounded-2xl shadow-lg"
+              />
             </div>
           </AnimatedElement>
 
@@ -60,7 +29,7 @@ export default function TeamSection() {
               <div>
                 <p className="text-sm font-semibold text-amber mb-3 uppercase tracking-wide">Про нас</p>
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 leading-tight">
-                  Вітаю! Це мій авторський сайт. Ми працюємо <span className="text-amber">невеликою</span> командою
+                  Ми працюємо <span className="text-amber">невеликою</span> командою
                 </h2>
                 <p className="text-lg text-gray-700 leading-relaxed">
                   У нас немає мети «заробити всі гроші світу» — нам важливо робити проєкти якісно, а не на конвеєрі.

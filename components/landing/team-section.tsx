@@ -21,7 +21,7 @@ export default function TeamSection() {
                 <div className="mb-6 relative">
                   <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
                     <img
-                      src="/286793332_5146371592111874_3646856194339008700_n.jpg"
+                      src="/images/Tkachenko.jpg"
                       alt="Ткаченко Максим"
                       className="w-full h-full object-cover"
                     />

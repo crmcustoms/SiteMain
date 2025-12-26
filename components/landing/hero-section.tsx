@@ -42,6 +42,13 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
       {/* Background */}
       <div className="absolute inset-0 z-0 bg-yellow-400"></div>
 
+      {/* Sketch background with animation */}
+      <img
+        src="/images/fon_sketch.png"
+        alt="Background decoration"
+        className="absolute inset-0 z-1 w-full h-full object-cover opacity-60 animate-in fade-in duration-1000"
+      />
+
       {/* Professor Image - Desktop Only, Right Side */}
       <div className="absolute right-0 bottom-0 z-5 hidden lg:block h-[90%] w-auto pointer-events-none">
         <img

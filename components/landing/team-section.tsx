@@ -12,15 +12,43 @@ export default function TeamSection() {
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Image placeholder */}
+          {/* Left side - Team member card */}
           <AnimatedElement delay={0}>
-            <div className="relative h-96 md:h-full min-h-96">
-              {/* Заглушка для фото */}
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 rounded-3xl flex items-center justify-center overflow-hidden">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">📸</div>
-                  <p className="text-gray-500 font-semibold">Місце для фото</p>
-                  <p className="text-gray-400 text-sm mt-2">Команда / Офіс</p>
+            <div className="relative h-96 md:h-full min-h-96 flex flex-col items-center justify-center">
+              {/* Profile card */}
+              <div className="relative z-10">
+                {/* Circular photo */}
+                <div className="mb-6 relative">
+                  <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg mx-auto">
+                    <img
+                      src="/286793332_5146371592111874_3646856194339008700_n.jpg"
+                      alt="Ткаченко Максим"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {/* Decorative circle background */}
+                  <div className="absolute -inset-6 bg-amber/10 rounded-full -z-10"></div>
+                </div>
+
+                {/* Business card */}
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-md text-center max-w-xs">
+                  <h3 className="text-2xl font-bold text-black mb-1">
+                    Ткаченко Максим
+                  </h3>
+                  <p className="text-sm text-amber font-semibold mb-3">
+                    Засновник
+                  </p>
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Бізнес аналітик та проект менеджер
+                  </p>
+
+                  {/* Divider */}
+                  <div className="border-t border-gray-100 my-4"></div>
+
+                  {/* Additional info */}
+                  <p className="text-xs text-gray-500">
+                    CRM Customs — якісні рішення для бізнесу
+                  </p>
                 </div>
               </div>
             </div>

@@ -8,6 +8,12 @@ export default function TeamSection() {
       {/* Фоновая анимация */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 right-0 w-80 h-80 bg-amber/5 rounded-full blur-3xl opacity-30"></div>
+        {/* Sketch background with animation */}
+        <img
+          src="/images/fon_sketch.png"
+          alt="Background decoration"
+          className="absolute inset-0 w-full h-full object-cover opacity-60 animate-in fade-in duration-1000"
+        />
       </div>
 
       <div className="container mx-auto px-4 md:px-6 relative z-10">

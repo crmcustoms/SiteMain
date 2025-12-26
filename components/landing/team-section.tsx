@@ -60,7 +60,7 @@ export default function TeamSection() {
               <div>
                 <p className="text-sm font-semibold text-amber mb-3 uppercase tracking-wide">Про нас</p>
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 leading-tight">
-                  Ми працюємо <span className="text-amber">невеликою</span> командою
+                  Вітаю! Це мій авторський сайт. Ми працюємо <span className="text-amber">невеликою</span> командою
                 </h2>
                 <p className="text-lg text-gray-700 leading-relaxed">
                   У нас немає мети «заробити всі гроші світу» — нам важливо робити проєкти якісно, а не на конвеєрі.

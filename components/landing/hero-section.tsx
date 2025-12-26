@@ -38,7 +38,7 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
   ]
 
   return (
-    <section className="w-full h-screen relative overflow-hidden font-montserrat">
+    <section className="w-full h-screen relative overflow-hidden font-montserrat flex flex-col">
       {/* Background */}
       <div className="absolute inset-0 z-0 bg-yellow-400"></div>
 
@@ -82,8 +82,8 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
         </a>
       </div>
 
-      {/* Logo Carousel */}
-      <div className="absolute inset-0 z-5 flex items-end justify-center pb-4 pointer-events-none w-screen">
+      {/* Logo Carousel - Top */}
+      <div className="relative z-5 w-full flex-shrink-0 pt-6 md:pt-8 lg:pt-10">
         <style>{`
           @keyframes scroll {
             0% {
@@ -101,41 +101,39 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
           }
         `}</style>
 
-        <div className="w-screen pointer-events-auto">
-          <AnimatedElement delay={0}>
-            <div className="overflow-hidden bg-transparent py-4">
-              <div className="carousel-scroll flex gap-10 justify-center">
-                {logos.map((logo) => (
-                  <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
-                    <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
-                      <img
-                        src={logo.src}
-                        alt={logo.name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
+        <AnimatedElement delay={0}>
+          <div className="overflow-hidden bg-transparent">
+            <div className="carousel-scroll flex gap-10 justify-center">
+              {logos.map((logo) => (
+                <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
+                  <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
                   </div>
-                ))}
+                </div>
+              ))}
 
-                {logos.map((logo) => (
-                  <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
-                    <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
-                      <img
-                        src={logo.src}
-                        alt={logo.name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
+              {logos.map((logo) => (
+                <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
+                  <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          </AnimatedElement>
-        </div>
+          </div>
+        </AnimatedElement>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 md:px-6 h-full flex items-start pt-16 md:pt-20 lg:pt-24 max-w-2xl md:max-w-3xl lg:max-w-4xl">
+      {/* Main Content - Bottom */}
+      <div className="relative z-10 flex-grow flex items-end justify-center container mx-auto px-4 md:px-6 pb-16 md:pb-20 lg:pb-24 max-w-2xl md:max-w-3xl lg:max-w-4xl">
         <div className="w-full">
           <div className="relative">
             <AnimatedElement delay={100}>

@@ -10,9 +10,6 @@ import TeamSection from "@/components/landing/team-section"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
-const WhyAutomation = dynamic(() => import("@/components/landing/why-automation"), { ssr: true })
-const Features = dynamic(() => import("@/components/landing/features"), { ssr: true })
-const Industries = dynamic(() => import("@/components/landing/industries"), { ssr: true })
 const CaseStudies = dynamic(() => import("@/components/landing/case-studies"), { ssr: true })
 const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), { ssr: true })
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
@@ -42,9 +39,6 @@ export default async function Home({
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} />
       <CrmServicesBlocks />
       <TeamSection />
-      <WhyAutomation dict={dict.landing.whyAutomation} />
-      <Features dict={dict.landing.features} commonDict={dict.common} />
-      <Industries dict={dict.landing.industries} />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
       <WhyChooseUs dict={dict.landing.whyChooseUs} />

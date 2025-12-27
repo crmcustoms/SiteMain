@@ -31,8 +31,11 @@ export default function TeamSection() {
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 leading-tight">
                   Ми працюємо <span className="text-amber">невеликою</span> командою
                 </h2>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-gray-700 leading-relaxed mb-3">
                   У нас немає мети «заробити всі гроші світу» — нам важливо робити проєкти якісно, а не на конвеєрі.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  <span className="font-bold">Саме це дозволяє нам працювати з індивідуальним підходом і створювати системи, унікальні та максимально пристосовані під ваш бізнес.</span>
                 </p>
               </div>
 
@@ -46,27 +49,12 @@ export default function TeamSection() {
                 </p>
 
                 {/* Benefits */}
-                <div className="space-y-3 pt-4 border-t border-gray-100">
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl flex-shrink-0 text-amber">✓</span>
-                    <div>
-                      <p className="font-semibold text-black text-sm">Без черг</p>
-                      <p className="text-xs text-gray-600">Початок проєкту без очікування</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl flex-shrink-0 text-amber">✓</span>
-                    <div>
-                      <p className="font-semibold text-black text-sm">Без затримок</p>
-                      <p className="text-xs text-gray-600">Немає «запишемо на наступний квартал»</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl flex-shrink-0 text-amber">✓</span>
-                    <div>
-                      <p className="font-semibold text-black text-sm">Без зникнень</p>
-                      <p className="text-xs text-gray-600">Прямий контакт після передоплати 🙂</p>
-                    </div>
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="flex items-start gap-4">
+                    <span className="text-4xl flex-shrink-0 text-amber">✓</span>
+                    <p className="text-lg font-semibold text-black leading-relaxed">
+                      Без черг, без «запишемо вас на наступний квартал» і без зникнень у тумані після передоплати 🙂
+                    </p>
                   </div>
                 </div>
               </div>

@@ -150,10 +150,10 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
           <div className="relative">
             <AnimatedElement delay={100}>
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight max-w-5xl">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight max-w-5xl">
                   <span className="text-black">CRM</span>, яка починає заробляти вже через місяць
                 </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight max-w-5xl">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight max-w-5xl">
                   Наведемо <span className="text-black">порядок</span> у продажах і підвищимо <span className="text-black">ефективність</span> команди
                   <sup className="text-black text-lg md:text-2xl ml-2 inline-block transform -rotate-12" style={{fontFamily: "'Comic Sans MS', 'Segoe Print', cursive, sans-serif", fontWeight: 'bold'}}>40%</sup>
                 </h2>

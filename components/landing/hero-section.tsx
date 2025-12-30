@@ -40,13 +40,13 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
   return (
     <section className="w-full h-screen relative overflow-hidden font-montserrat flex flex-col bg-white">
       {/* Left vertical yellow stripe for social sidebar */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 bg-yellow-400 z-0 hidden md:block"></div>
+      <div className="absolute left-0 top-0 bottom-0 w-16 bg-yellow-400 z-0 hidden md:block"></div>
 
       {/* Right vertical yellow stripe for professor image */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-yellow-400 z-1 hidden lg:block"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-1/6 bg-yellow-400 z-1 hidden lg:block"></div>
 
       {/* Center background image */}
-      <div className="absolute left-32 right-0 lg:right-1/3 top-0 bottom-0 z-0 hidden md:block">
+      <div className="absolute left-16 right-0 lg:right-1/6 top-0 bottom-0 z-0 hidden md:block">
         <img
           src="/images/background.webp"
           alt="Background"

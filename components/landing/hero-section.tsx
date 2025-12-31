@@ -42,27 +42,51 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
   return (
     <section className="w-full h-screen relative overflow-hidden font-montserrat flex flex-col bg-white">
       {/* Header with Logo and Menu */}
-      <div className="relative z-30 flex items-center justify-between px-4 md:px-8 lg:px-12 pt-6 md:pt-8">
+      <style>{`
+        .menu-item {
+          position: relative;
+          padding: 0.5rem 0;
+          transition: all 0.3s ease;
+        }
+        .menu-item::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #ffb800, #ffb800);
+          transition: width 0.3s ease;
+        }
+        .menu-item:hover::after {
+          width: 100%;
+        }
+        .menu-item:hover {
+          color: #ffb800;
+        }
+      `}</style>
+
+      <div className="relative z-30 flex items-center justify-between px-4 md:px-8 lg:px-12 pt-6 md:pt-8 pl-24 md:pl-32 lg:pl-40">
         {/* Logo */}
-        <Link href={`/${lang}`} className="flex items-center space-x-2">
-          <div className="text-3xl md:text-5xl font-bold tracking-wide">
+        <Link href={`/${lang}`} className="flex items-center space-x-2 flex-shrink-0">
+          <div className="text-2xl md:text-3xl font-bold tracking-wide">
             <span className="text-amber">CRM</span>
             <span className="text-black">CUSTOMS</span>
           </div>
         </Link>
 
         {/* Menu */}
-        <nav className="hidden md:flex flex-1 justify-center gap-8 items-center ml-12">
-          <Link href={`/${lang}`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+        <nav className="hidden md:flex flex-1 justify-center gap-12 items-center">
+          <Link href={`/${lang}`} className="menu-item text-base font-medium text-black transition-colors">
             {dict.navigation?.home || 'Головна'}
           </Link>
-          <Link href={`/${lang}/cases`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+          <Link href={`/${lang}/cases`} className="menu-item text-base font-medium text-black transition-colors">
             {dict.navigation?.cases || 'Кейси'}
           </Link>
-          <Link href={`/${lang}/blog`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+          <Link href={`/${lang}/blog`} className="menu-item text-base font-medium text-black transition-colors">
             {dict.navigation?.blog || 'Блог'}
           </Link>
-          <Link href={`/${lang}#services`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+          <Link href={`/${lang}#services`} className="menu-item text-base font-medium text-black transition-colors">
             {dict.navigation?.pricing || 'Послуги'}
           </Link>
         </nav>
@@ -83,10 +107,9 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
       {/* Right vertical yellow stripe for professor image */}
       <div className="absolute right-0 top-0 bottom-0 w-1/6 bg-yellow-400 z-2 hidden lg:block">
         {/* Phone number in right stripe */}
-        <div className="absolute top-8 right-4 text-black font-bold text-lg text-center hidden lg:block">
-          <a href="tel:+380671706703" className="hover:opacity-80 transition">
-            <div>+380</div>
-            <div>67 170-67-03</div>
+        <div className="absolute top-6 right-2 left-2 text-black font-bold text-xs text-center hidden lg:block px-1">
+          <a href="tel:+380671706703" className="hover:opacity-80 transition block whitespace-nowrap overflow-hidden text-ellipsis">
+            +380 67 170-67-03
           </a>
         </div>
       </div>

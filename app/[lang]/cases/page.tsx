@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { getBlogArticles } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
 
 // Динамическая генерация метаданных
@@ -149,10 +150,20 @@ export default async function CasesPage({
       : [];
 
     // Используем типизированный компонент
-    return <TypedStaticCases casesData={adaptedPosts} lang={safeLocale} />;
+    return (
+      <>
+        <Breadcrumbs items={[{ label: 'Історії успіху' }]} lang={safeLocale} />
+        <TypedStaticCases casesData={adaptedPosts} lang={safeLocale} />
+      </>
+    );
   } catch (error) {
     console.error("Ошибка при загрузке кейсов:", error);
-    return <TypedStaticCases casesData={[]} lang={safeLocale} />;
+    return (
+      <>
+        <Breadcrumbs items={[{ label: 'Історії успіху' }]} lang={safeLocale} />
+        <TypedStaticCases casesData={[]} lang={safeLocale} />
+      </>
+    );
   }
 }
 

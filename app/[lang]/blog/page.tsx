@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { getBlogPostsFromAPI } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
+import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
 
 // Динамическая генерация метаданных
@@ -136,11 +137,14 @@ export default async function BlogPage({
 
     // Используем тот же типизированный компонент что и кейсы
     return (
-      <TypedStaticCases 
-        casesData={adaptedPosts} 
-        lang={safeLocale}
-        pageType="blog"
-      />
+      <>
+        <Breadcrumbs items={[{ label: 'Блог' }]} lang={safeLocale} />
+        <TypedStaticCases
+          casesData={adaptedPosts}
+          lang={safeLocale}
+          pageType="blog"
+        />
+      </>
     );
   } catch (error) {
     console.error("Ошибка при загрузке блога:", error);

@@ -150,16 +150,40 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
         </div>
       </div>
 
-      {/* Main Content - Bottom */}
-      <div className="relative z-10 flex-grow flex items-end justify-center container mx-auto px-4 md:px-6 pb-16 md:pb-20 lg:pb-24 max-w-2xl md:max-w-3xl lg:max-w-4xl">
-        <div className="w-full">
-          <div className="relative">
+      {/* Main Content - Center */}
+      <style>{`
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .btn-hero {
+          animation: slideUp 0.6s ease-out;
+          transition: all 0.3s ease;
+        }
+        .btn-hero:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px rgba(255, 184, 0, 0.25);
+        }
+        .btn-hero:active {
+          transform: translateY(-2px);
+        }
+      `}</style>
+
+      <div className="relative z-10 flex-grow flex items-center justify-center container mx-auto px-4 md:px-6 max-w-2xl md:max-w-3xl lg:max-w-4xl">
+        <div className="w-full text-center">
+          <div className="relative mb-8">
             <AnimatedElement delay={100}>
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight max-w-5xl">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight">
                   <span className="text-black">CRM</span>, яка починає заробляти вже через місяць
                 </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight max-w-5xl">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight">
                   Наведемо <span className="text-black">порядок</span> у продажах і підвищимо <span className="text-black">ефективність</span> команди
                   <sup className="text-black text-lg md:text-2xl ml-2 inline-block transform -rotate-12" style={{fontFamily: "'Comic Sans MS', 'Segoe Print', cursive, sans-serif", fontWeight: 'bold'}}>40%</sup>
                 </h2>
@@ -168,16 +192,29 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
           </div>
 
           <AnimatedElement delay={500}>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <ContactFormDialog
                 trigger={
-                  <button className="btn-brackets bg-black text-white text-lg md:text-xl px-4 py-3 [&_svg]:stroke-white" style={{'--bracket-color': '#fff'} as any}>
-                    {dict.ctaButton}
+                  <button className="btn-hero bg-amber text-black font-bold px-6 py-3 text-sm md:text-base hover:bg-yellow-500 rounded-lg">
+                    {dict.ctaButton || "Замовити консультацію"}
                   </button>
                 }
                 title={commonDict.form.auditFormTitle}
                 description={commonDict.form.auditFormDescription}
                 formType="hero_audit"
+                buttonText={commonDict.form.submitButton}
+                dict={commonDict}
+              />
+
+              <ContactFormDialog
+                trigger={
+                  <button className="btn-hero bg-black text-amber font-bold px-6 py-3 text-sm md:text-base hover:bg-gray-900 rounded-lg border border-amber">
+                    Залишити номер
+                  </button>
+                }
+                title="Зв'язок за номером"
+                description="Введіть ваш номер телефону і ми вам передзвонимо"
+                formType="hero_callback"
                 buttonText={commonDict.form.submitButton}
                 dict={commonDict}
               />

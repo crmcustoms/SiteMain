@@ -94,10 +94,10 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
         </a>
       </div>
 
-      {/* Logo Carousel - Top */}
-      <div className="relative z-5 w-full flex-shrink-0 pt-6 md:pt-8 lg:pt-10">
+      {/* Logo Carousel - Bottom */}
+      <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-gray-200 py-6 z-20">
         <style>{`
-          @keyframes scroll {
+          @keyframes carouselScroll {
             0% {
               transform: translateX(0);
             }
@@ -105,43 +105,49 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
               transform: translateX(-50%);
             }
           }
-          .carousel-scroll {
-            animation: scroll 40s linear infinite;
+          .logo-track {
+            display: flex;
+            gap: 5rem;
+            width: max-content;
+            animation: carouselScroll 40s linear infinite;
           }
-          .carousel-scroll:hover {
-            animation-play-state: paused;
+          .logo-track img {
+            height: 32px;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            filter: grayscale(100%);
+          }
+          .logo-track img:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+            transform: scale(1.1);
           }
         `}</style>
 
-        <AnimatedElement delay={0}>
-          <div className="overflow-hidden bg-transparent">
-            <div className="carousel-scroll flex gap-10 justify-center">
-              {logos.map((logo) => (
-                <div key={`carousel-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
-                  <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
-                    <img
-                      src={logo.src}
-                      alt={logo.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
+        <div className="overflow-hidden w-full">
+          <div className="logo-track">
+            {/* First set of logos */}
+            {logos.map((logo) => (
+              <img
+                key={`carousel-${logo.id}`}
+                src={logo.src}
+                alt={logo.name}
+                className="flex-shrink-0"
+              />
+            ))}
 
-              {logos.map((logo) => (
-                <div key={`carousel-dup-${logo.id}`} className="flex-shrink-0 w-52 h-28 flex items-center justify-center">
-                  <div className="flex h-28 w-52 items-center justify-center rounded-lg border-2 border-gray-300 bg-white p-4 hover:border-amber hover:shadow-md transition-all">
-                    <img
-                      src={logo.src}
-                      alt={logo.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Duplicate for infinite loop */}
+            {logos.map((logo) => (
+              <img
+                key={`carousel-dup-${logo.id}`}
+                src={logo.src}
+                alt={logo.name}
+                aria-hidden="true"
+                className="flex-shrink-0"
+              />
+            ))}
           </div>
-        </AnimatedElement>
+        </div>
       </div>
 
       {/* Main Content - Bottom */}

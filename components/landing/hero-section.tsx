@@ -222,6 +222,10 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
             transform: translateY(0);
           }
         }
+        .h1-hero-stroke {
+          -webkit-text-stroke: 1px rgb(255, 255, 255);
+          text-stroke: 1px rgb(255, 255, 255);
+        }
         .btn-hero {
           animation: slideUp 0.6s ease-out;
           transition: all 0.3s ease;
@@ -240,7 +244,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
           <div className="relative mb-8">
             <AnimatedElement delay={100}>
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight h1-hero-stroke">
                   <span className="text-black">CRM</span>, яка починає заробляти вже через місяць
                 </h1>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight">

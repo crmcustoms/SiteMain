@@ -222,10 +222,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
             transform: translateY(0);
           }
         }
-        .h1-hero-stroke {
-          -webkit-text-stroke: 1px rgb(255, 255, 255);
-          text-stroke: 1px rgb(255, 255, 255);
-        }
         .btn-hero {
           animation: slideUp 0.6s ease-out;
           transition: all 0.3s ease;
@@ -240,11 +236,13 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: a
       `}</style>
 
       <div className="relative z-10 flex-grow flex items-center justify-center container mx-auto px-4 md:px-6 max-w-2xl md:max-w-3xl lg:max-w-4xl">
-        <div className="w-full text-center">
+        {/* Dark overlay behind text */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-transparent rounded-2xl pointer-events-none"></div>
+        <div className="w-full text-center relative z-10">
           <div className="relative mb-8">
             <AnimatedElement delay={100}>
               <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-amber mb-4 leading-tight h1-hero-stroke">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                   <span className="text-black">CRM</span>, яка починає заробляти вже через місяць
                 </h1>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight">

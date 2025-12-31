@@ -1,0 +1,430 @@
+# Вопросы для администратора Docker/сервера
+
+## Цель
+Настроить автоматическое развертывание сайта: когда код изменяется в GitHub, сайт должен автоматически обновиться в Docker.
+
+## Текущая ситуация
+- Сайт уже работает в Docker контейнере
+- Код проекта находится локально и планируется загрузить в GitHub
+- Нужно связать GitHub → Docker для автоматических обновлений
+
+## Вопросы о текущей настройке Docker
+
+### 1. Информация о контейнере
+- Как называется Docker контейнер с нашим сайтом?
+- На каком порту работает сайт? (например: localhost:3000)
+- Какой Docker образ используется?
+- Есть ли docker-compose.yml файл?
+
+### 2. Расположение файлов
+- Где на сервере находятся файлы проекта?
+- Как сейчас обновляется код в контейнере? (вручную?)
+- Есть ли volume маппинг между сервером и контейнером?
+
+### 3. Доступы и права
+- Есть ли на сервере установленный Git?
+- Может ли сервер получать доступ к GitHub (pull репозитория)?
+- Нужны ли SSH ключи для доступа к GitHub?
+- Есть ли права на перезапуск Docker контейнеров?
+
+### 4. Автоматизация
+- Есть ли опыт с GitHub Webhooks?
+- Можно ли установить GitHub Actions runner на сервер?
+- Предпочитаете ли вы webhook-подход или GitHub Actions?
+
+### 5. Мониторинг и логи
+- Как просматривать логи Docker контейнера?
+- Есть ли система мониторинга развертываний?
+- Нужны ли уведомления об успешных/неуспешных развертываниях?
+
+## Команды для получения информации
+
+Если можете, выполните эти команды и пришлите результат:
+
+```bash
+# Список запущенных контейнеров
+docker ps
+
+10:57:34 [root@crmcustoms:~]# docker ps
+CONTAINER ID   IMAGE                                        COMMAND                  CREATED        STATUS                  PORTS                                                          NAMES
+8a3e0a83736d   docker.n8n.io/n8nio/n8n:latest               "tini -- /docker-ent…"   12 hours ago   Up 12 hours             127.0.0.1:5678->5678/tcp                                       n8n
+b0e879dd9a53   ghcr.io/czlonkowski/n8n-mcp/n8n-mcp:latest   "/usr/local/bin/dock…"   12 hours ago   Up 12 hours (healthy)   0.0.0.0:3300->3000/tcp                                         n8n-mcp
+646881572e77   postgres:16                                  "docker-entrypoint.s…"   6 days ago     Up 6 days (healthy)     127.0.0.1:5433->5432/tcp                                       postgres
+1162e373fee2   portainer/portainer-ce:latest                "/portainer"             11 days ago    Up 11 days              9000/tcp, 127.0.0.1:9443->9443/tcp, 127.0.0.1:9080->8000/tcp   portainer
+06643c1ed126   sitemain-web                                 "docker-entrypoint.s…"   3 weeks ago    Up 3 weeks (healthy)    0.0.0.0:3000->3000/tcp                                         sitemain-web-1
+6d5977229424   flowiseai/flowise:latest                     "/bin/sh -c 'sleep 3…"   7 weeks ago    Up 5 weeks (healthy)    127.0.0.1:4000->4000/tcp                                       flowise
+76b3ea3a94bf   containrrr/watchtower                        "/watchtower"            7 weeks ago    Up 5 weeks (healthy)    8080/tcp                                                       watchtower
+1dd940766395   louislam/dockge:1                            "/usr/bin/dumb-init …"   3 months ago   Up 5 weeks (healthy)    0.0.0.0:5001->5001/tcp                                         dockge-dockge-1
+
+
+# Подробная информация о контейнере (замените CONTAINER_NAME)
+16:03:40 [root@crmcustoms:~]# docker inspect  sitemain-web-1
+[
+    {
+        "Id": "06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1",
+        "Created": "2025-09-15T12:11:14.335004302Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "npm",
+            "run",
+            "start"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 3513073,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2025-09-15T12:11:14.443580871Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2025-10-07T16:02:56.276041452+03:00",
+                        "End": "2025-10-07T16:02:56.369984082+03:00",
+                        "ExitCode": 0,
+                        "Output": "Connecting to localhost:3000 ([::1]:3000)\nremote file exists\n"
+                    },
+                    {
+                        "Start": "2025-10-07T16:03:26.371270804+03:00",
+                        "End": "2025-10-07T16:03:26.451474373+03:00",
+                        "ExitCode": 0,
+                        "Output": "Connecting to localhost:3000 ([::1]:3000)\nremote file exists\n"
+                    },
+                    {
+                        "Start": "2025-10-07T16:03:56.451975949+03:00",
+                        "End": "2025-10-07T16:03:56.579003071+03:00",
+                        "ExitCode": 0,
+                        "Output": "Connecting to localhost:3000 ([::1]:3000)\nremote file exists\n"
+                    },
+                    {
+                        "Start": "2025-10-07T16:04:26.579863031+03:00",
+                        "End": "2025-10-07T16:04:26.698434794+03:00",
+                        "ExitCode": 0,
+                        "Output": "Connecting to localhost:3000 ([::1]:3000)\nremote file exists\n"
+                    },
+                    {
+                        "Start": "2025-10-07T16:04:56.700799103+03:00",
+                        "End": "2025-10-07T16:04:56.822849428+03:00",
+                        "ExitCode": 0,
+                        "Output": "Connecting to localhost:3000 ([::1]:3000)\nremote file exists\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:1f93bff9b223e17e35a44ce7669c25771150f1a22866db99888c6815e1502471",
+        "ResolvConfPath": "/var/lib/docker/containers/06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1/hostname",
+        "HostsPath": "/var/lib/docker/containers/06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1/hosts",
+        "LogPath": "/var/lib/docker/containers/06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1/06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1-json.log",
+        "Name": "/sitemain-web-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "sitemain_default",
+            "PortBindings": {
+                "3000/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "3000"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "unless-stopped",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": null,
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "06643c1ed126fe0e6f8f9a5b0bfa6daa050c3300eec13333afcae51814fb77a1",
+                "LowerDir": "/var/lib/docker/overlay2/88a20170d9df3703b76c8dbd910b42db5e279ca869f385c7a50dc5f2f78c8d0b-init/diff:/var/lib/docker/overlay2/v2hvoe2u8o03y6ytbtd1baiik/diff:/var/lib/docker/overlay2/o213v4r2u0rvxlox7dlf8edj3/diff:/var/lib/docker/overlay2/itdyewdvx35n0pl4e2ncu247o/diff:/var/lib/docker/overlay2/iqamwzji3ergl9de4b6idxeuu/diff:/var/lib/docker/overlay2/df7c9eber2u6r50yfipwj33lh/diff:/var/lib/docker/overlay2/feccb001f797efb1d919544e08f10ccc1411f13400ba2cfe33ae57f3b6f8c57f/diff:/var/lib/docker/overlay2/c9123d56ac39a7745d11786e4c4bb89d8a2d8e12a055681e6e8c741e7bc2b19e/diff:/var/lib/docker/overlay2/b3f9181ea70e92d7a20a3bc195267f9fe4a0645d32f726d3f161af37a0f8b174/diff:/var/lib/docker/overlay2/1fda67f9e40afb6b17d1cdf99695b3ccb809fc62ec85d0e4f8106244b99973e0/diff",
+                "MergedDir": "/var/lib/docker/overlay2/88a20170d9df3703b76c8dbd910b42db5e279ca869f385c7a50dc5f2f78c8d0b/merged",
+                "UpperDir": "/var/lib/docker/overlay2/88a20170d9df3703b76c8dbd910b42db5e279ca869f385c7a50dc5f2f78c8d0b/diff",
+                "WorkDir": "/var/lib/docker/overlay2/88a20170d9df3703b76c8dbd910b42db5e279ca869f385c7a50dc5f2f78c8d0b/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [],
+        "Config": {
+            "Hostname": "06643c1ed126",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "3000/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "NEXT_TELEMETRY_DISABLED=1",
+                "NODE_ENV=production",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.19.0",
+                "YARN_VERSION=1.22.22"
+            ],
+            "Cmd": [
+                "npm",
+                "run",
+                "start"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "wget",
+                    "--no-verbose",
+                    "--tries=1",
+                    "--spider",
+                    "http://localhost:3000/health"
+                ],
+                "Interval": 30000000000,
+                "Timeout": 10000000000,
+                "StartPeriod": 40000000000,
+                "Retries": 3
+            },
+            "Image": "sitemain-web",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.docker.compose.config-hash": "db104fb27329750bcb962f124859d8f997a9ec788a092032587fd3f8e37b2130",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:1f93bff9b223e17e35a44ce7669c25771150f1a22866db99888c6815e1502471",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "sitemain",
+                "com.docker.compose.project.config_files": "/opt/stacks/SiteMain/docker-compose.yml",
+                "com.docker.compose.project.working_dir": "/opt/stacks/SiteMain",
+                "com.docker.compose.service": "web",
+                "com.docker.compose.version": "2.34.0"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "2e1e7efbe7273e2806bae23fa125f70f2557841aa9f105985e0596a6c9a161fa",
+            "SandboxKey": "/var/run/docker/netns/2e1e7efbe727",
+            "Ports": {
+                "3000/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "3000"
+                    }
+                ]
+            },
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "sitemain_default": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "sitemain-web-1",
+                        "web"
+                    ],
+                    "MacAddress": "ee:14:f3:be:a3:42",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "06bc9c940cd4364b6a413e7af18be743082dca0d8831db1885efc9263946af1c",
+                    "EndpointID": "09a9e9bef93eea04975e249e3cba213956e94cc47a328c429388739c9f7e0c1c",
+                    "Gateway": "172.21.0.1",
+                    "IPAddress": "172.21.0.2",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "sitemain-web-1",
+                        "web",
+                        "06643c1ed126"
+                    ]
+                }
+            }
+        }
+    }
+]
+
+
+# Если есть docker-compose
+docker-compose ps
+16:06:42 [root@crmcustoms:/opt/stacks/SiteMain]# dc ps
+NAME             IMAGE          COMMAND                  SERVICE   CREATED       STATUS                 PORTS
+sitemain-web-1   sitemain-web   "docker-entrypoint.s…"   web       3 weeks ago   Up 3 weeks (healthy)   0.0.0.0:3000->3000/tcp
+
+
+# Проверка доступности Git
+git --version
+16:06:49 [root@crmcustoms:/opt/stacks/SiteMain]# git --version
+git version 2.34.1
+
+
+# Проверка места на диске
+df -h
+16:07:04 [root@crmcustoms:/opt/stacks/SiteMain]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           382M  1.7M  380M   1% /run
+/dev/sda1        38G   34G  2.0G  95% /
+tmpfs           1.9G     0  1.9G   0% /dev/shm
+tmpfs           5.0M     0  5.0M   0% /run/lock
+/dev/sda15      253M  6.1M  246M   3% /boot/efi
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/46766134f7366eacb35c7d7f227850e98a5a04ff0e436ce49beeb59c1a6bad27/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/8d1224d3f5b1d829936fe7724d8cf823ad61536a9be94c1a41e75d78a1ea5835/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/9a9fb73b6121d5fcdb399f65ff5a0f3872646679c85d6b07f9929312d8e5be19/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/88a20170d9df3703b76c8dbd910b42db5e279ca869f385c7a50dc5f2f78c8d0b/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/ff966f715ac8a3eef94f7b2cb74148a7036f74d7ffcc8f16fef7d3778fb79a0e/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/f3f362ff7a44c14c19a33e6c5e3239a7bcbfc15715b29f3032452eb514d14999/merged
+tmpfs           382M     0  382M   0% /run/user/0
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/e7fe763768107b2ba08ab5b9eb036aa281c95ddcc4fa9c1b31cec850904f4def/merged
+overlay          38G   34G  2.0G  95% /var/lib/docker/overlay2/c59be4d8b7ebb166565d072d789e9c9a09cdd2671c05ab6d185d0ffe92a34bc6/merged
+
+```
+
+## Предпочтения по развертыванию
+
+Какой подход предпочитаете:
+
+**Вариант А: GitHub Webhooks**
+- GitHub отправляет уведомление на сервер при изменении кода
+- Сервер автоматически обновляет контейнер
+- Требует открытый endpoint на сервере
+
+**Вариант Б: GitHub Actions**
+- GitHub Actions собирает и отправляет новый образ
+- Может использовать Docker Hub или собственный registry
+- Не требует открытых портов на сервере
+
+**Вариант В: Polling (опрос)**
+- Сервер периодически проверяет изменения в GitHub
+- Простой в настройке
+- Менее оперативный
+
+А = как по мне то лучше
+Б = тоже хорош, но прийдется возиться с собственным registry
+В = то что и А только со стороны сервера
+
+## Безопасность
+
+- Есть ли требования по безопасности?
+	Общие, как ля сайта
+- Нужно ли ограничить доступ к webhook endpoint?
+	ДА
+- Используете ли SSL сертификаты?
+	Да, LetsEncrypt (web сервер caddy)
+- Есть ли firewall правила, которые нужно учесть?
+	общие: ssh,http,https
+
+## Дополнительная информация
+
+Пожалуйста, укажите любую дополнительную информацию о вашей инфраструктуре, которая может быть важна для настройки автоматического развертывания.

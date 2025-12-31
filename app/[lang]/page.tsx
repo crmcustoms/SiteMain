@@ -36,7 +36,7 @@ export default async function Home({
 
   return (
     <div className="flex flex-col items-center">
-      <HeroSection dict={dict.landing.hero} commonDict={dict.common} />
+      <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} />
       <CrmServicesBlocks />
       <TeamSection />
       <CaseStudies dict={dict.landing.caseStudies} />

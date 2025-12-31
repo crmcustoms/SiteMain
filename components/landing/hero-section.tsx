@@ -1,11 +1,13 @@
 "use client"
 
+import Link from "next/link"
 import { Facebook, Youtube, Send } from "@/components/icons"
 import { AnimatedElement } from "@/components/ui/animated-element"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
+import { MessengerWidget } from "@/components/landing/messenger-widget"
 import { useState, useEffect } from "react"
 
-export default function HeroSection({ dict, commonDict }: { dict: any; commonDict: any }) {
+export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: any; commonDict: any; lang?: string }) {
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -39,6 +41,33 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
 
   return (
     <section className="w-full h-screen relative overflow-hidden font-montserrat flex flex-col bg-white">
+      {/* Header with Logo and Menu */}
+      <div className="relative z-30 flex items-center justify-between px-4 md:px-8 lg:px-12 pt-6 md:pt-8">
+        {/* Logo */}
+        <Link href={`/${lang}`} className="flex items-center space-x-2">
+          <div className="text-3xl md:text-5xl font-bold tracking-wide">
+            <span className="text-amber">CRM</span>
+            <span className="text-black">CUSTOMS</span>
+          </div>
+        </Link>
+
+        {/* Menu */}
+        <nav className="hidden md:flex flex-1 justify-center gap-8 items-center ml-12">
+          <Link href={`/${lang}`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+            {dict.navigation?.home || 'Головна'}
+          </Link>
+          <Link href={`/${lang}/cases`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+            {dict.navigation?.cases || 'Кейси'}
+          </Link>
+          <Link href={`/${lang}/blog`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+            {dict.navigation?.blog || 'Блог'}
+          </Link>
+          <Link href={`/${lang}#services`} className="text-lg font-medium text-black transition-colors hover:text-amber">
+            {dict.navigation?.pricing || 'Послуги'}
+          </Link>
+        </nav>
+      </div>
+
       {/* Left vertical yellow stripe for social sidebar */}
       <div className="absolute left-0 top-0 bottom-0 w-16 bg-yellow-400 z-0 hidden md:block"></div>
 
@@ -52,7 +81,15 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
       </div>
 
       {/* Right vertical yellow stripe for professor image */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/6 bg-yellow-400 z-2 hidden lg:block"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-1/6 bg-yellow-400 z-2 hidden lg:block">
+        {/* Phone number in right stripe */}
+        <div className="absolute top-8 right-4 text-black font-bold text-lg text-center hidden lg:block">
+          <a href="tel:+380671706703" className="hover:opacity-80 transition">
+            <div>+380</div>
+            <div>67 170-67-03</div>
+          </a>
+        </div>
+      </div>
 
       {/* Professor Image - Desktop Only, Right Side */}
       <div className="absolute right-0 bottom-0 z-5 hidden lg:block h-[90%] w-auto pointer-events-none">
@@ -222,6 +259,8 @@ export default function HeroSection({ dict, commonDict }: { dict: any; commonDic
           </AnimatedElement>
         </div>
       </div>
+
+      <MessengerWidget />
     </section>
   )
 }

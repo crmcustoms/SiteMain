@@ -39,9 +39,14 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       })
 
       if (!validatedFields.success) {
+        const errors = validatedFields.error.flatten();
+        const errorMessages = Object.entries(errors.fieldErrors)
+          .map(([field, msgs]) => msgs?.join(', '))
+          .filter(Boolean)
+          .join('\n');
         return {
           success: false,
-          message: "Помилка валідації форми. Перевірте введені дані.",
+          message: errorMessages || "Помилка валідації форми. Перевірте введені дані.",
         }
       }
 
@@ -78,9 +83,14 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       })
 
       if (!validatedFields.success) {
+        const errors = validatedFields.error.flatten();
+        const errorMessages = Object.entries(errors.fieldErrors)
+          .map(([field, msgs]) => msgs?.join(', '))
+          .filter(Boolean)
+          .join('\n');
         return {
           success: false,
-          message: "Помилка валідації форми. Перевірте введені дані.",
+          message: errorMessages || "Помилка валідації форми. Перевірте введені дані.",
         }
       }
 

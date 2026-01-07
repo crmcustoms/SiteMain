@@ -46,7 +46,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showContactForm, setShowContactForm] = useState(false)
   const [showAuditForm, setShowAuditForm] = useState(false)
-  const [contactForm, setContactForm] = useState({ name: '', phone: '' })
+  const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
       const result = await submitForm(formData)
 
       if (result.success) {
-        setContactForm({ name: '', phone: '' })
+        setContactForm({ name: '', email: '', phone: '' })
         setShowContactForm(false)
         alert(result.message)
       } else {
@@ -114,7 +114,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
       const result = await submitForm(formData)
 
       if (result.success) {
-        setContactForm({ name: '', phone: '' })
+        setContactForm({ name: '', email: '', phone: '' })
         setShowAuditForm(false)
         alert(result.message)
       } else {

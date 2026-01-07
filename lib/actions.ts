@@ -5,7 +5,7 @@ import { z } from "zod"
 // Схема валідації для контактної форми
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: "Ім'я повинно містити щонайменше 2 символи" }),
-  email: z.string().email({ message: "Введіть коректну email адресу" }),
+  email: z.string().email({ message: "Введіть коректну email адресу" }).optional(),
   phone: z.string().optional(),
   message: z.string().optional(),
   formType: z.string().optional(),
@@ -92,7 +92,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         to: "your-email@example.com",
         subject: "Нова заявка з сайту",
         name: validatedFields.data.name,
-        email: validatedFields.data.email,
+        email: validatedFields.data.email || "Не вказано",
         phone: validatedFields.data.phone || "Не вказано",
         message: validatedFields.data.message || "Не вказано",
         formType: validatedFields.data.formType,

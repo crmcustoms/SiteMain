@@ -34,14 +34,14 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     if (formType === "subscribe") {
       // Валідація форми підписки
       const validatedFields = subscribeFormSchema.safeParse({
-        email: formData.get("email"),
+        email: formData.get("email") || "",
         formType,
       })
 
       if (!validatedFields.success) {
         const errors = validatedFields.error.flatten();
         const errorMessages = Object.entries(errors.fieldErrors)
-          .map(([field, msgs]) => msgs?.join(', '))
+          .map(([, msgs]) => msgs?.join(', '))
           .filter(Boolean)
           .join('\n');
         return {
@@ -75,17 +75,17 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     } else {
       // Валідація контактної форми
       const validatedFields = contactFormSchema.safeParse({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        message: formData.get("message"),
+        name: formData.get("name") || "",
+        email: formData.get("email") || "",
+        phone: formData.get("phone") || "",
+        message: formData.get("message") || "",
         formType,
       })
 
       if (!validatedFields.success) {
         const errors = validatedFields.error.flatten();
         const errorMessages = Object.entries(errors.fieldErrors)
-          .map(([field, msgs]) => msgs?.join(', '))
+          .map(([, msgs]) => msgs?.join(', '))
           .filter(Boolean)
           .join('\n');
         return {

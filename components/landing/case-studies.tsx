@@ -10,33 +10,30 @@ export default function CaseStudies({ dict }: { dict: any }) {
   const caseStudies = [
     {
       id: 1,
-      image: "/images/landings/industry-solutions/industry.jpg",
       company: "Будівельна компанія 'Фундамент'",
       industry: "Будівництво",
       problem: "Складнощі з відстеженням проєктів та координацією роботи бригад.",
       solution: "Впровадження комплексної системи управління проєктами.",
       result: "Скорочення термінів будівництва на 20% та зниження витрат на 15%.",
-      link: "/ua/cases"
+      image: "/construction-site-management.png",
     },
     {
       id: 2,
-      image: "/images/landings/industry-solutions/furniture.jpg",
-      company: "Меблева компанія ВМКК",
-      industry: "Виробництво",
-      problem: "Менеджери вручну контролювали роботу аутсорсингових збирачів меблів через дзвінки та Viber.",
-      solution: "Інтегрована Airtable-форма для звітів збирачів, що працює безпосередньо з CRM-системою.",
-      result: "100% замовлень мають фото-звіт, економія 1,5 години щодня для кожного менеджера.",
-      link: "/uk/cases/avtomatyzatsiya-zayavok-na-zbirku-zvitnist-pidryadnyky"
+      company: "IT компанія 'Digital Solutions'",
+      industry: "Інформаційні технології",
+      problem: "Відсутність автоматизації процесів продажів та довгий цикл угоди.",
+      solution: "Інтеграція CRM з n8n для автоматизації воронки продажів.",
+      result: "Збільшення конверсії на 35% та скорочення циклу угоди вдвічі.",
+      image: "/digital-workspace.png",
     },
     {
       id: 3,
-      image: "/images/case-studies/pr-agency.jpg",
-      company: "PR-компанія ITComms",
-      industry: "IT та технології",
-      problem: "Витрати фіксувалися вручну, часто постфактум. Угоди перевищували бюджет без відома керівника.",
-      solution: "Автоматизована система на базі CRM, завдань та Google Таблиць, що об'єднує управління витратами.",
-      result: "Прозорі витрати, автоматичні звіти, зниження перевищення бюджету на 70%.",
-      link: "/ua/cases/avtomatyzatsiya-kontrolyu-vytrat-u-proekti"
+      company: "Мережа ресторанів 'Смак України'",
+      industry: "HoReCa",
+      problem: "Неефективне управління постачальниками та контроль залишків.",
+      solution: "Розробка індивідуальної системи управління постачанням.",
+      result: "Зменшення витрат на закупівлі на 25% та зниження залишків на 40%.",
+      image: "/restaurant-kitchen-management.jpg",
     },
   ]
 
@@ -71,12 +68,12 @@ export default function CaseStudies({ dict }: { dict: any }) {
             </div>
             <div>
               <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
-                {dict?.title || "Історії успіху наших клієнтів"}
+                Історії успіху наших клієнтів
               </h2>
             </div>
           </div>
           <p className="text-lg text-black/60 max-w-2xl">
-            {dict?.subtitle || "Дізнайтеся, як наші рішення допомогли реальним бізнесам досягти успіху."}
+            Дізнайтеся, як наші рішення допомогли реальним бізнесам досягти успіху.
           </p>
         </div>
 

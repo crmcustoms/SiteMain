@@ -1,291 +1,544 @@
 "use client"
 
-import Link from "next/link"
-import { Facebook, Youtube, Send } from "@/components/icons"
-import { AnimatedElement } from "@/components/ui/animated-element"
-import { ContactFormDialog } from "@/components/contact-form-dialog"
-import { MessengerWidget } from "@/components/landing/messenger-widget"
-import { useState, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
+import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
 
-export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict: any; commonDict: any; lang?: string }) {
-  const [isScrolled, setIsScrolled] = useState(false)
+const services = [
+  {
+    id: 1,
+    title: "Впровадження CRM",
+    description: "Planfix для автоматизації бізнесу",
+    icon: "💼",
+    image: "/images/Group 1.png",
+    isImage: true,
+  },
+  {
+    id: 2,
+    title: "Штучний інтелект",
+    description: "AI в бізнес-процеси",
+    icon: "🤖",
+    image: "/images/aichat.png",
+    isImage: true,
+  },
+  {
+    id: 3,
+    title: "Інтеграції та розробка",
+    description: "Сервіси та додатки для CRM",
+    icon: "⚙️",
+    image: "/images/Group 10.png",
+    isImage: true,
+  },
+]
+
+const recentCases = [
+  { company: "ВІТ Маркет", result: "+45% ефективності", date: "Грудень 2024" },
+  { company: "TechPro", result: "20 год/тиждень", date: "Листопад 2024" },
+  { company: "Digital Agency", result: "+60% конверсія", date: "Жовтень 2024" },
+]
+
+export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: any; commonDict?: any; lang?: string }) {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const characterRef = useRef<HTMLDivElement>(null)
+  const circleRef = useRef<HTMLDivElement>(null)
+  const [currentService, setCurrentService] = useState(0)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [showContactForm, setShowContactForm] = useState(false)
+  const [showAuditForm, setShowAuditForm] = useState(false)
+  const [contactForm, setContactForm] = useState({ name: '', phone: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrolled = window.scrollY > window.innerHeight - 100
-      setIsScrolled(scrolled)
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!heroRef.current) return
+
+      const { clientX, clientY } = e
+      const { innerWidth, innerHeight } = window
+
+      const moveX = (clientX - innerWidth / 2) / 40
+      const moveY = (clientY - innerHeight / 2) / 40
+
+      setMousePos({ x: moveX, y: moveY })
     }
 
-    window.addEventListener('scroll', handleScroll)
-    handleScroll()
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
   }, [])
 
-  const logos = [
-    { id: 1, name: "Logo 1", src: "/images/logo_servises/2.png" },
-    { id: 2, name: "Logo 2", src: "/images/logo_servises/5.png" },
-    { id: 3, name: "Logo 3", src: "/images/logo_servises/6.png" },
-    { id: 4, name: "Logo 4", src: "/images/logo_servises/7.png" },
-    { id: 5, name: "Logo 5", src: "/images/logo_servises/9.png" },
-    { id: 6, name: "Logo 6", src: "/images/logo_servises/10.png" },
-    { id: 7, name: "Logo 7", src: "/images/logo_servises/11.png" },
-    { id: 8, name: "Logo 8", src: "/images/logo_servises/13.png" },
-    { id: 9, name: "Logo 9", src: "/images/logo_servises/14.png" },
-    { id: 10, name: "Logo 10", src: "/images/logo_servises/21.png" },
-    { id: 11, name: "Logo 11", src: "/images/logo_servises/24.png" },
-    { id: 12, name: "Logo 12", src: "/images/logo_servises/images.png" },
-  ]
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentService((prev) => (prev + 1) % services.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('https://n8n.crmcustoms.com/webhook/contact-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactForm),
+      })
+
+      if (response.ok) {
+        setContactForm({ name: '', phone: '' })
+        setShowContactForm(false)
+        alert('Дякуємо! Ваше повідомлення відправлено.')
+      } else {
+        alert('Помилка при відправці. Спробуйте ще раз.')
+      }
+    } catch (error) {
+      alert('Помилка при відправці. Спробуйте ще раз.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('https://n8n.crmcustoms.com/webhook/audit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(contactForm),
+      })
+
+      if (response.ok) {
+        setContactForm({ name: '', phone: '' })
+        setShowAuditForm(false)
+        alert('Дякуємо! Ваше повідомлення відправлено.')
+      } else {
+        alert('Помилка при відправці. Спробуйте ще раз.')
+      }
+    } catch (error) {
+      alert('Помилка при відправці. Спробуйте ще раз.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <section className="w-full h-screen relative overflow-hidden font-montserrat flex flex-col bg-white">
-      {/* Header with Logo and Menu */}
-      <style>{`
-        .menu-item {
-          position: relative;
-          padding: 0.5rem 0;
-          transition: all 0.3s ease;
-        }
-        .menu-item::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #ffb800, #ffb800);
-          transition: width 0.3s ease;
-        }
-        .menu-item:hover::after {
-          width: 100%;
-        }
-        .menu-item:hover {
-          color: #ffb800;
-        }
-      `}</style>
-
-      <div className="relative z-30 flex items-center justify-between px-4 md:px-8 lg:px-12 pt-6 md:pt-8 pl-24 md:pl-32 lg:pl-40">
-        {/* Logo */}
-        <Link href={`/${lang}`} className="flex items-center space-x-2 flex-shrink-0">
-          <div className="text-2xl md:text-3xl font-bold tracking-wide">
-            <span className="text-amber">CRM</span>
-            <span className="text-black">CUSTOMS</span>
-          </div>
-        </Link>
-
-        {/* Menu */}
-        <nav className="hidden md:flex flex-1 justify-center gap-12 items-center">
-          <Link href={`/${lang}`} className="menu-item text-base font-medium text-black transition-colors">
-            {dict.navigation?.home || 'Головна'}
-          </Link>
-          <Link href={`/${lang}/cases`} className="menu-item text-base font-medium text-black transition-colors">
-            {dict.navigation?.cases || 'Кейси'}
-          </Link>
-          <Link href={`/${lang}/blog`} className="menu-item text-base font-medium text-black transition-colors">
-            {dict.navigation?.blog || 'Блог'}
-          </Link>
-          <Link href={`/${lang}#services`} className="menu-item text-base font-medium text-black transition-colors">
-            {dict.navigation?.pricing || 'Послуги'}
-          </Link>
-        </nav>
-      </div>
-
-      {/* Left vertical yellow stripe for social sidebar */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 bg-yellow-400 z-0 hidden md:block"></div>
-
-      {/* Center background image */}
-      <div className="absolute left-16 right-0 lg:right-1/6 top-0 bottom-0 z-0 hidden md:block">
-        <img
-          src="/images/background.webp"
-          alt="Background"
-          className="w-full h-full object-cover"
+    <div ref={heroRef} className="relative min-h-screen overflow-hidden bg-white w-full">
+      {/* Decorative grid lines */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent)",
+            backgroundSize: "50px 50px",
+          }}
         />
       </div>
 
-      {/* Right vertical yellow stripe for professor image */}
-      <div className="absolute right-0 top-0 bottom-0 w-1/6 bg-yellow-400 z-2 hidden lg:block">
-        {/* Phone number in right stripe */}
-        <div className="absolute top-6 right-2 left-2 text-black font-bold text-xs text-center hidden lg:block px-1">
-          <a href="tel:+380671706703" className="hover:opacity-80 transition block whitespace-nowrap overflow-hidden text-ellipsis">
-            +380 67 170-67-03
+      {/* Top navigation */}
+      <nav className="relative z-50 flex items-center justify-between px-8 py-6 border-b border-black/5">
+        <div className="font-bold text-xl tracking-tight"><span className="text-[#FFD700]">CRM</span><span className="text-black">CUSTOMS</span></div>
+        <div className="hidden md:flex items-center gap-12 text-base text-black/70 font-medium absolute left-1/2 transform -translate-x-1/2">
+          <a href={`/${lang}/landing/implementation-crm`} className="hover:text-[#FFD700] transition-colors">
+            Послуги
+          </a>
+          <a href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors">
+            Кейси
+          </a>
+          <a href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors">
+            Блог
+          </a>
+          <a href={`/${lang}`} className="hover:text-[#FFD700] transition-colors">
+            Про нас
           </a>
         </div>
-      </div>
-
-      {/* Professor Image - Desktop Only, Right Side */}
-      <div className="absolute right-0 bottom-0 z-5 hidden lg:block h-[90%] w-auto pointer-events-none">
-        <img
-          src="/images/professor.png"
-          alt="Professor"
-          className="h-full w-auto object-contain"
-        />
-      </div>
-
-      {/* Social Sidebar */}
-      <div className={`fixed left-4 top-1/2 -translate-y-1/2 flex flex-col z-20 pr-4 border-r ${isScrolled ? 'border-gray-300' : 'border-white'} hidden md:flex`}>
-        <a
-          href="https://www.youtube.com/@crmcustomsua"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
-          title="YouTube"
-        >
-          <Youtube className="h-6 w-6 stroke-[1.5]" />
-        </a>
-        <a
-          href="https://www.facebook.com/crmcustom"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
-          title="Facebook"
-        >
-          <Facebook className="h-6 w-6 stroke-[1.5]" />
-        </a>
-        <a
-          href="https://t.me/prodayslonakume"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${isScrolled ? 'text-gray-800' : 'text-white'} mb-6 transition-all hover:text-amber hover:scale-110`}
-          title="Telegram"
-        >
-          <Send className="h-6 w-6 stroke-[1.5]" />
-        </a>
-      </div>
-
-      {/* Logo Carousel - Bottom */}
-      <div className="absolute bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t border-gray-200 py-6 z-20">
-        <style>{`
-          @keyframes carouselScroll {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-          .logo-track {
-            display: flex;
-            gap: 5rem;
-            width: max-content;
-            animation: carouselScroll 40s linear infinite;
-          }
-          .logo-track img {
-            height: 32px;
-            opacity: 0.4;
-            transition: all 0.3s ease;
-            filter: grayscale(100%);
-          }
-          .logo-track img:hover {
-            opacity: 1;
-            filter: grayscale(0%);
-            transform: scale(1.1);
-          }
-        `}</style>
-
-        <div className="overflow-hidden w-full">
-          <div className="logo-track">
-            {/* First set of logos */}
-            {logos.map((logo) => (
-              <img
-                key={`carousel-${logo.id}`}
-                src={logo.src}
-                alt={logo.name}
-                className="flex-shrink-0"
-              />
-            ))}
-
-            {/* Duplicate for infinite loop */}
-            {logos.map((logo) => (
-              <img
-                key={`carousel-dup-${logo.id}`}
-                src={logo.src}
-                alt={logo.name}
-                aria-hidden="true"
-                className="flex-shrink-0"
-              />
-            ))}
-          </div>
+        <div className="flex items-center gap-4">
+          <a href="https://t.me/crmcustomsua" target="_blank" rel="noopener noreferrer" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="Telegram">
+            <Send className="w-4 h-4 text-black" />
+          </a>
+          <a href="viber://contact?number=%2B380671706703" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="Viber">
+            <Phone className="w-4 h-4 text-black" />
+          </a>
+          <a href="https://wa.me/380671706703" target="_blank" rel="noopener noreferrer" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="WhatsApp">
+            <MessageCircle className="w-4 h-4 text-black" />
+          </a>
+          <div className="mx-2 h-4 w-[1px] bg-black/10" />
+          <button onClick={() => setShowContactForm(true)} className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
+            Зателефонуйте мені
+          </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Main Content - Center */}
-      <style>{`
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .btn-hero {
-          animation: slideUp 0.6s ease-out;
-          transition: all 0.3s ease;
-        }
-        .btn-hero:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 24px rgba(255, 184, 0, 0.25);
-        }
-        .btn-hero:active {
-          transform: translateY(-2px);
-        }
-      `}</style>
-
-      <div className="relative z-10 flex-grow flex items-center justify-center container mx-auto px-4 md:px-6 max-w-2xl md:max-w-3xl lg:max-w-4xl">
-        {/* Dark overlay behind text */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-transparent rounded-2xl pointer-events-none"></div>
-        <div className="w-full text-center relative z-10">
-          <div className="relative mb-8">
-            <AnimatedElement delay={100}>
-              <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                  <span className="text-black">CRM</span>, яка починає заробляти вже через місяць
-                </h1>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-amber mb-8 leading-tight">
-                  Наведемо <span className="text-black">порядок</span> у продажах і підвищимо <span className="text-black">ефективність</span> команди
-                  <sup className="text-black text-lg md:text-2xl ml-2 inline-block transform -rotate-12" style={{fontFamily: "'Comic Sans MS', 'Segoe Print', cursive, sans-serif", fontWeight: 'bold'}}>40%</sup>
-                </h2>
+      <div className="relative px-8 py-12 max-w-[1800px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left side - Content */}
+          <div className="lg:col-span-5 relative z-20 space-y-6">
+            {/* Services Carousel - Top Left */}
+            <div className="relative border border-black/10 bg-white/80 backdrop-blur-sm overflow-visible" style={{ minHeight: '200px' }}>
+              <div className="flex items-center justify-between p-6 pb-4 relative z-20">
+                <div className="text-xs font-mono text-black/40 tracking-wider">// ПОСЛУГИ</div>
+                <div className="text-xs font-mono text-black/40">0{currentService + 1}/03</div>
               </div>
-            </AnimatedElement>
+
+              <div className="relative h-40 px-6 pb-6" style={{ display: 'flex', alignItems: 'center' }}>
+                {services.map((service, idx) => (
+                  <div
+                    key={service.id}
+                    className={`absolute inset-0 transition-all duration-700 flex items-center ${
+                      idx === currentService
+                        ? "opacity-100 translate-x-0"
+                        : idx < currentService
+                          ? "opacity-0 -translate-x-full"
+                          : "opacity-0 translate-x-full"
+                    }`}
+                  >
+                    {/* Text on the left with padding */}
+                    <div className="relative z-10 flex-1 pr-8" style={{ paddingLeft: '10px' }}>
+                      <div className="text-lg font-bold text-black mb-1">{service.title}</div>
+                      <div className="text-sm text-black/60">{service.description}</div>
+                    </div>
+
+                    {/* Image right aligned with 20px offset, can overflow vertically */}
+                    {service.isImage && service.image ? (
+                      <div className="absolute right-[20px] top-[40%] transform -translate-y-1/2 w-[446px] h-[446px] flex items-center justify-center pointer-events-none">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          width={446}
+                          height={446}
+                          className="w-full h-full object-contain drop-shadow-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-8xl opacity-30">{service.icon}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2 mt-4">
+                {services.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentService(idx)}
+                    className={`h-1 transition-all ${idx === currentService ? "w-12 bg-[#FFD700]" : "w-6 bg-black/20"}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Main heading with decorative elements */}
+            <div className="relative">
+              {/* Decorative corner */}
+              <div className="absolute -left-4 -top-4 w-16 h-16 border-l-2 border-t-2 border-[#FFD700]" />
+
+              <h1 className="text-6xl xl:text-7xl font-black leading-[0.9] text-black uppercase tracking-tighter">
+                АВТОМАТИЗАЦІЯ
+                <br />
+                <span className="relative inline-block">
+                  БІЗНЕСУ
+                  <div className="absolute -right-8 top-1/2 -translate-y-1/2 w-20 h-[2px] bg-[#FFD700]" />
+                </span>
+                <br />
+                <span className="text-[#FFD700]">ЗА 30 ДНІВ</span>
+              </h1>
+
+              {/* Tech label */}
+              <div className="absolute -right-4 top-0 rotate-90 origin-left">
+                <div className="text-xs font-mono text-black/30 tracking-[0.3em]">TECH_INTERFACE</div>
+              </div>
+            </div>
+
+            {/* Stats block */}
+            <div className="flex gap-4 pt-4">
+              <div className="border border-black/10 p-4 flex-1 bg-white/80">
+                <div className="text-3xl font-bold text-black">48+</div>
+                <div className="text-xs text-black/60 mt-1 font-medium">Проектів</div>
+              </div>
+              <div className="border border-black/10 p-4 flex-1 bg-white/80">
+                <div className="text-3xl font-bold text-[#FFD700]">4.9</div>
+                <div className="text-xs text-black/60 mt-1 font-medium">Рейтинг</div>
+              </div>
+              <div className="border border-black/10 p-4 flex-1 bg-white/80">
+                <div className="text-3xl font-bold text-black">30</div>
+                <div className="text-xs text-black/60 mt-1 font-medium">Днів</div>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="flex items-center gap-4 pt-4">
+              <button onClick={() => setShowAuditForm(true)} className="relative group px-8 py-4 bg-black text-white font-bold overflow-hidden hover:cursor-pointer">
+                <span className="relative z-10">БЕЗКОШТОВНИЙ АУДИТ</span>
+                <div className="absolute inset-0 bg-[#FFD700] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                <span className="absolute inset-0 flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold z-20">
+                  БЕЗКОШТОВНИЙ АУДИТ
+                </span>
+              </button>
+              <div className="border-l-2 border-black/20 pl-4">
+                <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
+                <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
+              </div>
+            </div>
+
+            {/* Decorative tech lines */}
+            <div className="flex items-center gap-2 pt-6 text-xs font-mono text-black/30">
+              <div className="w-3 h-3 border border-black/20" />
+              <div className="h-[1px] w-12 bg-black/20" />
+              <div>INTERFACE.V2</div>
+              <div className="h-[1px] flex-1 bg-black/20" />
+            </div>
           </div>
 
-          <AnimatedElement delay={500}>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <ContactFormDialog
-                trigger={
-                  <button className="btn-hero bg-amber text-black font-bold px-6 py-3 text-sm md:text-base hover:bg-yellow-500 rounded-lg">
-                    {dict.ctaButton || "Замовити консультацію"}
-                  </button>
-                }
-                title={commonDict.form.auditFormTitle}
-                description={commonDict.form.auditFormDescription}
-                formType="hero_audit"
-                buttonText={commonDict.form.submitButton}
-                dict={commonDict}
-              />
+          {/* Center - Character with geometric shape */}
+          <div className="lg:col-span-4 relative flex items-center justify-center min-h-[700px]">
+            {/* Large yellow circle background */}
+            <div
+              ref={circleRef}
+              className="absolute w-[500px] h-[500px] rounded-full bg-[#FFD700] transition-transform duration-300 ease-out"
+              style={{
+                transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)`,
+              }}
+            />
 
-              <ContactFormDialog
-                trigger={
-                  <button className="btn-hero bg-black text-amber font-bold px-6 py-3 text-sm md:text-base hover:bg-gray-900 rounded-lg border border-amber">
-                    Залишити номер
-                  </button>
-                }
-                title="Зв'язок за номером"
-                description="Введіть ваш номер телефону і ми вам передзвонимо"
-                formType="hero_callback"
-                buttonText={commonDict.form.submitButton}
-                dict={commonDict}
+            {/* Decorative rings */}
+            <div className="absolute w-[600px] h-[600px] rounded-full border border-black/5" />
+            <div className="absolute w-[700px] h-[700px] rounded-full border border-black/5" />
+
+            {/* Character */}
+            <div
+              ref={characterRef}
+              className="relative z-10 transition-transform duration-300 ease-out"
+              style={{
+                transform: `translate(${mousePos.x}px, ${mousePos.y}px)`,
+              }}
+            >
+              <Image
+                src="/images/professor.png"
+                alt="CRM Expert"
+                width={450}
+                height={600}
+                quality={95}
+                priority
+                className="w-[450px] h-auto drop-shadow-2xl"
               />
             </div>
-          </AnimatedElement>
+
+            {/* Floating tech UI elements */}
+            <div className="absolute top-20 left-0 border border-black/20 bg-white p-3 text-xs font-mono shadow-lg">
+              <div className="text-black/40">STATUS:</div>
+              <div className="text-[#FFD700] font-bold">● ACTIVE</div>
+            </div>
+
+            <div className="absolute bottom-32 left-8 border border-black/20 bg-white p-3 text-xs font-mono shadow-lg">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#FFD700]" />
+                <div>
+                  <div className="text-black/40">VER</div>
+                  <div className="font-bold text-black">2.0</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute top-40 right-0 w-20 h-[1px] bg-black/20" />
+            <div className="absolute top-40 right-0 w-[1px] h-12 bg-black/20" />
+          </div>
+
+          {/* Right side - Recent cases & video */}
+          <div className="lg:col-span-3 relative z-20 space-y-6">
+            {/* Recent cases */}
+            <div className="border border-black/10 p-6 bg-white/80 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-xs font-mono text-black/40 tracking-wider">// ОСТАННІ КЕЙСИ</div>
+              </div>
+
+              <div className="space-y-4">
+                {recentCases.map((case_item, idx) => (
+                  <div key={idx} className="group cursor-pointer">
+                    <div className="flex items-start gap-3 pb-3 border-b border-black/5 hover:border-[#FFD700] transition-colors">
+                      <div className="text-xs font-mono text-[#FFD700] mt-1">0{idx + 1}</div>
+                      <div className="flex-1">
+                        <div className="text-sm font-bold text-black group-hover:text-[#FFD700] transition-colors">
+                          {case_item.company}
+                        </div>
+                        <div className="text-xs text-black/60 mt-1">{case_item.result}</div>
+                        <div className="text-xs text-black/40 font-mono mt-1">{case_item.date}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <a href={`/${lang}/cases`} className="w-full mt-4 py-2 border border-black/20 text-sm font-medium hover:bg-black hover:text-white transition-colors block text-center">
+                Всі кейси →
+              </a>
+            </div>
+
+            {/* Video preview */}
+            <div className="relative group cursor-pointer overflow-hidden border border-black/10">
+              <div className="relative aspect-video bg-gray-100">
+                <Image
+                  src="/images/herosektion.png"
+                  alt="Hero section preview"
+                  width={400}
+                  height={225}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[#FFD700] flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Play className="w-7 h-7 text-black ml-1" fill="black" />
+                  </div>
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="text-white text-sm font-bold drop-shadow-lg">
+                    Швидкий запуск продажів з мінімальним бюджетом за три дні
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation dots */}
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex gap-2">
+                <div className="w-8 h-1 bg-[#FFD700]" />
+                <div className="w-8 h-1 bg-black/10" />
+                <div className="w-8 h-1 bg-black/10" />
+              </div>
+              <div className="flex gap-2">
+                <button className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <MessengerWidget />
-    </section>
+      {/* Decorative corner frames */}
+      <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-black/5 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-32 h-32 border-r-2 border-t-2 border-black/5 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-black/5 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-black/5 pointer-events-none" />
+
+      {/* Bottom tech info bar */}
+      <div className="absolute bottom-0 left-0 right-0 border-t border-black/5 bg-white/80 backdrop-blur-sm py-3 px-8">
+        <div className="max-w-[1800px] mx-auto flex items-center justify-between text-xs font-mono text-black/40">
+          <div className="flex items-center gap-8">
+            <div>SYSTEM: CRM_CUSTOMS</div>
+            <div>VERSION: 2.0.24</div>
+            <div>
+              STATUS: <span className="text-[#FFD700]">● OPERATIONAL</span>
+            </div>
+          </div>
+          <div>SCROLL TO EXPLORE ↓</div>
+        </div>
+      </div>
+
+      {/* Contact Form Modal */}
+      {showContactForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full border border-black/10 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-black">Зателефонуйте мені</h2>
+              <button
+                onClick={() => setShowContactForm(false)}
+                className="w-8 h-8 flex items-center justify-center hover:bg-black/5 rounded transition-colors"
+              >
+                <X className="w-5 h-5 text-black" />
+              </button>
+            </div>
+
+            <form onSubmit={handleContactSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Ім'я</label>
+                <input
+                  type="text"
+                  required
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="Ваше ім'я"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Телефон</label>
+                <input
+                  type="tel"
+                  required
+                  value={contactForm.phone}
+                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="+380671706703"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-6 py-3 bg-black text-white font-medium hover:bg-[#FFD700] hover:text-black transition-colors disabled:opacity-50 cursor-disabled"
+              >
+                {isSubmitting ? 'Відправлення...' : 'Зателефонуйте мені'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Audit Form Modal */}
+      {showAuditForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full border border-black/10 shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-black">Безкоштовний аудит</h2>
+              <button
+                onClick={() => setShowAuditForm(false)}
+                className="w-8 h-8 flex items-center justify-center hover:bg-black/5 rounded transition-colors"
+              >
+                <X className="w-5 h-5 text-black" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAuditSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Ім'я</label>
+                <input
+                  type="text"
+                  required
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="Ваше ім'я"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Телефон</label>
+                <input
+                  type="tel"
+                  required
+                  value={contactForm.phone}
+                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="+380671706703"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-6 py-3 bg-black text-white font-medium hover:bg-[#FFD700] hover:text-black transition-colors disabled:opacity-50 cursor-disabled"
+              >
+                {isSubmitting ? 'Відправлення...' : 'Отримати аудит'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

@@ -8,7 +8,7 @@ import { submitForm } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
 
-export default function StaticFinalCta({ dict, commonDict }) {
+export default function StaticFinalCta({ dict, commonDict, lang = "uk" }) {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({

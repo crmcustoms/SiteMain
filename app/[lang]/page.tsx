@@ -7,6 +7,7 @@ import StaticServices from "@/components/landing/static-services"
 import StaticFinalCta from "@/components/landing/static-final-cta"
 import CrmServicesBlocks from "@/components/landing/crm-services-blocks"
 import TeamSection from "@/components/landing/team-section"
+import LogosCarousel from "@/components/landing/logos-carousel"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
@@ -37,6 +38,7 @@ export default async function Home({
   return (
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} />
+      <LogosCarousel />
       <CrmServicesBlocks />
       <TeamSection />
       <CaseStudies dict={dict.landing.caseStudies} />
@@ -44,7 +46,7 @@ export default async function Home({
       <WhyChooseUs dict={dict.landing.whyChooseUs} />
       <StaticServices dict={servicesData} commonDict={commonData} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
-      <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} />
+      <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />
     </div>
   )
 }

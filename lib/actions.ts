@@ -55,6 +55,13 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         ...validatedFields.data,
       })
 
+      if (!response) {
+        return {
+          success: false,
+          message: "Помилка при відправці форми. Спробуйте ще раз.",
+        }
+      }
+
       return {
         success: true,
         message: "Дякуємо за підписку! Ми надіслали вам лист для підтвердження.",
@@ -81,7 +88,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       console.log("Дані контактної форми:", validatedFields.data)
 
       // Імітуємо відправку запиту на сервер
-      await sendEmailNotification({
+      const response = await sendEmailNotification({
         to: "your-email@example.com",
         subject: "Нова заявка з сайту",
         name: validatedFields.data.name,
@@ -91,6 +98,13 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         formType: validatedFields.data.formType,
         date: new Date().toLocaleString(),
       })
+
+      if (!response) {
+        return {
+          success: false,
+          message: "Помилка при відправці форми. Спробуйте ще раз.",
+        }
+      }
 
       return {
         success: true,

@@ -32,13 +32,14 @@ const services = [
   },
 ]
 
-const recentCases = [
-  { company: "ВІТ Маркет", result: "+45% ефективності", date: "Грудень 2024" },
-  { company: "TechPro", result: "20 год/тиждень", date: "Листопад 2024" },
-  { company: "Digital Agency", result: "+60% конверсія", date: "Жовтень 2024" },
-]
+interface RecentCase {
+  title: string
+  slug: string
+  tags: string[]
+  date: string
+}
 
-export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: any; commonDict?: any; lang?: string }) {
+export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases = [] }: { dict?: any; commonDict?: any; lang?: string; recentCases?: RecentCase[] }) {
   const heroRef = useRef<HTMLDivElement>(null)
   const characterRef = useRef<HTMLDivElement>(null)
   const circleRef = useRef<HTMLDivElement>(null)
@@ -359,20 +360,24 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
               </div>
 
               <div className="space-y-4">
-                {recentCases.map((case_item, idx) => (
-                  <div key={idx} className="group cursor-pointer">
+                {recentCases.length > 0 ? recentCases.map((case_item, idx) => (
+                  <a key={idx} href={`/${lang}/cases/${case_item.slug}`} className="group cursor-pointer block">
                     <div className="flex items-start gap-3 pb-3 border-b border-black/5 hover:border-[#FFD700] transition-colors">
                       <div className="text-xs font-mono text-[#FFD700] mt-1">0{idx + 1}</div>
                       <div className="flex-1">
                         <div className="text-sm font-bold text-black group-hover:text-[#FFD700] transition-colors">
-                          {case_item.company}
+                          {case_item.title}
                         </div>
-                        <div className="text-xs text-black/60 mt-1">{case_item.result}</div>
+                        <div className="text-xs text-black/60 mt-1">
+                          {case_item.tags.length > 0 ? case_item.tags.join(', ') : 'Без тегов'}
+                        </div>
                         <div className="text-xs text-black/40 font-mono mt-1">{case_item.date}</div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  </a>
+                )) : (
+                  <div className="text-xs text-black/60">Кейсы не доступны</div>
+                )}
               </div>
 
               <a href={`/${lang}/cases`} className="w-full mt-4 py-2 border border-black/20 text-sm font-medium hover:bg-black hover:text-white transition-colors block text-center">

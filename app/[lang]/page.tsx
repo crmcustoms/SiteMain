@@ -1,6 +1,7 @@
 import { getDictionary } from "@/lib/dictionaries"
 import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
+import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 
 // Заменяем динамический импорт на обычный импорт для компонента Services
 import StaticServices from "@/components/landing/static-services"
@@ -31,13 +32,28 @@ export default async function Home({
   // Получаем словарь для выбранного языка
   const dict = await getDictionary(safeLocale);
 
+  // Получаем последние 3 кейса для отображения в hero-section
+  let recentCases = [];
+  try {
+    const articles = await getBlogArticles(true).catch(() => []) || [];
+    const sortedArticles = sortArticlesByDate(articles);
+    recentCases = sortedArticles.slice(0, 3).map((article: any) => ({
+      title: article.property_name || 'Без названия',
+      slug: article.property_slug || 'untitled',
+      tags: article.property_tags || [],
+      date: article.property_format_date || article.property_date || '',
+    }));
+  } catch (error) {
+    console.error("Ошибка при получении кейсов для hero-section:", error);
+  }
+
   // Создаем локальную копию данных для Services чтобы избежать проблем с сериализацией
   const servicesData = dict.landing.services ? { ...dict.landing.services } : null;
   const commonData = { ...dict.common };
 
   return (
     <div className="flex flex-col items-center">
-      <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} />
+      <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
       <LogosCarousel />
       <CrmServicesBlocks />
       <TeamSection />

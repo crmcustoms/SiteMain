@@ -34,7 +34,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     if (formType === "subscribe") {
       // Валідація форми підписки
       const validatedFields = subscribeFormSchema.safeParse({
-        email: formData.get("email") || "",
+        email: formData.get("email")?.trim() || undefined,
         formType,
       })
 
@@ -75,10 +75,10 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     } else {
       // Валідація контактної форми
       const validatedFields = contactFormSchema.safeParse({
-        name: formData.get("name") || "",
-        email: formData.get("email") || "",
-        phone: formData.get("phone") || "",
-        message: formData.get("message") || "",
+        name: formData.get("name")?.trim() || "",
+        email: formData.get("email")?.trim() || undefined,
+        phone: formData.get("phone")?.trim() || "",
+        message: formData.get("message")?.trim() || "",
         formType,
       })
 

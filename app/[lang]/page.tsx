@@ -54,8 +54,8 @@ export default async function Home({
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
       <LogosCarousel />
-      <TeamSection />
       <WhyChooseUs dict={dict.landing.whyChooseUs} />
+      <TeamSection />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
       <StaticServices dict={servicesData} commonDict={commonData} />

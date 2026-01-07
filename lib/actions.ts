@@ -125,13 +125,8 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
 // В реальному проекті тут буде інтеграція з сервісом відправки email
 async function sendEmailNotification(params: Record<string, any>): Promise<boolean> {
   try {
-    // Визначаємо вебхук на основі типу форми
-    const formType = params.formType || "contact"
-    let webhookUrl = "https://n8n.crmcustoms.com/webhook/contact-form"
-
-    if (formType === "final_audit" || formType === "audit") {
-      webhookUrl = "https://n8n.crmcustoms.com/webhook/audit-form"
-    }
+    // Всі форми відправляються на один вебхук
+    const webhookUrl = "https://n8n.crmcustoms.com/webhook/f14880e5-5d4a-4c6d-bc8c-69d82ef68acc"
 
     // Формируем payload только из отдельных полей
     const payload = {

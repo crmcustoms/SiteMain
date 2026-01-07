@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { getBlogPostsFromAPI } from "@/lib/blog"
+import { getBlogPostsFromAPI, sortBlogPostsByDate } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
 import { Breadcrumbs } from "@/components/breadcrumbs"
@@ -109,10 +109,13 @@ export default async function BlogPage({
     const dict = await getDictionary(safeLocale).catch(() => ({}));
     // Принудительно обновляем кеш для получения актуальных данных блога
     const articles = await getBlogPostsFromAPI(true).catch(() => []) || [];
-    
+
+    // Сортируем блог по дате (новые сверху)
+    const sortedArticles = sortBlogPostsByDate(articles);
+
     // Безопасная адаптация статей блога в формат кейсов
-    const adaptedPosts: CasePost[] = Array.isArray(articles) 
-      ? articles.map((article: any): CasePost | null => {
+    const adaptedPosts: CasePost[] = Array.isArray(sortedArticles)
+      ? sortedArticles.map((article: any): CasePost | null => {
           if (!article) return null;
           
           // Извлекаем категории из blog API данных

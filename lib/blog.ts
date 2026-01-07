@@ -875,6 +875,90 @@ export async function getBlogPostBySlug(slug: string, forceRefresh = false) {
 }
 
 /**
+ * Сортировка статей по дате (новые сверху)
+ */
+export function sortArticlesByDate(articles: any[]): any[] {
+  if (!Array.isArray(articles)) return [];
+
+  return [...articles].sort((a, b) => {
+    const dateA = parseArticleDate(a.property_format_date || a.property_date || '');
+    const dateB = parseArticleDate(b.property_format_date || b.property_date || '');
+
+    // Если обе даты невалидны, оставляем исходный порядок
+    if (!dateA && !dateB) return 0;
+    // Если только одна дата валидна, она идет первой
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    // Сортируем по убыванию (новые первыми)
+    return dateB.getTime() - dateA.getTime();
+  });
+}
+
+/**
+ * Сортировка блога по дате (новые сверху)
+ */
+export function sortBlogPostsByDate(articles: any[]): any[] {
+  if (!Array.isArray(articles)) return [];
+
+  return [...articles].sort((a, b) => {
+    // Для блога используем property_date
+    const dateA = parseArticleDate(a.property_date || a.property_created_date || '');
+    const dateB = parseArticleDate(b.property_date || b.property_created_date || '');
+
+    // Если обе даты невалидны, оставляем исходный порядок
+    if (!dateA && !dateB) return 0;
+    // Если только одна дата валидна, она идет первой
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    // Сортируем по убыванию (новые первыми)
+    return dateB.getTime() - dateA.getTime();
+  });
+}
+
+/**
+ * Парсинг даты из строки с различными форматами
+ */
+function parseArticleDate(dateStr: string): Date | null {
+  if (!dateStr || typeof dateStr !== 'string') return null;
+
+  const trimmed = dateStr.trim();
+  if (!trimmed) return null;
+
+  // Проверяем ISO формат (2024-01-15)
+  const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    const date = new Date(trimmed);
+    if (!isNaN(date.getTime())) return date;
+  }
+
+  // Проверяем формат (15 января 2024)
+  // Поддерживаем русский и украинский языки
+  const months = {
+    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3, 'мая': 4, 'июня': 5,
+    'июля': 6, 'августа': 7, 'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11,
+    'січня': 0, 'лютого': 1, 'березня': 2, 'квітня': 3, 'травня': 4, 'червня': 5,
+    'липня': 6, 'серпня': 7, 'вересня': 8, 'жовтня': 9, 'листопада': 10, 'грудня': 11
+  };
+
+  let wordMatch = trimmed.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/);
+  if (wordMatch) {
+    const [, day, month, year] = wordMatch;
+    const monthKey = (month as keyof typeof months);
+    if (monthKey in months) {
+      return new Date(parseInt(year), months[monthKey], parseInt(day));
+    }
+  }
+
+  // Пытаемся использовать встроенный парсер
+  const date = new Date(trimmed);
+  if (!isNaN(date.getTime())) return date;
+
+  return null;
+}
+
+/**
  * Получение контента статьи блога по id
  */
 export async function getBlogPostContent(id: string, forceRefresh = false) {

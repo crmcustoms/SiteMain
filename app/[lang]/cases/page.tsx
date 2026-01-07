@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { getBlogArticles } from "@/lib/blog"
+import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
 import { Breadcrumbs } from "@/components/breadcrumbs"
@@ -120,10 +120,13 @@ export default async function CasesPage({
     const dict = await getDictionary(safeLocale).catch(() => ({}));
     // Принудительно обновляем кеш для получения актуальных данных
     const articles = await getBlogArticles(true).catch(() => []) || [];
-    
+
+    // Сортируем кейсы по дате (новые сверху)
+    const sortedArticles = sortArticlesByDate(articles);
+
     // Безопасная адаптация статей
-    const adaptedPosts: CasePost[] = Array.isArray(articles) 
-      ? articles.map((article: any) => {
+    const adaptedPosts: CasePost[] = Array.isArray(sortedArticles)
+      ? sortedArticles.map((article: any) => {
           if (!article) return null;
           
           // Извлекаем сервисы из API данных

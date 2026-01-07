@@ -34,7 +34,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     if (formType === "subscribe") {
       // Валідація форми підписки
       const validatedFields = subscribeFormSchema.safeParse({
-        email: formData.get("email")?.trim() || undefined,
+        email: (formData.get("email") as string)?.trim() || undefined,
         formType,
       })
 
@@ -61,9 +61,10 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       })
 
       if (!response) {
+        console.error("Webhook failed for subscribe form");
         return {
           success: false,
-          message: "Помилка при відправці форми. Спробуйте ще раз.",
+          message: "Помилка при відправці на сервер. Спробуйте ще раз.",
         }
       }
 
@@ -75,10 +76,10 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     } else {
       // Валідація контактної форми
       const validatedFields = contactFormSchema.safeParse({
-        name: formData.get("name")?.trim() || "",
-        email: formData.get("email")?.trim() || undefined,
-        phone: formData.get("phone")?.trim() || "",
-        message: formData.get("message")?.trim() || "",
+        name: (formData.get("name") as string)?.trim() || "",
+        email: (formData.get("email") as string)?.trim() || undefined,
+        phone: (formData.get("phone") as string)?.trim() || "",
+        message: (formData.get("message") as string)?.trim() || "",
         formType,
       })
 
@@ -110,9 +111,10 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       })
 
       if (!response) {
+        console.error("Webhook failed for contact form");
         return {
           success: false,
-          message: "Помилка при відправці форми. Спробуйте ще раз.",
+          message: "Помилка при відправці на сервер. Спробуйте ще раз.",
         }
       }
 
@@ -124,9 +126,10 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     }
   } catch (error) {
     console.error("Помилка відправки форми:", error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return {
       success: false,
-      message: "Сталася помилка при відправці форми. Спробуйте пізніше.",
+      message: `Помилка: ${errorMessage}`,
     }
   }
 }

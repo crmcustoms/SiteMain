@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { FooterFacebook, Instagram, Twitter, Mail, Phone, MapPin } from "@/components/icons"
+import { FooterFacebook, Mail, Phone } from "@/components/icons"
 
 export default function Footer({ dict, lang = 'ua' }: { dict: any; lang?: string }) {
   return (
@@ -80,11 +80,7 @@ export default function Footer({ dict, lang = 'ua' }: { dict: any; lang?: string
               </li>
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail size={16} />
-                <span>info@crmcustoms.com</span>
-              </li>
-              <li className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin size={16} />
-                <span>{dict.footer.address}</span>
+                <span>tm@crmcustoms.com</span>
               </li>
             </ul>
           </div>

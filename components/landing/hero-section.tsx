@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
+import { submitForm } from "@/lib/actions"
 
 const services = [
   {
@@ -78,20 +79,22 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('https://n8n.crmcustoms.com/webhook/contact-form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactForm),
-      })
+      const formData = new FormData()
+      formData.append('name', contactForm.name)
+      formData.append('phone', contactForm.phone)
+      formData.append('formType', 'contact')
 
-      if (response.ok) {
+      const result = await submitForm(formData)
+
+      if (result.success) {
         setContactForm({ name: '', phone: '' })
         setShowContactForm(false)
-        alert('Дякуємо! Ваше повідомлення відправлено.')
+        alert(result.message)
       } else {
-        alert('Помилка при відправці. Спробуйте ще раз.')
+        alert(result.message)
       }
     } catch (error) {
+      console.error('Помилка при відправці:', error)
       alert('Помилка при відправці. Спробуйте ще раз.')
     } finally {
       setIsSubmitting(false)
@@ -103,20 +106,22 @@ export default function HeroSection({ dict, commonDict, lang = 'uk' }: { dict?: 
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('https://n8n.crmcustoms.com/webhook/audit-form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactForm),
-      })
+      const formData = new FormData()
+      formData.append('name', contactForm.name)
+      formData.append('phone', contactForm.phone)
+      formData.append('formType', 'audit')
 
-      if (response.ok) {
+      const result = await submitForm(formData)
+
+      if (result.success) {
         setContactForm({ name: '', phone: '' })
         setShowAuditForm(false)
-        alert('Дякуємо! Ваше повідомлення відправлено.')
+        alert(result.message)
       } else {
-        alert('Помилка при відправці. Спробуйте ще раз.')
+        alert(result.message)
       }
     } catch (error) {
+      console.error('Помилка при відправці:', error)
       alert('Помилка при відправці. Спробуйте ще раз.')
     } finally {
       setIsSubmitting(false)

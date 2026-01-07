@@ -182,7 +182,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
           {/* Left side - Content */}
           <div className="lg:col-span-5 relative z-20 space-y-6">
             {/* Services Carousel - Top Left */}
-            <div className="relative border border-black/10 bg-white/80 backdrop-blur-sm overflow-visible" style={{ minHeight: '200px' }}>
+            <div className="hidden md:block relative border border-black/10 bg-white/80 backdrop-blur-sm overflow-visible" style={{ minHeight: '200px' }}>
               <div className="flex items-center justify-between p-6 pb-4 relative z-20">
                 <div className="text-xs font-mono text-black/40 tracking-wider">// ПОСЛУГИ</div>
                 <div className="text-xs font-mono text-black/40">0{currentService + 1}/03</div>

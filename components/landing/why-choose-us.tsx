@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckCircle2, ChevronRight } from "lucide-react"
+import { CheckCircle2, ChevronRight, X } from "lucide-react"
 import { useState } from "react"
 
 const servicesData = [
@@ -63,6 +63,12 @@ const servicesData = [
 
 export default function WhyChooseUs() {
   const [activeService, setActiveService] = useState(0)
+  const [showModal, setShowModal] = useState(false)
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+  })
 
   return (
     <div className="relative min-h-screen bg-white py-20 overflow-hidden">
@@ -169,7 +175,10 @@ export default function WhyChooseUs() {
                 Проаналізуємо вашу поточну систему та покажемо, як збільшити продажі на 30-50%
               </p>
 
-              <button className="group relative w-full py-4 bg-black text-white font-bold overflow-hidden transition-colors hover:bg-[#FFD700] hover:text-black">
+              <button
+                onClick={() => setShowModal(true)}
+                className="group relative w-full py-4 bg-black text-white font-bold overflow-hidden transition-colors hover:bg-[#FFD700] hover:text-black"
+              >
                 <span className="flex items-center justify-center gap-2">
                   ЗАМОВИТИ АУДИТ
                   <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -192,6 +201,81 @@ export default function WhyChooseUs() {
           </div>
         </div>
       </div>
+
+      {/* Modal for Call Order */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full p-8 relative">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-black/50 hover:text-black transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <h3 className="text-2xl font-black text-black mb-2">Замовити звонок</h3>
+            <p className="text-sm text-black/70 mb-6">
+              Залиште ваші контакти, і ми зв'яжемось з вами найближчим часом
+            </p>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                // Handle form submission
+                setShowModal(false)
+                setFormData({ name: "", phone: "", email: "" })
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-bold text-black mb-2">Ім'я *</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-black/10 rounded-lg focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="Ваше ім'я"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-black mb-2">Телефон *</label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-black/10 rounded-lg focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="+380 (XX) XXX-XX-XX"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-black mb-2">Email</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-2 border-2 border-black/10 rounded-lg focus:outline-none focus:border-[#FFD700] transition-colors"
+                  placeholder="ваш@email.com"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 bg-black text-white font-bold rounded-lg transition-colors hover:bg-[#FFD700] hover:text-black mt-6"
+              >
+                Замовити звонок
+              </button>
+
+              <p className="text-xs text-black/50 text-center">
+                Ми не будемо спамити. Гарантуємо конфіденційність ваших даних.
+              </p>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

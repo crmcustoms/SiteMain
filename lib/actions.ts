@@ -134,8 +134,10 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
       timestamp: new Date().toISOString(),
     }
 
-    console.log("Відправка даних на вебхук:", webhookUrl)
-    console.log("Дані для відправки:", payload)
+    console.log("=== WEBHOOK REQUEST ===")
+    console.log("URL:", webhookUrl)
+    console.log("Payload:", JSON.stringify(payload, null, 2))
+    console.log("=======================\n")
 
     // Відправка даних на вебхук
     const response = await fetch(webhookUrl, {

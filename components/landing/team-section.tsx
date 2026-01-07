@@ -1,67 +1,107 @@
 "use client"
 
-import { AnimatedElement } from "@/components/ui/animated-element"
+import Image from "next/image"
+import { CheckCircle2 } from "lucide-react"
 
 export default function TeamSection() {
   return (
-    <section className="w-full py-16 md:py-24 lg:py-32 bg-gray-50 relative overflow-hidden">
-      {/* Фоновая анимация */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 right-0 w-80 h-80 bg-amber/5 rounded-full blur-3xl opacity-30"></div>
+    <div className="relative min-h-screen bg-white py-20 overflow-hidden">
+      {/* Background grid pattern */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent)",
+            backgroundSize: "50px 50px",
+          }}
+        />
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="relative max-w-[1400px] mx-auto px-8">
+        <div className="mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
+              <div className="text-xs font-mono font-bold text-black">03</div>
+            </div>
+            <div>
+              <h2 className="text-5xl font-black text-black uppercase tracking-tighter">Про нас</h2>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Team image */}
-          <AnimatedElement delay={0}>
-            <div className="relative flex items-center justify-center">
-              <img
-                src="/images/komanda.png"
-                alt="Команда CRM Customs"
-                className="w-full h-auto rounded-2xl shadow-lg"
-              />
-            </div>
-          </AnimatedElement>
-
-          {/* Right side - Text content */}
-          <AnimatedElement delay={100}>
-            <div className="space-y-6">
-              <div>
-                <p className="text-sm font-semibold text-amber mb-3 uppercase tracking-wide">Про нас</p>
-                <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 leading-tight">
-                  Ми працюємо <span className="text-amber">невеликою</span> командою
-                </h2>
-                <p className="text-lg text-gray-700 leading-relaxed mb-3">
-                  У нас немає мети «заробити всі гроші світу» — нам важливо робити проєкти якісно, а не на конвеєрі.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  <span className="font-bold">Саме це дозволяє нам створювати унікальні системи, максимально пристосовані під ваш бізнес.</span>
-                </p>
+          {/* Left side - Team photo */}
+          <div className="relative">
+            <div className="relative border-2 border-black/10 p-2 bg-white">
+              <div className="absolute -top-3 left-4 bg-white px-2">
+                <span className="text-xs font-mono text-black/40 tracking-wider">TEAM.PHOTO</span>
               </div>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image src="/images/komanda.png" alt="Команда CRM Customs" fill className="object-cover" />
+              </div>
+              <div className="absolute -bottom-3 right-4 bg-white px-2">
+                <span className="text-xs font-mono text-[#FFD700] tracking-wider">READY_TO_HELP</span>
+              </div>
+            </div>
 
-              {/* Main message */}
-              <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-black mb-3">
-                  Якщо ви бачите нашу рекламу
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  це означає просту річ: у нас з'явився вільний час і ми готові взяти ще кілька нових проєктів.
-                </p>
+            {/* Corner decorations */}
+            <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-[#FFD700]" />
+            <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-[#FFD700]" />
+          </div>
 
-                {/* Benefits */}
-                <div className="pt-4 border-t border-gray-100">
-                  <div className="flex items-start gap-4">
-                    <span className="text-4xl flex-shrink-0 text-amber">✓</span>
-                    <p className="text-lg font-semibold text-black leading-relaxed">
-                      Без черг, без «запишемо вас на наступний квартал» і без зникнень у тумані після передоплати 🙂
-                    </p>
-                  </div>
+          {/* Right side - Content */}
+          <div className="space-y-8">
+            <div className="border-l-4 border-[#FFD700] pl-6">
+              <p className="text-lg text-black/80 leading-relaxed mb-4">
+                Ми працюємо <span className="font-bold text-black">невеликою командою</span>.
+              </p>
+              <p className="text-lg text-black/80 leading-relaxed mb-4">
+                У нас немає мети «заробити всі гроші світу» — нам важливо робити проєкти{" "}
+                <span className="font-bold text-black">якісно</span>, а не на конвеєрі.
+              </p>
+              <p className="text-lg text-black/80 leading-relaxed">
+                Саме це дозволяє нам створювати <span className="font-bold text-black">унікальні системи</span>,
+                максимально пристосовані під ваш бізнес.
+              </p>
+            </div>
+
+            <div className="border-2 border-black/10 p-6 bg-black/5">
+              <div className="flex items-start gap-3 mb-4">
+                <div className="w-8 h-8 bg-[#FFD700] flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-lg font-black text-black">!</span>
                 </div>
+                <p className="text-base text-black/80 leading-relaxed">
+                  Якщо ви бачите нашу рекламу — це означає просту річ: у нас з'явився{" "}
+                  <span className="font-bold text-black">вільний час</span> і ми готові взяти ще кілька нових проєктів.
+                </p>
               </div>
             </div>
-          </AnimatedElement>
+
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                <span className="text-base text-black/80">Без черг</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                <span className="text-base text-black/80">Без «запишемо вас на наступний квартал»</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-6 h-6 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                <span className="text-base text-black/80">Без зникнень у тумані після передоплати</span>
+              </div>
+            </div>
+
+            {/* Tech label decoration */}
+            <div className="flex items-center gap-4 pt-6">
+              <div className="flex-1 h-[1px] bg-black/10" />
+              <div className="text-xs font-mono text-black/40 tracking-wider">TRANSPARENT_WORKFLOW</div>
+              <div className="flex-1 h-[1px] bg-black/10" />
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

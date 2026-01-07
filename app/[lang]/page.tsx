@@ -6,7 +6,6 @@ import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 // Заменяем динамический импорт на обычный импорт для компонента Services
 import StaticServices from "@/components/landing/static-services"
 import StaticFinalCta from "@/components/landing/static-final-cta"
-import CrmServicesBlocks from "@/components/landing/crm-services-blocks"
 import TeamSection from "@/components/landing/team-section"
 import LogosCarousel from "@/components/landing/logos-carousel"
 
@@ -55,11 +54,10 @@ export default async function Home({
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
       <LogosCarousel />
-      <CrmServicesBlocks />
       <TeamSection />
+      <WhyChooseUs dict={dict.landing.whyChooseUs} />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
-      <WhyChooseUs dict={dict.landing.whyChooseUs} />
       <StaticServices dict={servicesData} commonDict={commonData} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />

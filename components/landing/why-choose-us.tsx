@@ -71,7 +71,7 @@ export default function WhyChooseUs() {
   })
 
   return (
-    <div className="relative min-h-screen bg-white py-16 overflow-hidden">
+    <div className="relative min-h-screen bg-white pt-16 pb-0 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div

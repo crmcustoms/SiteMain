@@ -22,7 +22,7 @@ export default function LogosCarousel() {
   const duplicatedLogos = [...logos, ...logos, ...logos]
 
   return (
-    <section className="w-full py-8 bg-white border-b border-black/5">
+    <section className="w-full pt-0 pb-8 bg-white border-b border-black/5">
       <div className="w-full overflow-hidden">
         <style>{`
           @keyframes scroll {

@@ -114,7 +114,7 @@ export default function Testimonials({ dict }: { dict: any }) {
   }
 
   return (
-    <div className="relative min-h-screen bg-white py-20 overflow-hidden">
+    <div className="relative min-h-screen bg-white py-16 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div

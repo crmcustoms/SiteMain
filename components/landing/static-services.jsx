@@ -36,7 +36,7 @@ export default function StaticServices({ dict, commonDict }) {
   }
 
   return (
-    <section id="services" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+    <section id="services" className="w-full py-16 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <div className="space-y-2">

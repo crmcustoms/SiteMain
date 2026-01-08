@@ -4,49 +4,49 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react"
 import Image from "next/image"
 
-export default function CaseStudies({ dict }: { dict: any }) {
+const successStories = [
+  {
+    id: 1,
+    company: "Будівельна компанія 'Фундамент'",
+    industry: "Будівництво",
+    problem: "Складнощі з відстеженням проєктів та координацією роботи бригад.",
+    solution: "Впровадження комплексної системи управління проєктами.",
+    result: "Скорочення термінів будівництва на 20% та зниження витрат на 15%.",
+    image: "/construction-site-management.png",
+  },
+  {
+    id: 2,
+    company: "IT компанія 'Digital Solutions'",
+    industry: "Інформаційні технології",
+    problem: "Відсутність автоматизації процесів продажів та довгий цикл угоди.",
+    solution: "Інтеграція CRM з n8n для автоматизації воронки продажів.",
+    result: "Збільшення конверсії на 35% та скорочення циклу угоди вдвічі.",
+    image: "/digital-workspace.png",
+  },
+  {
+    id: 3,
+    company: "Мережа ресторанів 'Смак України'",
+    industry: "HoReCa",
+    problem: "Неефективне управління постачальниками та контроль залишків.",
+    solution: "Розробка індивідуальної системи управління постачанням.",
+    result: "Зменшення витрат на закупівлі на 25% та зниження залишків на 40%.",
+    image: "/restaurant-kitchen-management.jpg",
+  },
+]
+
+export function SuccessStoriesSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const caseStudies = [
-    {
-      id: 1,
-      company: "Будівельна компанія 'Фундамент'",
-      industry: "Будівництво",
-      problem: "Складнощі з відстеженням проєктів та координацією роботи бригад.",
-      solution: "Впровадження комплексної системи управління проєктами.",
-      result: "Скорочення термінів будівництва на 20% та зниження витрат на 15%.",
-      image: "/images/landings/industry-solutions/industry.jpg",
-    },
-    {
-      id: 2,
-      company: "Меблева компанія ВМКК",
-      industry: "Виробництво",
-      problem: "Менеджери вручну контролювали роботу аутсорсингових збирачів меблів через дзвінки та Viber.",
-      solution: "Інтегрована Airtable-форма для звітів збирачів, що працює безпосередньо з CRM-системою.",
-      result: "100% замовлень мають фото-звіт, економія 1,5 години щодня для кожного менеджера.",
-      image: "/images/landings/industry-solutions/furniture.jpg",
-    },
-    {
-      id: 3,
-      company: "PR-компанія ITComms",
-      industry: "IT та технології",
-      problem: "Витрати фіксувалися вручну, часто постфактум. Угоди перевищували бюджет без відома керівника.",
-      solution: "Автоматизована система на базі CRM, завдань та Google Таблиць, що об'єднує управління витратами.",
-      result: "Прозорі витрати, автоматичні звіти, зниження перевищення бюджету на 70%.",
-      image: "/images/case-studies/pr-agency.jpg",
-    },
-  ]
-
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? caseStudies.length - 1 : prev - 1))
+    setCurrentIndex((prev) => (prev === 0 ? successStories.length - 1 : prev - 1))
   }
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === caseStudies.length - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => (prev === successStories.length - 1 ? 0 : prev + 1))
   }
 
   return (
-    <div className="relative min-h-screen bg-white py-16 overflow-hidden">
+    <div className="relative min-h-screen bg-white py-20 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div
@@ -84,7 +84,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
-              {caseStudies.map((story) => (
+              {successStories.map((story) => (
                 <div key={story.id} className="w-full flex-shrink-0">
                   <div className="max-w-5xl mx-auto">
                     <div className="border-2 border-black/10 bg-white p-8 relative">
@@ -161,7 +161,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
                           <div className="flex items-center gap-2 pt-4">
                             <div className="flex-1 h-[1px] bg-black/10" />
                             <span className="text-xs font-mono text-[#FFD700]">
-                              {String(story.id).padStart(2, "0")}/{String(caseStudies.length).padStart(2, "0")}
+                              {String(story.id).padStart(2, "0")}/{String(successStories.length).padStart(2, "0")}
                             </span>
                             <div className="flex-1 h-[1px] bg-black/10" />
                           </div>
@@ -193,7 +193,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
 
           {/* Dots indicator */}
           <div className="flex justify-center gap-2 mt-8">
-            {caseStudies.map((_, index) => (
+            {successStories.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}

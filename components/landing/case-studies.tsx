@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Building2 } from "lucide-react"
-import Image from "next/image"
+import OptimizedImage from "@/components/ui/optimized-image"
 
 export default function CaseStudies({ dict }: { dict: any }) {
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -98,7 +98,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
                         {/* Left side - Image */}
                         <div className="relative">
                           <div className="relative w-full overflow-hidden border border-black/10">
-                            <Image
+                            <OptimizedImage
                               src={story.image || "/placeholder.svg"}
                               alt={story.company}
                               width={600}
@@ -117,7 +117,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
                           <div className="flex items-start gap-4">
                             <div className="w-12 h-12 bg-black/5 border border-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
                               {story.companyLogo ? (
-                                <Image
+                                <OptimizedImage
                                   src={story.companyLogo}
                                   alt={story.company}
                                   width={40}

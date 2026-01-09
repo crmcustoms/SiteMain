@@ -94,52 +94,55 @@ export default function CaseStudies({ dict }: { dict: any }) {
                         <span className="text-xs font-mono text-black/40 tracking-wider">SUCCESS_CASE</span>
                       </div>
 
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {/* Left side - Image */}
-                        <div className="relative">
-                          <div className="relative w-full overflow-hidden border border-black/10">
-                            <OptimizedImage
-                              src={story.image || "/placeholder.svg"}
-                              alt={story.company}
-                              width={600}
-                              height={450}
-                              className="w-full h-auto object-cover"
-                            />
-                          </div>
-                          {/* Corner decorations */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#FFD700]" />
-                          <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#FFD700]" />
-                        </div>
-
-                        {/* Right side - Content */}
-                        <div className="space-y-6">
-                          {/* Company info */}
-                          <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-black/5 border border-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:items-stretch">
+                        {/* Left side - Logo + Image */}
+                        <div className="flex flex-col">
+                          {/* Company header with logo */}
+                          <div className="flex items-start gap-4 mb-6 pb-4 border-b border-black/10">
+                            <div className="w-20 h-20 bg-black/5 border border-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden rounded">
                               {story.companyLogo ? (
                                 <OptimizedImage
                                   src={story.companyLogo}
                                   alt={story.company}
-                                  width={40}
-                                  height={40}
-                                  className="w-full h-full object-contain"
+                                  width={80}
+                                  height={80}
+                                  className="w-full h-full object-contain p-2"
                                 />
                               ) : (
-                                <Building2 className="w-6 h-6 text-black/60" />
+                                <Building2 className="w-8 h-8 text-black/60" />
                               )}
                             </div>
-                            <div>
-                              <h3 className="text-2xl font-bold text-black mb-1">{story.company}</h3>
-                              <div className="inline-block px-3 py-1 bg-[#FFD700]/20 border border-[#FFD700]/30">
+                            <div className="flex-1 pt-1">
+                              <h3 className="text-xl font-bold text-black mb-2">{story.company}</h3>
+                              <div className="inline-block px-3 py-1 bg-[#FFD700]/20 border border-[#FFD700]/30 rounded">
                                 <span className="text-xs font-mono text-black/70">{story.industry}</span>
                               </div>
                             </div>
                           </div>
 
+                          {/* Image */}
+                          <div className="relative flex-1 min-h-[400px] mb-4">
+                            <div className="relative w-full h-full overflow-hidden border border-black/10">
+                              <OptimizedImage
+                                src={story.image || "/placeholder.svg"}
+                                alt={story.company}
+                                width={600}
+                                height={450}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            {/* Corner decorations */}
+                            <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#FFD700]" />
+                            <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#FFD700]" />
+                          </div>
+                        </div>
+
+                        {/* Right side - Content */}
+                        <div className="flex flex-col justify-start space-y-6">
                           {/* Problem */}
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 bg-black/5 border border-black/20 flex items-center justify-center">
+                              <div className="w-6 h-6 bg-black/5 border border-black/20 flex items-center justify-center rounded">
                                 <span className="text-xs font-mono text-black/70">!</span>
                               </div>
                               <h4 className="text-sm font-bold text-black uppercase tracking-wider">Проблема</h4>
@@ -150,7 +153,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
                           {/* Solution */}
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 bg-black/5 border border-black/20 flex items-center justify-center">
+                              <div className="w-6 h-6 bg-black/5 border border-black/20 flex items-center justify-center rounded">
                                 <span className="text-xs font-mono text-black/70">→</span>
                               </div>
                               <h4 className="text-sm font-bold text-black uppercase tracking-wider">Рішення</h4>
@@ -159,9 +162,9 @@ export default function CaseStudies({ dict }: { dict: any }) {
                           </div>
 
                           {/* Result */}
-                          <div className="space-y-2">
+                          <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center">
+                              <div className="w-6 h-6 bg-[#FFD700]/10 border border-[#FFD700]/30 flex items-center justify-center rounded">
                                 <span className="text-xs font-mono text-[#FFD700]">✓</span>
                               </div>
                               <h4 className="text-sm font-bold text-black uppercase tracking-wider">Результат</h4>
@@ -170,7 +173,7 @@ export default function CaseStudies({ dict }: { dict: any }) {
                           </div>
 
                           {/* Tech decoration */}
-                          <div className="flex items-center gap-2 pt-4">
+                          <div className="flex items-center gap-2 pt-4 mt-auto">
                             <div className="flex-1 h-[1px] bg-black/10" />
                             <span className="text-xs font-mono text-[#FFD700]">
                               {String(story.id).padStart(2, "0")}/{String(caseStudies.length).padStart(2, "0")}

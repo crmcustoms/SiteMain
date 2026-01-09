@@ -46,12 +46,12 @@ export default function AuditWhy() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center pb-16">
           {/* Left side - Text */}
           <div className="space-y-8">
             {/* Partnership concept */}
             <div className="border border-black/10 p-8">
-              <div className="text-xs font-mono text-black/40 tracking-wider mb-4">// PARTNERSHIP</div>
+              <div className="text-xs font-mono text-black/40 tracking-wider mb-4">// ВЗАЄМОДІЯ</div>
               <p className="text-base text-black/80 leading-relaxed mb-6">
                 Для якісного впровадження потрібні <span className="font-bold">двоє</span>:
               </p>
@@ -76,7 +76,7 @@ export default function AuditWhy() {
               <div className="h-[1px] bg-black/10 my-6" />
 
               <p className="text-sm text-black/70 leading-relaxed">
-                <span className="text-black/40 font-mono text-xs">// CONCEPT</span>
+                <span className="text-black/40 font-mono text-xs">// СТРАТЕГІЯ</span>
                 <br className="mb-2" />
                 Разом створюємо правильне технічне завдання. Це як з проектом будинку: архітектор має знати що хоче власник, а власник має почути що можливо технічно.
               </p>
@@ -86,7 +86,7 @@ export default function AuditWhy() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Requirements */}
               <div className="border border-black/10 p-6">
-                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">REQUIREMENTS</div>
+                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">НЕОБХІДНЕ</div>
                 <ul className="space-y-3">
                   {requirements.map((req, idx) => (
                     <div key={idx} className="flex items-start gap-3">
@@ -99,7 +99,7 @@ export default function AuditWhy() {
 
               {/* Benefits */}
               <div className="border border-black/10 p-6">
-                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">DELIVERABLES</div>
+                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">ОТРИМУЄТЕ</div>
                 <ul className="space-y-3">
                   {benefits.map((benefit, idx) => (
                     <div key={idx} className="flex items-start gap-3">
@@ -112,26 +112,37 @@ export default function AuditWhy() {
             </div>
           </div>
 
-          {/* Right side - Image */}
-          <div className="relative flex items-center justify-center">
-            {/* Decorative corner elements */}
-            <div className="absolute -top-8 -left-8 w-16 h-16 border-l-2 border-t-2 border-[#FFD700]" />
-            <div className="absolute -bottom-8 -right-8 w-16 h-16 border-b-2 border-r-2 border-[#FFD700]" />
+          {/* Right side - Image with geometric background */}
+          <div className="relative flex items-center justify-center min-h-[600px]">
+            {/* Large yellow circle background */}
+            <div className="absolute w-[400px] h-[400px] rounded-full bg-[#FFD700] transition-transform duration-300 ease-out" />
 
-            {/* Image container - clean and minimal */}
-            <div className="relative w-full max-w-sm">
-              <div className="border-2 border-black/10 p-4 bg-white">
-                <div className="relative w-full aspect-[3/4] overflow-hidden bg-black/5">
-                  <Image
-                    src="/images/professor2.png"
-                    alt="CRM Expert"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              </div>
+            {/* Decorative rings */}
+            <div className="absolute w-[500px] h-[500px] rounded-full border border-black/5" />
+            <div className="absolute w-[600px] h-[600px] rounded-full border border-black/5" />
+
+            {/* Character image */}
+            <div className="relative z-10 transition-transform duration-300 ease-out">
+              <Image
+                src="/images/professor2.png"
+                alt="CRM Expert"
+                width={350}
+                height={450}
+                quality={95}
+                priority
+                className="w-[350px] h-auto drop-shadow-2xl"
+              />
             </div>
+
+            {/* Floating tech UI element - top left */}
+            <div className="absolute top-20 left-0 border border-black/20 bg-white p-3 text-xs font-mono shadow-lg">
+              <div className="text-black/40">AUDIT</div>
+              <div className="text-[#FFD700] font-bold">● ACTIVE</div>
+            </div>
+
+            {/* Decorative corner elements */}
+            <div className="absolute -bottom-4 -left-4 w-12 h-12 border-l-2 border-b-2 border-[#FFD700]" />
+            <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-[#FFD700]" />
           </div>
         </div>
       </div>

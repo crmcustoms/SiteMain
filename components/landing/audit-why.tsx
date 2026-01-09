@@ -2,10 +2,25 @@
 
 import React from "react"
 import Image from "next/image"
+import { CheckCircle2, Users, Zap } from "lucide-react"
 
 export default function AuditWhy() {
+  const requirements = [
+    { label: "2 години часу" },
+    { label: "Розуміння своїх процесів" },
+    { label: "Відповідальна особа з повноваженнями" },
+  ]
+
+  const benefits = [
+    { label: "Технічне завдання" },
+    { label: "Точний кошторис" },
+    { label: "Roadmap впровадження" },
+    { label: "Розуміння термінів" },
+  ]
+
   return (
     <div className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
+      {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div
           className="absolute inset-0"
@@ -31,96 +46,90 @@ export default function AuditWhy() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start pb-16">
           {/* Left side - Text */}
-          <div className="space-y-6">
-            <div className="border-l-4 border-[#FFD700] pl-6">
-              <p className="text-lg text-black/80 leading-relaxed mb-4">
-                Для якісного впровадження потрібні <span className="font-bold text-black">двоє</span>:
+          <div className="space-y-8">
+            {/* Partnership concept */}
+            <div className="border border-black/10 p-8">
+              <div className="text-xs font-mono text-black/40 tracking-wider mb-4">// PARTNERSHIP</div>
+              <p className="text-base text-black/80 leading-relaxed mb-6">
+                Для якісного впровадження потрібні <span className="font-bold">двоє</span>:
               </p>
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">👤</span>
-                  <span className="text-base text-black/80"><span className="font-bold">Ви</span> — знаєте свої бізнес-процеси</span>
+
+              <div className="space-y-4 mb-6">
+                <div className="flex items-start gap-4 pl-4 border-l-2 border-black/10">
+                  <Users className="w-5 h-5 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-sm font-bold text-black">ВИ</div>
+                    <div className="text-sm text-black/70">знаєте свої бізнес-процеси</div>
+                  </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🔧</span>
-                  <span className="text-base text-black/80"><span className="font-bold">Ми</span> — знаємо як їх покласти на систему</span>
+                <div className="flex items-start gap-4 pl-4 border-l-2 border-black/10">
+                  <Zap className="w-5 h-5 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-sm font-bold text-black">МИ</div>
+                    <div className="text-sm text-black/70">знаємо як їх покласти на систему</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <p className="text-base text-black/70 leading-relaxed italic">
-              Разом створюємо правильне технічне завдання.
-            </p>
+              <div className="h-[1px] bg-black/10 my-6" />
 
-            <div className="bg-black/5 border border-black/10 p-6">
-              <p className="text-sm text-black/80 mb-3">
-                Це як з проектом будинку: архітектор має знати що хоче власник, а власник має почути що можливо технічно.
+              <p className="text-sm text-black/70 leading-relaxed">
+                <span className="text-black/40 font-mono text-xs">// CONCEPT</span>
+                <br className="mb-2" />
+                Разом створюємо правильне технічне завдання. Це як з проектом будинку: архітектор має знати що хоче власник, а власник має почути що можливо технічно.
               </p>
             </div>
 
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">📋 Що потрібно від вас на аудиті:</h3>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>2 години часу</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Розуміння своїх процесів</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Відповідальна особа з повноваженнями</span>
-                  </li>
+            {/* Requirements and Benefits Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Requirements */}
+              <div className="border border-black/10 p-6">
+                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">REQUIREMENTS</div>
+                <ul className="space-y-3">
+                  {requirements.map((req, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 bg-[#FFD700] mt-2 flex-shrink-0" />
+                      <span className="text-sm text-black/80">{req.label}</span>
+                    </div>
+                  ))}
                 </ul>
               </div>
 
-              <div>
-                <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">🎯 Що ви отримаєте:</h3>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Технічне завдання</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Точний кошторис</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Roadmap впровадження</span>
-                  </li>
-                  <li className="flex items-start gap-3 text-sm text-black/80">
-                    <span className="text-black/40 mt-0.5">•</span>
-                    <span>Розуміння термінів</span>
-                  </li>
+              {/* Benefits */}
+              <div className="border border-black/10 p-6">
+                <div className="text-xs font-mono text-black/40 tracking-wider mb-4">DELIVERABLES</div>
+                <ul className="space-y-3">
+                  {benefits.map((benefit, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-[#FFD700] mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-black/80">{benefit.label}</span>
+                    </div>
+                  ))}
                 </ul>
               </div>
             </div>
           </div>
 
-          {/* Right side - Image with background */}
+          {/* Right side - Image */}
           <div className="relative flex items-center justify-center">
-            {/* Background geometric shape with yellow */}
-            <div className="absolute w-[500px] h-[500px] rounded-full bg-[#FFD700]/20 blur-3xl"></div>
-            <div className="absolute w-[400px] h-[400px] rounded-full bg-[#FFD700]/10"></div>
-            <div className="absolute w-[350px] h-[350px] border-2 border-[#FFD700]/20 rounded-full"></div>
+            {/* Decorative corner elements */}
+            <div className="absolute -top-8 -left-8 w-16 h-16 border-l-2 border-t-2 border-[#FFD700]" />
+            <div className="absolute -bottom-8 -right-8 w-16 h-16 border-b-2 border-r-2 border-[#FFD700]" />
 
-            {/* Image container */}
-            <div className="relative z-10 flex items-center justify-center">
-              <div className="relative w-[300px] h-[400px] overflow-hidden">
-                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-[#FFD700]"></div>
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-[#FFD700]"></div>
-                <Image
-                  src="/images/professor2.png"
-                  alt="Аудит CRM"
-                  fill
-                  className="object-cover"
-                />
+            {/* Image container - clean and minimal */}
+            <div className="relative w-full max-w-sm">
+              <div className="border-2 border-black/10 p-4 bg-white">
+                <div className="relative w-full aspect-[3/4] overflow-hidden bg-black/5">
+                  <Image
+                    src="/images/professor2.png"
+                    alt="CRM Expert"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
               </div>
             </div>
           </div>

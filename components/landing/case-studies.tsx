@@ -15,8 +15,8 @@ export default function CaseStudies({ dict }: { dict: any }) {
       problem: "Витрати фіксувалися вручну, часто постфактум. Угоди перевищували бюджет без відома керівника.",
       solution: "Автоматизована система на базі CRM, завдань та Google Таблиць, що об'єднує управління витратами.",
       result: "Прозорі витрати, автоматичні звіти, зниження перевищення бюджету на 70%.",
-      image: "/images/case-studies/pr-agency.jpg",
-      companyLogo: "/images/case-studies/itcomms-logo.png",
+      image: "/images/case-studies/itcomms-illustration.jpg",
+      companyLogo: "/images/case-studies/itcommslogo.jpg",
     },
     {
       id: 2,

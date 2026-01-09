@@ -166,7 +166,7 @@ export default function Testimonials({ dict }: { dict: any }) {
                     {/* Avatar and Info */}
                     <div className="flex items-center gap-4 mb-6 pt-2">
                       <div className="relative w-20 h-20 flex-shrink-0">
-                        <div className="relative aspect-square overflow-hidden border border-black/10">
+                        <div className="relative w-20 h-20 overflow-hidden border border-black/10">
                           <Image
                             src={testimonial.photo}
                             alt={testimonial.name}

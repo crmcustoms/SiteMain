@@ -97,12 +97,13 @@ export default function CaseStudies({ dict }: { dict: any }) {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Left side - Image */}
                         <div className="relative">
-                          <div className="relative aspect-[4/3] overflow-hidden border border-black/10">
+                          <div className="relative w-full overflow-hidden border border-black/10">
                             <Image
                               src={story.image || "/placeholder.svg"}
                               alt={story.company}
-                              fill
-                              className="object-cover"
+                              width={600}
+                              height={450}
+                              className="w-full h-auto object-cover"
                             />
                           </div>
                           {/* Corner decorations */}

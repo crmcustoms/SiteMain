@@ -72,7 +72,7 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
         <div className="mb-16">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
-              <div className="text-xs font-mono font-bold text-black">07</div>
+              <div className="text-xs font-mono font-bold text-black">08</div>
             </div>
             <div>
               <h2 className="text-5xl font-black text-black uppercase tracking-tighter">FAQ</h2>

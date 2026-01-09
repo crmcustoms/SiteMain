@@ -156,39 +156,39 @@ export default function Pricing() {
         </div>
 
         {/* Budget callout */}
-        <div className="relative max-w-2xl mx-auto bg-black/5 border-2 border-[#FFD700]/30 p-8 rounded-sm">
-          <div className="absolute -top-3 left-8 bg-white px-3 py-0.5">
-            <h3 className="text-sm font-bold text-black">💰 ЩО ЯКЩО БЮДЖЕТ ДУЖЕ ОБМЕЖЕНИЙ?</h3>
-          </div>
+        <div className="lg:w-2/3 border-l-4 border-[#FFD700] bg-black/5 p-6">
+          <div className="space-y-4">
+            <div className="border-b border-black/10 pb-4 mb-4">
+              <h3 className="text-lg font-bold text-black">Що якщо бюджет дуже обмежений?</h3>
+            </div>
 
-          <div className="space-y-4 mt-4">
             <p className="text-sm text-black/80">
               Ми можемо налаштувати базову систему від <span className="font-bold text-black">5,000₴</span>:
             </p>
 
             <ul className="space-y-2">
               <li className="flex items-start gap-3 text-sm text-black/80">
-                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span className="text-black/40 mt-0.5">•</span>
                 <span>Налаштування статусів та полів</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-black/80">
-                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span className="text-black/40 mt-0.5">•</span>
                 <span>1-2 прості автоматизації</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-black/80">
-                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span className="text-black/40 mt-0.5">•</span>
                 <span>3 дні підтримки в чаті</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-black/80">
-                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span className="text-black/40 mt-0.5">•</span>
                 <span>30-хвилинний вебінар</span>
               </li>
             </ul>
 
-            <div className="border-t border-[#FFD700]/20 pt-4 mt-4">
-              <p className="text-xs font-mono text-black/40 mb-2">⚠️ ВАЖЛИВО</p>
-              <p className="text-sm text-black/70">
-                Це технічне налаштування без аудиту. Підходить якщо у вас вже є готова CRM і дуже прості процеси.
+            <div className="border-t border-black/10 pt-4 mt-4">
+              <p className="text-xs text-black/40 mb-2 uppercase tracking-wider">Важливо</p>
+              <p className="text-sm text-black/70 leading-relaxed">
+                Це <span className="font-bold text-black">технічне налаштування без аудиту</span>. Підходить якщо у вас <span className="font-bold text-black">немає досвіду роботи в CRM і дуже прості процеси</span>. Або є готова CRM і теж нескладно.
               </p>
             </div>
           </div>

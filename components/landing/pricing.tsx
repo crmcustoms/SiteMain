@@ -85,7 +85,7 @@ export default function Pricing() {
         <div className="mb-16">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
-              <div className="text-xs font-mono font-bold text-black">06</div>
+              <div className="text-xs font-mono font-bold text-black">04</div>
             </div>
             <div>
               <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
@@ -100,7 +100,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
           {plans.map((plan) => (
             <div
               key={plan.id}
@@ -154,7 +154,48 @@ export default function Pricing() {
             </div>
           ))}
         </div>
+
+        {/* Budget callout */}
+        <div className="relative max-w-2xl mx-auto bg-black/5 border-2 border-[#FFD700]/30 p-8 rounded-sm">
+          <div className="absolute -top-3 left-8 bg-white px-3 py-0.5">
+            <h3 className="text-sm font-bold text-black">💰 ЩО ЯКЩО БЮДЖЕТ ДУЖЕ ОБМЕЖЕНИЙ?</h3>
+          </div>
+
+          <div className="space-y-4 mt-4">
+            <p className="text-sm text-black/80">
+              Ми можемо налаштувати базову систему від <span className="font-bold text-black">5,000₴</span>:
+            </p>
+
+            <ul className="space-y-2">
+              <li className="flex items-start gap-3 text-sm text-black/80">
+                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span>Налаштування статусів та полів</span>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-black/80">
+                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span>1-2 прості автоматизації</span>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-black/80">
+                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span>3 дні підтримки в чаті</span>
+              </li>
+              <li className="flex items-start gap-3 text-sm text-black/80">
+                <span className="text-[#FFD700] font-bold mt-0.5">·</span>
+                <span>30-хвилинний вебінар</span>
+              </li>
+            </ul>
+
+            <div className="border-t border-[#FFD700]/20 pt-4 mt-4">
+              <p className="text-xs font-mono text-black/40 mb-2">⚠️ ВАЖЛИВО</p>
+              <p className="text-sm text-black/70">
+                Це технічне налаштування без аудиту. Підходить якщо у вас вже є готова CRM і дуже прості процеси.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div className="h-16"></div>
     </div>
   )
 }

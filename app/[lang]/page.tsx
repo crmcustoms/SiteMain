@@ -62,9 +62,9 @@ export default async function Home({
       <LogosCarousel />
       <WhyChooseUs />
       <TeamSection />
+      <Pricing />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
-      <Pricing />
       <StaticServices dict={servicesData} commonDict={commonData} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />

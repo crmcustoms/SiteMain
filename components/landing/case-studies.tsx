@@ -10,6 +10,16 @@ export default function CaseStudies({ dict }: { dict: any }) {
   const caseStudies = [
     {
       id: 1,
+      company: "PR-компанія ITComms",
+      industry: "IT та технології",
+      problem: "Витрати фіксувалися вручну, часто постфактум. Угоди перевищували бюджет без відома керівника.",
+      solution: "Автоматизована система на базі CRM, завдань та Google Таблиць, що об'єднує управління витратами.",
+      result: "Прозорі витрати, автоматичні звіти, зниження перевищення бюджету на 70%.",
+      image: "/images/case-studies/pr-agency.jpg",
+      companyLogo: "/images/case-studies/itcomms-logo.png",
+    },
+    {
+      id: 2,
       company: "Будівельна компанія 'Фундамент'",
       industry: "Будівництво",
       problem: "Складнощі з відстеженням проєктів та координацією роботи бригад.",
@@ -18,22 +28,13 @@ export default function CaseStudies({ dict }: { dict: any }) {
       image: "/images/landings/industry-solutions/industry.jpg",
     },
     {
-      id: 2,
+      id: 3,
       company: "Меблева компанія ВМКК",
       industry: "Виробництво",
       problem: "Менеджери вручну контролювали роботу аутсорсингових збирачів меблів через дзвінки та Viber.",
       solution: "Інтегрована Airtable-форма для звітів збирачів, що працює безпосередньо з CRM-системою.",
       result: "100% замовлень мають фото-звіт, економія 1,5 години щодня для кожного менеджера.",
       image: "/images/landings/industry-solutions/furniture.jpg",
-    },
-    {
-      id: 3,
-      company: "PR-компанія ITComms",
-      industry: "IT та технології",
-      problem: "Витрати фіксувалися вручну, часто постфактум. Угоди перевищували бюджет без відома керівника.",
-      solution: "Автоматизована система на базі CRM, завдань та Google Таблиць, що об'єднує управління витратами.",
-      result: "Прозорі витрати, автоматичні звіти, зниження перевищення бюджету на 70%.",
-      image: "/images/case-studies/pr-agency.jpg",
     },
   ]
 
@@ -113,8 +114,18 @@ export default function CaseStudies({ dict }: { dict: any }) {
                         <div className="space-y-6">
                           {/* Company info */}
                           <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-black/5 border border-black/10 flex items-center justify-center flex-shrink-0">
-                              <Building2 className="w-6 h-6 text-black/60" />
+                            <div className="w-12 h-12 bg-black/5 border border-black/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                              {story.companyLogo ? (
+                                <Image
+                                  src={story.companyLogo}
+                                  alt={story.company}
+                                  width={40}
+                                  height={40}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <Building2 className="w-6 h-6 text-black/60" />
+                              )}
                             </div>
                             <div>
                               <h3 className="text-2xl font-bold text-black mb-1">{story.company}</h3>

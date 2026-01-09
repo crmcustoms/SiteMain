@@ -6,6 +6,7 @@ import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 import StaticFinalCta from "@/components/landing/static-final-cta"
 import TeamSection from "@/components/landing/team-section"
 import LogosCarousel from "@/components/landing/logos-carousel"
+import AuditWhy from "@/components/landing/audit-why"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
@@ -57,6 +58,7 @@ export default async function Home({
       <WhyChooseUs />
       <TeamSection />
       <Pricing />
+      <AuditWhy />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />

@@ -56,13 +56,13 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
   const currentFaqs = faqData[activeTab] || faqData.price
 
   return (
-    <div className="relative w-full bg-black pt-16 pb-16 overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.02]">
+    <div className="relative w-full bg-white pt-16 pb-16 overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.03]">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              "linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent)",
+              "linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent)",
             backgroundSize: "50px 50px",
           }}
         />
@@ -70,9 +70,15 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
 
       <div className="relative max-w-[1400px] mx-auto px-8">
         <div className="mb-16">
-          <div className="text-xs font-mono text-[#FFD700] tracking-wider mb-4">// ВІДПОВІДІ НА ЗАПИТАННЯ</div>
-          <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-4">FAQ</h2>
-          <p className="text-lg text-gray-300">Закриваємо всі сумніви та заперечення</p>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
+              <div className="text-xs font-mono font-bold text-black">07</div>
+            </div>
+            <div>
+              <h2 className="text-5xl font-black text-black uppercase tracking-tighter">FAQ</h2>
+            </div>
+          </div>
+          <p className="text-lg text-black/60 max-w-3xl">Закриваємо всі сумніви та заперечення</p>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-12">
@@ -83,7 +89,7 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
               className={`px-6 py-3 font-bold uppercase tracking-wide transition-all border-2 text-sm ${
                 activeTab === cat.id
                   ? "bg-[#FFD700] text-black border-[#FFD700]"
-                  : "border-[#FFD700] text-white hover:bg-[#FFD700]/10"
+                  : "border-[#FFD700] text-black hover:bg-[#FFD700]/10"
               }`}
             >
               {cat.label}
@@ -93,12 +99,12 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
 
         <div className="space-y-4">
           {currentFaqs.map((item) => (
-            <div key={item.id} className="border border-white/10 bg-white/5 overflow-hidden">
+            <div key={item.id} className="border border-black/10 bg-white/80 overflow-hidden">
               <button
                 onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                className="w-full px-8 py-6 flex items-center justify-between hover:bg-white/10 transition-all"
+                className="w-full px-8 py-6 flex items-center justify-between hover:bg-black/5 transition-all"
               >
-                <span className="text-lg font-bold text-white text-left">{item.q}</span>
+                <span className="text-lg font-bold text-black text-left">{item.q}</span>
                 <ChevronDown
                   className={`w-5 h-5 text-[#FFD700] flex-shrink-0 transition-transform ${
                     expandedId === item.id ? "rotate-180" : ""
@@ -107,9 +113,9 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
               </button>
 
               {expandedId === item.id && (
-                <div className="px-8 pb-6 space-y-4 border-t border-white/10 bg-white/5">
-                  <div className="text-[#FFD700] font-bold">{item.short}</div>
-                  <div className="text-white/80 text-base leading-relaxed whitespace-pre-line">{item.full}</div>
+                <div className="px-8 pb-6 space-y-3 border-t border-black/10 bg-white/80">
+                  <div className="text-[#FFD700] font-bold whitespace-pre-line">{item.short}</div>
+                  <div className="text-black/80 text-base leading-relaxed whitespace-pre-line">{item.full}</div>
                 </div>
               )}
             </div>
@@ -117,11 +123,11 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
         </div>
 
         <div className="mt-16 text-center">
-          <h3 className="text-2xl font-black text-white mb-4">Залишились питання?</h3>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+          <h3 className="text-2xl font-black text-black mb-4">Залишились питання?</h3>
+          <p className="text-black/60 mb-8 max-w-2xl mx-auto">
             Замовте безкоштовний аудит — відповімо на всі питання та покажемо як це буде працювати.
           </p>
-          <button className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-white transition-all">
+          <button className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-black hover:text-[#FFD700] transition-all border-2 border-[#FFD700]">
             Отримати безкоштовний аудит
           </button>
         </div>

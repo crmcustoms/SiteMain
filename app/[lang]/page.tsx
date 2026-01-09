@@ -16,6 +16,7 @@ const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), 
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })
 const Pricing = dynamic(() => import("@/components/landing/pricing"), { ssr: true })
+const AuditWhy = dynamic(() => import("@/components/landing/audit-why"), { ssr: true })
 
 export default async function Home({
   params,
@@ -63,6 +64,7 @@ export default async function Home({
       <WhyChooseUs />
       <TeamSection />
       <Pricing />
+      <AuditWhy />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
       <StaticServices dict={servicesData} commonDict={commonData} />

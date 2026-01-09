@@ -15,6 +15,7 @@ const CaseStudies = dynamic(() => import("@/components/landing/case-studies"), {
 const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), { ssr: true })
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })
+const Pricing = dynamic(() => import("@/components/landing/pricing"), { ssr: true })
 
 export default async function Home({
   params,
@@ -32,7 +33,12 @@ export default async function Home({
   const dict = await getDictionary(safeLocale);
 
   // Получаем последние 3 кейса для отображения в hero-section
-  let recentCases = [];
+  let recentCases: Array<{
+    title: string
+    slug: string
+    tags: string[]
+    date: string
+  }> = [];
   try {
     const articles = await getBlogArticles(true).catch(() => []) || [];
     const sortedArticles = sortArticlesByDate(articles);
@@ -54,10 +60,11 @@ export default async function Home({
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
       <LogosCarousel />
-      <WhyChooseUs dict={dict.landing.whyChooseUs} />
+      <WhyChooseUs />
       <TeamSection />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
+      <Pricing />
       <StaticServices dict={servicesData} commonDict={commonData} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />

@@ -1,88 +1,160 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check } from "lucide-react"
-import { ContactFormDialog } from "@/components/contact-form-dialog"
+import React from "react"
+import { CheckCircle2, Star } from "lucide-react"
 
-export default function Pricing({ dict, commonDict }: { dict: any; commonDict: any }) {
+export default function Pricing() {
   const plans = [
     {
-      name: dict.plans[0].name,
-      price: dict.plans[0].price,
-      description: dict.plans[0].description,
-      features: dict.plans[0].features,
+      id: 1,
+      name: "СТАРТ",
+      price: "від 25,000₴",
+      duration: "2-4 тижні",
+      description: "Базове впровадження для швидкого старту",
+      features: [
+        "Обов'язковий аудит (5,000₴, 2 години)",
+        "Підбір CRM під ваш бізнес",
+        "Налаштування воронок та статусів",
+        "Налаштування полів та карток",
+        "До 3 базових інтеграцій",
+        "Базові автоматизації",
+        "Вебінар для команди (1-2 години)",
+        "Тиждень технічної підтримки",
+      ],
+      forWho: "Малий бізнес до 20 осіб, перше впровадження CRM",
+      popular: false,
     },
     {
-      name: dict.plans[1].name,
-      price: dict.plans[1].price,
-      description: dict.plans[1].description,
-      features: dict.plans[1].features,
+      id: 2,
+      name: "ПРОФЕСІЙНИЙ",
+      price: "від 70,000₴",
+      duration: "1-2 місяці",
+      description: "Повне впровадження з автоматизацією",
+      features: [
+        "Глибокий аудит бізнес-процесів (2-3 дні)",
+        "CRM впровадження під ключ",
+        "До 7 інтеграцій",
+        "n8n автоматизація",
+        "Налаштування логіки роботи команди",
+        "Вебінар для команди (4-8 годин)",
+        "Місяць технічної підтримки",
+        "Документація (за потребою)",
+      ],
+      forWho: "Середній бізнес 20-100 осіб, потрібна автоматизація рутини",
       popular: true,
+      badge: "Найпопулярніший варіант",
     },
     {
-      name: dict.plans[2].name,
-      price: dict.plans[2].price,
-      description: dict.plans[2].description,
-      features: dict.plans[2].features,
+      id: 3,
+      name: "ІНДИВІДУАЛЬНИЙ",
+      price: "від 120,000₴",
+      duration: "від 2 місяців",
+      description: "Комплексні рішення для складних завдань",
+      features: [
+        "Передпроєктне дослідження",
+        "Детальний аналіз бізнес-процесів",
+        "Визначення точок автоматизації",
+        "Повне впровадження",
+        "Кастомна розробка модулів",
+        "Необмежені інтеграції",
+        "AI в бізнес-процеси",
+        "Складні n8n сценарії",
+        "Виділений менеджер проєкту",
+        "3 місяці технічної підтримки",
+        "Повна документація",
+      ],
+      forWho: "Унікальні процеси, багато інтеграцій, потрібна розробка",
+      popular: false,
     },
   ]
 
   return (
-    <section id="pricing" className="w-full py-12 md:py-24 lg:py-32">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{dict.title}</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {dict.subtitle}
-            </p>
+    <div className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(0deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 0, 0, .05) 25%, rgba(0, 0, 0, .05) 26%, transparent 27%, transparent 74%, rgba(0, 0, 0, .05) 75%, rgba(0, 0, 0, .05) 76%, transparent 77%, transparent)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
+
+      <div className="relative max-w-[1400px] mx-auto px-8">
+        <div className="mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
+              <div className="text-xs font-mono font-bold text-black">06</div>
+            </div>
+            <div>
+              <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
+                Ціноутворення
+              </h2>
+            </div>
           </div>
+          <p className="text-lg text-black/60 max-w-3xl">
+            Скільки це коштує? Кожне впровадження CRM — унікальне. Без попереднього вивчення
+            бізнес-процесів неможливо коректно оцінити обсяг робіт і назвати
+            точну ціну. Але щоб у вас було розуміння порядку цифр — ось базові варіанти.
+          </p>
         </div>
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 mt-8">
-          {plans.map((plan, index) => (
-            <Card key={index} className={`flex flex-col ${plan.popular ? "border-amber shadow-lg" : ""}`}>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-16">
+          {plans.map((plan) => (
+            <div
+              key={plan.id}
+              className={`relative border-2 p-8 flex flex-col h-full transition-all hover:shadow-lg ${
+                plan.popular
+                  ? "border-[#FFD700] bg-yellow-50"
+                  : "border-black/10"
+              }`}
+            >
               {plan.popular && (
-                <div className="bg-amber text-black text-center py-1 text-sm font-medium">{dict.popularLabel}</div>
+                <div className="absolute -top-4 left-8 bg-white px-4 py-1 border-2 border-[#FFD700]">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 fill-[#FFD700] text-[#FFD700]" />
+                    <span className="text-xs font-bold text-black">{plan.badge}</span>
+                  </div>
+                </div>
               )}
-              <CardHeader>
-                <CardTitle>{plan.name}</CardTitle>
-                <div className="mt-4 text-4xl font-bold">{plan.price}</div>
-                <CardDescription className="mt-2">{plan.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <ul className="space-y-2">
-                  {plan.features.map((feature: string, i: number) => (
-                    <li key={i} className="flex items-center">
-                      <Check className="mr-2 h-4 w-4 text-amber" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <ContactFormDialog
-                  trigger={
-                    <Button className={`w-full ${plan.popular ? "bg-amber hover:bg-amber-hover text-black" : ""}`}>
-                      {dict.ctaButton}
-                    </Button>
-                  }
-                  title={commonDict.form.pricingFormTitle}
-                  description={commonDict.form.pricingFormDescription}
-                  formType={`pricing_${plan.name.toLowerCase()}`}
-                  buttonText={commonDict.form.submitButton}
-                  dict={commonDict}
-                />
-              </CardFooter>
-            </Card>
+
+              <div className="mb-6 pt-4">
+                <h3 className="text-2xl font-black text-black mb-2 uppercase tracking-tight">
+                  {plan.name}
+                </h3>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-3xl font-bold text-black">{plan.price}</span>
+                  <span className="text-sm text-black/60">· {plan.duration}</span>
+                </div>
+                <p className="text-sm text-black/70">{plan.description}</p>
+              </div>
+
+              <div className="space-y-3 mb-6 flex-1">
+                {plan.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-[#FFD700] flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-black/80">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t-2 border-black/10 pt-6 mt-6">
+                <p className="text-xs font-mono text-black/40 mb-2">ДЛЯ КОГО</p>
+                <p className="text-sm font-medium text-black/80">{plan.forWho}</p>
+              </div>
+
+              <button className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
+                plan.popular
+                  ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                  : "border-2 border-black/20 text-black hover:border-[#FFD700] hover:bg-[#FFD700] hover:text-black"
+              }`}>
+                Розглянути варіант
+              </button>
+            </div>
           ))}
         </div>
-        <div className="mt-8 text-center">
-          <Button variant="link" className="text-amber hover:text-amber-hover">
-            {dict.compareLink}
-          </Button>
-        </div>
       </div>
-    </section>
+    </div>
   )
 }

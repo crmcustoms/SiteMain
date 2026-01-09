@@ -1,69 +1,131 @@
 "use client"
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button"
-import { ContactFormDialog } from "@/components/contact-form-dialog"
 import { useState } from "react"
+import { ChevronDown } from "lucide-react"
 
-interface FaqItem {
-  id: string;
-  question: string;
-  answer: string;
-}
+export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any }) {
+  const [activeTab, setActiveTab] = useState("price")
+  const [expandedId, setExpandedId] = useState<string | null>(null)
 
-export default function Faq({ dict, commonDict }: { dict: any; commonDict: any }) {
-  const [openItem, setOpenItem] = useState<string | null>(null);
-  
-  const faqs = dict.items.map((item: any, index: number) => ({
-    id: `item-${index}`,
-    question: item.question,
-    answer: item.answer,
-  }))
-  
-  const handleToggle = (value: string) => {
-    setOpenItem(openItem === value ? null : value);
-  };
+  const categories = [
+    { id: "price", label: "Ціна та окупність" },
+    { id: "time", label: "Терміни та складність" },
+    { id: "risks", label: "Ризики" },
+    { id: "process", label: "Процес" },
+    { id: "why", label: "Чому ми" }
+  ]
+
+  const faqData: Record<string, Array<{ id: string; q: string; short: string; full: string }>> = {
+    price: [
+      { id: "p1", q: "Чому так дорого? У конкурентів дешевше", short: "Ми впроваджуємо рішення, а не шаблон.", full: "Конкуренти: готовий шаблон, немає аналізу, стандартні налаштування, без інтеграцій, без навчання.\n\nМи: обов'язковий аудит, система під ваш бізнес, інтеграції, автоматизації, навчання, підтримка.\n\nРезультат: система працює через місяць." },
+      { id: "p2", q: "Коли окупиться впровадження?", short: "Зазвичай 3-6 місяців для середнього бізнесу.", full: "Малий бізнес (25К): 4-5 місяців. Середній (70К): 3-4 місяці. Великий (120К+): 2-3 місяці.\n\nПриклад: PR-агентство ITComms скоротило витрати на 70%, окупилось за 2 проєкти." },
+      { id: "p3", q: "А чи не дешевше найняти адміністратора?", short: "Адмін 25-40К/міс. Впровадження 70К один раз.", full: "Адміністратор: зарплата щомісяця 300-480К/рік, знає 1-2 системи, якщо звільниться — все спочатку.\n\nНаше впровадження: один раз 70-120К, 100+ досвіду, система працює сама, документація залишається." },
+      { id: "p4", q: "Чи можна почати з мінімального бюджету?", short: "Так! Від 5,000₴ та пакет СТАРТ від 25,000₴.", full: "5К: готова CRM, технічне налаштування. 25К: повне впровадження з аудитом, навчанням, тиждень підтримки." },
+      { id: "p5", q: "Чи є розстрочка?", short: "Так, 50% передоплата + 50% після здачі проєкту.", full: "Стандартна схема: 50/50. Для великих проєктів: 30% при підписанні, 40% після аудиту, 30% після здачі." },
+      { id: "p6", q: "Що входить у вартість?", short: "Все необхідне: аудит, налаштування, інтеграції, навчання, підтримка.", full: "СТАРТ: аудит, CRM, до 3 інтеграцій, вебінар, тиждень підтримки.\n\nПРОФЕСІЙНИЙ: глибокий аудит, до 7 інтеграцій, n8n, місяць підтримки.\n\nІНДИВІДУАЛЬНИЙ: розробка, необмежені інтеграції, 3 місяці підтримки." }
+    ],
+    time: [
+      { id: "t1", q: "Як довго триває впровадження?", short: "Від 1 тижня до 4 місяців залежно від складності.", full: "Мінімум: 3-7 днів. СТАРТ: 2-4 тижні. ПРОФЕСІЙНИЙ: 1-2 місяці. ІНДИВІДУАЛЬНИЙ: від 2 місяців.\n\nСтандартний проєкт займає 6 тижнів." },
+      { id: "t2", q: "Чи зупиниться робота під час впровадження?", short: "Ні! Впровадження паралельно з поточною роботою.", full: "Налаштування відбувається в тестовому середовищі. Єдиний момент: перенесення даних (1-2 години у вихідні)." },
+      { id: "t3", q: "Чи складно буде користуватися системою?", short: "Ні, якщо налаштована правильно під ваші процеси.", full: "Ми аналізуємо процеси, налаштовуємо тільки потрібне, автоматизуємо рутину, навчаємо команду.\n\nПісля навчання: перша неділя — звикають, тиждень — швидше ніж Excel." },
+      { id: "t4", q: "Чи можемо перерости цю CRM?", short: "Ми підбираємо системи що масштабуються разом з вами.", full: "Planfix: від 5 до 500+ користувачів. KeepinCRM: від стартапу до корпоративу. Pipedrive: від малого до великого.\n\nПравильна система витримує зростання 10-200 людей." },
+      { id: "t5", q: "Чи потрібно купувати дорогі ліцензії?", short: "Ні, від 300₴/юзер/міс або безкоштовні тарифи.", full: "Планфікс: від 450₴/юзер. KeepinCRM: від 300₴ (є безкоштовний). Малий бізнес: 3-5К/міс за команду.\n\nЛіцензії НЕ входять у вартість впровадження." }
+    ],
+    risks: [
+      { id: "r1", q: "А що якщо CRM не підійде?", short: "Саме тому аудит обов'язковий — щоб не помилитися.", full: "Аудит → вивчаємо процеси, підбираємо оптимальну. ТЗ → ви видите ЩО робиться. Тестування → ви перевіряєте перед запуском.\n\nГарантія: 30 днів або виправимо помилки безкоштовно." },
+      { id: "r2", q: "Що якщо у нас особливі процеси?", short: "Особливі процеси — норма. Саме для цього індивідуальне впровадження.", full: "Вирішували: виробництво, юридичні, e-commerce, B2B, дистрибуція.\n\nПриклад: меблева фабрика ВМКК — контроль підрядників через фото, інтеграція Airtable." },
+      { id: "r3", q: "Чи захищені наші дані?", short: "Так. Дані в CRM яку обираєте, ми тільки налаштовуємо.", full: "Дані у вашому акаунті, ви власник. Безпека: Планфікс (сервери в Європі, SSL), KeepinCRM (Україна, захищено).\n\nДоговір: підписуємо NDA якщо потрібно." },
+      { id: "r4", q: "Що якщо ви зникнете після впровадження?", short: "10+ років на ринку. Ви отримуєте документацію.", full: "На ринку з 2014 року, 100+ проєктів, ФОП з відповідальністю.\n\nОтримуєте: документація, відео-інструкції, доступи, ТЗ з описом всіх процесів." },
+      { id: "r5", q: "Що якщо команда не прийме систему?", short: "Опір змінам нормально. Ми навчаємо і показуємо користь.", full: "Фокус на перевагах для менеджерів: менше рутини, швидше угоди. Залучаємо до тестування, збираємо зворотний зв'язок.\n\nДосвід: через 2 тижні не хочуть Excel." }
+    ],
+    process: [
+      { id: "pr1", q: "Як проходить впровадження? Які етапи?", short: "Аудит → ТЗ → Налаштування → Тестування → Навчання → Запуск → Підтримка.", full: "1. Аудит (2-4 год): аналіз процесів, підбір CRM\n2. ТЗ (1-2 дні): складаємо, узгоджуємо, кошторис\n3. Налаштування (1-4 тижні): налаштування, інтеграції, автоматизації\n4. Тестування (3-5 днів): ви тестуєте\n5. Навчання (1 день): вебінар, практика\n6. Запуск (1 день): перенесення даних, команда працює\n7. Підтримка (1-3 місяці): підтримка, адаптація" },
+      { id: "pr2", q: "Що таке аудит?", short: "2 години розмови про бізнес, після якої ТЗ та кошторис.", full: "Без аудиту не працюємо: потрібні двоє — ви (процеси) + ми (технологія).\n\nЧто відбувається: ви розповідаєте, ми питаємо, разом виявляємо вузькі місця, пропонуємо рішення." },
+      { id: "pr3", q: "Чи потрібен відповідальний з нашого боку?", short: "Обов'язково! Без нього проєкт буде гальмувати.", full: "Впровадження — дуэт. Ви знаєте процеси, ми технологію. Разом результат.\n\nХто: розуміє процеси, має повноваження, організує людей. Часто: власник, топ-менеджер, керівник продажів." },
+      { id: "pr4", q: "Чи можна побачити приклад роботи?", short: "Так! На аудиті показуємо референси і можемо демо.", full: "Видите: 18 кейсів на сайті з цифрами. На аудиті: показуємо схожі проєкти, демо. Потім: тестове середовище на тест.\n\nРеференси: контакти клієнтів що дали згоду." }
+    ],
+    why: [
+      { id: "w1", q: "Чим ви відрізняєтесь від інших?", short: "Не продаємо CRM — вирішуємо бізнес-задачі через автоматизацію.", full: "Інші: партнери однієї CRM, шаблонами, мета продати ліцензію.\n\nМи: 20+ CRM, підбираємо під ваш бізнес, мета щоб працювало, залишаємось на підтримці." },
+      { id: "w2", q: "Чи працюєте ви з нашою галуззю?", short: "З більшістю галузей. Якщо ні — навіть цікавіше!", full: "Працювали: e-commerce, виробництво, IT, юридичні, PR, маркетинг, сервісні, B2B, фінансові, будівництво.\n\nПроцеси схожі — лідогенерація, заявки, угоди, клієнти, звіти." },
+      { id: "w3", q: "Скільки у вас клієнтів?", short: "100+ проєктів за 10 років. З деякими можна поговорити.", full: "2014+ (10+ років), 100+ проєктів, 18 кейсів на сайті.\n\nРеференси: PR-агентство ITComms, меблева фабрика ВМКК, інші за запитом." },
+      { id: "w4", q: "Чи надаєте гарантію?", short: "Так! 30 днів або виправимо помилки безкоштовно.", full: "Гарантія: технічні помилки виправляємо місяць. Результат: система працює за 30 днів.\n\nПідтримка: СТАРТ (тиждень), ПРОФЕСІЙНИЙ (місяць), ІНДИВІДУАЛЬНИЙ (3 місяці)." },
+      { id: "w5", q: "Чому саме вас, а не самим?", short: "3-6 міс + 150К = 50% функціоналу. Ми: місяць + 70К = 90%.", full: "Самим: 3-6 місяців, метод проб, перша CRM (помилки), 50% можливостей.\n\nМи: місяць, 100+ досвіду, 90% можливостей, гарантія результату." }
+    ]
+  }
+
+  const currentFaqs = faqData[activeTab] || faqData.price
 
   return (
-    <section className="w-full py-16 bg-muted/50">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{dict.title}</h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              {dict.subtitle}
-            </p>
-          </div>
+    <div className="relative w-full bg-black pt-16 pb-16 overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent)",
+            backgroundSize: "50px 50px",
+          }}
+        />
+      </div>
+
+      <div className="relative max-w-[1400px] mx-auto px-8">
+        <div className="mb-16">
+          <div className="text-xs font-mono text-[#FFD700] tracking-wider mb-4">// ВІДПОВІДІ НА ЗАПИТАННЯ</div>
+          <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-4">FAQ</h2>
+          <p className="text-lg text-gray-300">Закриваємо всі сумніви та заперечення</p>
         </div>
-        <div className="mx-auto max-w-3xl mt-8">
-          <div className="space-y-4">
-            {faqs.map((faq: FaqItem) => (
-              <div key={faq.id} className="border rounded-md overflow-hidden">
-                <button
-                  onClick={() => handleToggle(faq.id)}
-                  className="w-full p-4 text-left flex justify-between items-center bg-white hover:bg-gray-50"
-                >
-                  <span className="font-medium">{faq.question}</span>
-                  <span>{openItem === faq.id ? '▼' : '▶'}</span>
-                </button>
-                {openItem === faq.id && (
-                  <div className="p-4 bg-gray-50 border-t">{faq.answer}</div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <ContactFormDialog
-              trigger={<Button className="bg-amber text-black hover:bg-amber-hover">{dict.ctaButton || "Поставити своє запитання"}</Button>}
-              title={commonDict.form.questionFormTitle}
-              description={commonDict.form.questionFormDescription}
-              formType="faq_question"
-              buttonText={commonDict.form.submitButton}
-              dict={commonDict}
-            />
-          </div>
+
+        <div className="flex flex-wrap gap-2 mb-12">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveTab(cat.id)}
+              className={`px-6 py-3 font-bold uppercase tracking-wide transition-all border-2 text-sm ${
+                activeTab === cat.id
+                  ? "bg-[#FFD700] text-black border-[#FFD700]"
+                  : "border-[#FFD700] text-white hover:bg-[#FFD700]/10"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="space-y-4">
+          {currentFaqs.map((item) => (
+            <div key={item.id} className="border border-white/10 bg-white/5 overflow-hidden">
+              <button
+                onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                className="w-full px-8 py-6 flex items-center justify-between hover:bg-white/10 transition-all"
+              >
+                <span className="text-lg font-bold text-white text-left">{item.q}</span>
+                <ChevronDown
+                  className={`w-5 h-5 text-[#FFD700] flex-shrink-0 transition-transform ${
+                    expandedId === item.id ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {expandedId === item.id && (
+                <div className="px-8 pb-6 space-y-4 border-t border-white/10 bg-white/5">
+                  <div className="text-[#FFD700] font-bold">{item.short}</div>
+                  <div className="text-white/80 text-base leading-relaxed whitespace-pre-line">{item.full}</div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <h3 className="text-2xl font-black text-white mb-4">Залишились питання?</h3>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            Замовте безкоштовний аудит — відповімо на всі питання та покажемо як це буде працювати.
+          </p>
+          <button className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-white transition-all">
+            Отримати безкоштовний аудит
+          </button>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

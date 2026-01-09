@@ -3,8 +3,6 @@ import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
 import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 
-// Заменяем динамический импорт на обычный импорт для компонента Services
-import StaticServices from "@/components/landing/static-services"
 import StaticFinalCta from "@/components/landing/static-final-cta"
 import TeamSection from "@/components/landing/team-section"
 import LogosCarousel from "@/components/landing/logos-carousel"
@@ -16,7 +14,6 @@ const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), 
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })
 const Pricing = dynamic(() => import("@/components/landing/pricing"), { ssr: true })
-const AuditWhy = dynamic(() => import("@/components/landing/audit-why"), { ssr: true })
 
 export default async function Home({
   params,
@@ -53,10 +50,6 @@ export default async function Home({
     console.error("Ошибка при получении кейсов для hero-section:", error);
   }
 
-  // Создаем локальную копию данных для Services чтобы избежать проблем с сериализацией
-  const servicesData = dict.landing.services ? { ...dict.landing.services } : null;
-  const commonData = { ...dict.common };
-
   return (
     <div className="flex flex-col items-center">
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
@@ -64,10 +57,8 @@ export default async function Home({
       <WhyChooseUs />
       <TeamSection />
       <Pricing />
-      <AuditWhy />
       <CaseStudies dict={dict.landing.caseStudies} />
       <Testimonials dict={dict.landing.testimonials} />
-      <StaticServices dict={servicesData} commonDict={commonData} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />
     </div>

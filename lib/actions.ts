@@ -2105,10 +2105,13 @@ async function sendQuizResultToUser(params: {
     })
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => '')
+      console.error("✗ Email webhook error:", response.status, response.statusText, errorText)
       throw new Error(`Помилка відправки email: ${response.status} ${response.statusText}`)
     }
 
-    await response.json().catch(() => ({}))
+    const responseData = await response.json().catch(() => ({}))
+    console.log("✓ Email webhook response:", response.status, responseData)
     return true
   } catch (error) {
     console.error("Помилка відправки результата на email:", error)

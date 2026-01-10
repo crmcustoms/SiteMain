@@ -1066,8 +1066,8 @@ export default function QuizSection() {
                   height={600}
                   quality={95}
                   priority
+                  unoptimized
                   className="w-full h-full object-cover drop-shadow-2xl"
-                  style={{ maxWidth: '500px', height: 'auto' }}
                 />
               </div>
 

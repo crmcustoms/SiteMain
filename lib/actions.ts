@@ -80,6 +80,9 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         console.error("Помилка парсингу result:", e)
       }
 
+      // Формируем текст анализа для email
+      const analysisText = formatQuizAnalysis(answersData, resultData, formData.get("clientType") as string)
+
       // Відправка даних квиза
       console.log("Дані квиза:", {
         name: validatedFields.data.name,
@@ -90,6 +93,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         result: resultData,
       })
 
+      // Отправка на вебхук для администратора
       const response = await sendEmailNotification({
         to: "your-email@example.com",
         subject: "Нова заявка з квиза діагностики",
@@ -100,10 +104,22 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         answers: answersData, // Отправляем как объект, а не строку
         clientType: formData.get("clientType") as string,
         result: resultData, // Отправляем результат
+        analysis: analysisText, // Текст анализа для удобства
         callTime: formData.get("callTime") as string,
         otherTime: formData.get("otherTime") as string,
         date: new Date().toLocaleString(),
       })
+
+      // Отправка email пользователю с анализом (если email указан)
+      if (validatedFields.data.email) {
+        await sendQuizResultToUser({
+          to: validatedFields.data.email,
+          name: validatedFields.data.name,
+          clientType: formData.get("clientType") as string,
+          analysis: analysisText,
+          profile: resultData.profile || {},
+        })
+      }
 
       if (!response) {
         console.error("Webhook failed for quiz form");
@@ -218,6 +234,91 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       success: false,
       message: `Помилка: ${errorMessage}`,
     }
+  }
+}
+
+// Функція для форматирования текста анализа квиза
+function formatQuizAnalysis(answers: any, result: any, clientType: string): string {
+  const profile = result?.profile || {}
+  const clientTypeLabels: Record<string, string> = {
+    'startup': 'Не підходить',
+    'small': 'Рекомендовано',
+    'medium-risk': 'Середній ризик',
+    'ideal': 'Ідеально',
+    'large': 'Преміум',
+    'has-crm': 'Є CRM'
+  }
+
+  let text = `РЕЗУЛЬТАТ ДІАГНОСТИКИ\n`
+  text += `========================\n\n`
+  text += `Тип клієнта: ${clientTypeLabels[clientType] || clientType}\n\n`
+
+  if (profile.businessType) {
+    text += `Тип бізнесу: ${profile.businessType}\n`
+  }
+  if (profile.teamSize) {
+    text += `Розмір команди: ${profile.teamSize}\n`
+  }
+  if (profile.systems && profile.systems.length > 0) {
+    text += `Системи: ${profile.systems.join(', ')}\n`
+  }
+  if (profile.painsList && profile.painsList.length > 0) {
+    text += `Проблеми: ${profile.painsList.join(', ')}\n`
+  }
+  if (profile.decisionMaker) {
+    text += `Приймає рішення: ${profile.decisionMaker}\n`
+  }
+
+  text += `\n========================\n`
+  text += `Детальні рекомендації та план дій дивіться на сайті.\n`
+
+  return text
+}
+
+// Функція для відправки результата квиза на email пользователю
+async function sendQuizResultToUser(params: {
+  to: string
+  name: string
+  clientType: string
+  analysis: string
+  profile: any
+}): Promise<boolean> {
+  try {
+    const webhookUrl = "https://n8n.crmcustoms.com/webhook/f14880e5-5d4a-4c6d-bc8c-69d82ef68acc"
+
+    const payload = {
+      emailType: "quiz_result",
+      to: params.to,
+      subject: "Результат діагностики CRM",
+      name: params.name,
+      clientType: params.clientType,
+      analysis: params.analysis,
+      profile: params.profile,
+      timestamp: new Date().toISOString(),
+    }
+
+    console.log("=== SENDING QUIZ RESULT EMAIL ===")
+    console.log("To:", params.to)
+    console.log("Payload:", JSON.stringify(payload, null, 2))
+    console.log("==================================\n")
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Помилка відправки email: ${response.status} ${response.statusText}`)
+    }
+
+    await response.json().catch(() => ({}))
+    return true
+  } catch (error) {
+    console.error("Помилка відправки результата на email:", error)
+    return false
   }
 }
 

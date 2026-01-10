@@ -411,7 +411,13 @@ export default function QuizSection() {
 
       if (result.success) {
         setCurrentScreen('result')
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        // Прокручиваем к результату, а не в самый верх
+        setTimeout(() => {
+          const resultElement = document.getElementById('quiz-result')
+          if (resultElement) {
+            resultElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+        }, 100)
       } else {
         toast({
           title: "Помилка",
@@ -1213,8 +1219,12 @@ export default function QuizSection() {
                     ...prev,
                     contact: { ...prev.contact!, email: e.target.value }
                   }))}
+                  placeholder="Залиште email, щоб отримати результат на пошту"
                   className="w-full px-4 py-3 border border-black/20 focus:border-black outline-none"
                 />
+                <p className="text-xs text-black/60 mt-1">
+                  Якщо залишите email, ми надішлемо вам детальний аналіз та рекомендації на пошту
+                </p>
               </div>
 
               <div>
@@ -1291,7 +1301,7 @@ export default function QuizSection() {
 
         {/* Result Screen */}
         {currentScreen === 'result' && clientType && (
-          <div className="border border-black p-8 md:p-12 relative animate-in fade-in zoom-in duration-500">
+          <div id="quiz-result" className="border border-black p-8 md:p-12 relative animate-in fade-in zoom-in duration-500">
             <div className="absolute -top-3 left-8 bg-white px-2">
               <span className="text-xs font-mono text-black/60 tracking-wider uppercase">
                 {clientType === 'startup' ? '[NOT_SUITABLE]' :

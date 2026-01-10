@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Customs - Діагностика</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #FFFFFF;
+            --color-text: #000000;
+            --color-accent: #FFD700;
+            --color-border: #E5E5E5;
+            --color-secondary: #A3A3A3;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Intro Screen */
+        .quiz-intro {
+            text-align: center;
+            border: 1px solid var(--color-text);
+            padding: 60px 40px;
+            position: relative;
+        }
+
+        .quiz-intro::before {
+            content: '// ДІАГНОСТИКА';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--color-bg);
+            padding: 0 12px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quiz-intro h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .quiz-intro p {
+            font-size: 1.125rem;
+            color: #404040;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .quiz-benefits {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .benefit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-family: var(--font-mono);
+        }
+
+        .benefit::before {
+            content: '✓';
+            color: var(--color-accent);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Main Quiz Container */
+        .quiz-container {
+            border: 1px solid var(--color-text);
+            padding: 48px;
+            position: relative;
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+        }
+
+        /* Progress Bar */
+        .quiz-progress {
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--color-bg);
+            padding: 0 12px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-bar {
+            height: 2px;
+            background: var(--color-border);
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-accent);
+            transition: width 0.3s ease;
+        }
+
+        /* Question */
+        .quiz-question {
+            margin-bottom: 40px;
+        }
+
+        .question-number {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--color-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quiz-question h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+
+        /* Options */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: var(--color-text);
+            background: #F8F9FA;
+        }
+
+        .option.selected {
+            border-color: var(--color-text);
+            background: var(--color-accent);
+        }
+
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            margin-top: 4px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .option-content {
+            flex: 1;
+        }
+
+        .option-label {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .option-hint {
+            font-size: 0.875rem;
+            color: #404040;
+        }
+
+        .option-input {
+            margin-top: 12px;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-main);
+            font-size: 1rem;
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: var(--color-text);
+        }
+
+        /* Checkboxes limit warning */
+        .limit-warning {
+            font-size: 0.875rem;
+            color: #DC2626;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .limit-warning.active {
+            display: block;
+        }
+
+        /* Navigation Buttons */
+        .quiz-navigation {
+            display: flex;
+            gap: 16px;
+            justify-content: space-between;
+            margin-top: 48px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--color-text);
+            background: var(--color-bg);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--color-text);
+            color: var(--color-bg);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            background: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: var(--color-text);
+        }
+
+        .btn-primary:hover {
+            background: #E6C200;
+            border-color: #E6C200;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: none;
+        }
+
+        .contact-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: var(--color-accent);
+            margin-left: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-main);
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-text);
+        }
+
+        .form-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-radio {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-radio input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .form-checkbox input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Result Screen */
+        .quiz-result {
+            display: none;
+        }
+
+        .quiz-result.active {
+            display: block;
+        }
+
+        .result-icon {
+            font-size: 1rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            color: var(--color-text);
+            letter-spacing: 2px;
+            border: 2px solid var(--color-text);
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--color-accent);
+        }
+
+        .result-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .result-icon-wrapper {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .result-profile {
+            background: #F8F9FA;
+            padding: 24px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 32px;
+        }
+
+        .result-profile h3 {
+            font-size: 1.125rem;
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+        }
+
+        .result-profile ul {
+            list-style: none;
+        }
+
+        .result-profile li {
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .result-profile li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+        }
+
+        .result-content h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .result-content p {
+            margin-bottom: 16px;
+            font-size: 1.0625rem;
+            line-height: 1.7;
+        }
+
+        .result-list {
+            list-style: none;
+            margin: 24px 0;
+        }
+
+        .result-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .result-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        .result-box {
+            background: var(--color-accent);
+            padding: 24px;
+            margin: 32px 0;
+            border: 1px solid var(--color-text);
+        }
+
+        .result-box h5 {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .result-warning {
+            background: #FEF2F2;
+            border: 1px solid #DC2626;
+            padding: 24px;
+            margin: 32px 0;
+        }
+
+        .result-warning h5 {
+            color: #DC2626;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .result-cta {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .result-secondary {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .quiz-intro,
+            .quiz-container {
+                padding: 32px 24px;
+            }
+
+            .quiz-intro h1 {
+                font-size: 2rem;
+            }
+
+            .quiz-benefits {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .quiz-question h2 {
+                font-size: 1.5rem;
+            }
+
+            .quiz-navigation {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .result-cta {
+                flex-direction: column;
+            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Intro Screen -->
+        <div id="intro" class="quiz-intro active">
+            <h1>Не впевнені що вам підходить?</h1>
+            <p>Відповісте на 5 питань — ми підготуємо персональну рекомендацію та підберемо оптимальне рішення</p>
+            
+            <div class="quiz-benefits">
+                <div class="benefit">Займе 60 секунд</div>
+                <div class="benefit">Персональна рекомендація</div>
+                <div class="benefit">Орієнтовна вартість</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="startQuiz()">Пройти діагностику</button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz" class="quiz-container">
+            <div class="quiz-progress">ПИТАННЯ <span id="current-q">1</span> З 5</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <!-- Questions will be inserted here -->
+            <div id="quiz-content"></div>
+
+            <div class="quiz-navigation">
+                <button class="btn" id="btn-back" onclick="previousQuestion()" disabled>← Назад</button>
+                <button class="btn btn-primary" id="btn-next" onclick="nextQuestion()">Далі →</button>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div id="contact-form" class="quiz-container contact-form">
+            <div class="quiz-progress">ОСТАННІЙ КРОК</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+
+            <div class="quiz-question">
+                <h2>Куди надіслати результат та коли зручно зателефонувати?</h2>
+
+                <div class="form-group">
+                    <label class="form-label required">Ваше ім'я</label>
+                    <input type="text" id="contact-name" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Телефон</label>
+                    <input type="tel" id="contact-phone" class="form-input" placeholder="+380" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email (необов'язково)</label>
+                    <input type="email" id="contact-email" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Коли зручно зателефонувати?</label>
+                    <div class="form-radio-group">
+                        <label class="form-radio">
+                            <input type="radio" name="call-time" value="today_18" checked>
+                            <span>Сьогодні до 18:00</span>
+                        </label>
+                        <label class="form-radio">
+                            <input type="radio" name="call-time" value="tomorrow_12">
+                            <span>Завтра з 10:00 до 12:00</span>
+                        </label>
+                        <label class="form-radio">
+                            <input type="radio" name="call-time" value="tomorrow_18">
+                            <span>Завтра з 14:00 до 18:00</span>
+                        </label>
+                        <label class="form-radio">
+                            <input type="radio" name="call-time" value="other">
+                            <span>Інший час (напишу в коментарі)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group hidden" id="other-time-group">
+                    <label class="form-label">Напишіть коли вам зручно</label>
+                    <input type="text" id="other-time" class="form-input">
+                </div>
+
+                <div class="form-checkbox">
+                    <input type="checkbox" id="privacy" required>
+                    <label for="privacy">Погоджуюсь з політикою конфіденційності</label>
+                </div>
+            </div>
+
+            <div class="quiz-navigation">
+                <button class="btn" onclick="backToQuiz()">← Назад</button>
+                <button class="btn btn-primary" onclick="submitQuiz()">Отримати персональну рекомендацію</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result" class="quiz-container quiz-result">
+            <div id="result-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = {
+            questions: [
+                {
+                    id: 'businessType',
+                    number: 1,
+                    title: 'Як ви працюєте з клієнтами?',
+                    type: 'radio',
+                    options: [
+                        {
+                            value: 'b2b',
+                            label: 'B2B (продаємо бізнесу)',
+                            hint: 'Цикл угоди довгий, потрібен контроль етапів'
+                        },
+                        {
+                            value: 'b2c',
+                            label: 'B2C (продаємо кінцевим споживачам)',
+                            hint: 'Цикл короткий, важлива швидкість обробки'
+                        },
+                        {
+                            value: 'both',
+                            label: 'B2B + B2C (обидва напрямки)',
+                            hint: 'Потрібні різні воронки для різних клієнтів'
+                        }
+                    ]
+                },
+                {
+                    id: 'teamSize',
+                    number: 2,
+                    title: 'Скільки людей у вашій команді?',
+                    type: 'radio',
+                    options: [
+                        {
+                            value: '1-3',
+                            label: '1-3 особи',
+                            hint: 'Тільки починаємо'
+                        },
+                        {
+                            value: '3-15',
+                            label: '3-15 осіб',
+                            hint: 'Малий бізнес, потрібна система'
+                        },
+                        {
+                            value: '15-35',
+                            label: '15-35 осіб',
+                            hint: 'Середній бізнес, вже є хаос'
+                        },
+                        {
+                            value: '35+',
+                            label: '35-100+ осіб',
+                            hint: 'Великий бізнес, складні процеси'
+                        }
+                    ]
+                },
+                {
+                    id: 'systems',
+                    number: 3,
+                    title: 'Які системи вже працюють у вас?',
+                    type: 'checkbox',
+                    options: [
+                        {
+                            value: 'nothing',
+                            label: 'Нічого (працюємо в Excel/блокнотах)',
+                            hint: ''
+                        },
+                        {
+                            value: 'crm',
+                            label: 'CRM система',
+                            hint: '',
+                            hasInput: true,
+                            inputPlaceholder: 'Яка саме?'
+                        },
+                        {
+                            value: 'accounting',
+                            label: 'Бухгалтерія/облік (Medoc, Finsmart, 1С)',
+                            hint: '',
+                            hasInput: true,
+                            inputPlaceholder: 'Яка саме?'
+                        },
+                        {
+                            value: 'tasks',
+                            label: 'Таск-менеджер (Asana, Trello, інше)',
+                            hint: ''
+                        },
+                        {
+                            value: 'portal',
+                            label: 'Корпоративний портал',
+                            hint: ''
+                        }
+                    ]
+                },
+                {
+                    id: 'pains',
+                    number: 4,
+                    title: 'Що найбільше болить зараз?',
+                    subtitle: 'Оберіть до 3 варіантів',
+                    type: 'checkbox',
+                    maxSelect: 3,
+                    options: [
+                        {
+                            value: 'lost_clients',
+                            label: 'Втрачаємо клієнтів між менеджерами'
+                        },
+                        {
+                            value: 'unknown_source',
+                            label: 'Не знаємо звідки прийшов клієнт'
+                        },
+                        {
+                            value: 'old_base',
+                            label: 'Менеджери працюють тільки зі старою базою'
+                        },
+                        {
+                            value: 'no_control',
+                            label: 'Немає контролю за угодами'
+                        },
+                        {
+                            value: 'hard_training',
+                            label: 'Складно навчити нових співробітників'
+                        },
+                        {
+                            value: 'task_chaos',
+                            label: 'Хаос у завданнях та дедлайнах'
+                        },
+                        {
+                            value: 'reporting_time',
+                            label: 'Витрачаємо багато часу на звітність'
+                        },
+                        {
+                            value: 'no_visibility',
+                            label: 'Керівник не бачить повну картину'
+                        }
+                    ]
+                },
+                {
+                    id: 'decisionMaker',
+                    number: 5,
+                    title: 'Хто буде приймати рішення про впровадження?',
+                    type: 'radio',
+                    options: [
+                        {
+                            value: 'owner',
+                            label: 'Я власник/співвласник',
+                            hint: 'Приймаю рішення сам'
+                        },
+                        {
+                            value: 'director',
+                            label: 'Я директор (найманий)',
+                            hint: 'Потрібно узгодження з власником'
+                        },
+                        {
+                            value: 'head',
+                            label: 'Я керівник відділу',
+                            hint: 'Потрібно узгодження з директором'
+                        },
+                        {
+                            value: 'responsible',
+                            label: 'Я відповідальний за проєкт',
+                            hint: 'Маю повноваження прийняти рішення'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Quiz State
+        let currentQuestion = 0;
+        let answers = {
+            businessType: '',
+            teamSize: '',
+            systems: {},
+            pains: [],
+            decisionMaker: '',
+            contact: {}
+        };
+
+        // Start Quiz
+        function startQuiz() {
+            document.getElementById('intro').classList.remove('active');
+            document.getElementById('quiz').classList.add('active');
+            renderQuestion();
+        }
+
+        // Render Question
+        function renderQuestion() {
+            const question = quizData.questions[currentQuestion];
+            const content = document.getElementById('quiz-content');
+            
+            let html = `
+                <div class="quiz-question">
+                    <div class="question-number">Питання ${question.number} з 5</div>
+                    <h2>${question.title}</h2>
+                    ${question.subtitle ? `<p style="margin-bottom: 24px; color: #404040;">${question.subtitle}</p>` : ''}
+                    <div class="quiz-options">
+            `;
+
+            question.options.forEach((option, index) => {
+                const inputType = question.type;
+                const inputName = question.id; // Всі checkboxes в одній групі мають однакове name
+                const isChecked = question.type === 'radio' 
+                    ? answers[question.id] === option.value
+                    : answers[question.id] && (
+                        answers[question.id][option.value] === true || 
+                        (typeof answers[question.id][option.value] === 'string' && answers[question.id][option.value] !== '')
+                    );
+
+                html += `
+                    <label class="option ${isChecked ? 'selected' : ''}" data-value="${option.value}">
+                        <input type="${inputType}" 
+                               name="${inputName}" 
+                               value="${option.value}"
+                               ${isChecked ? 'checked' : ''}
+                               onchange="handleAnswer('${question.id}', '${option.value}', '${question.type}', ${question.maxSelect || 'null'})">
+                        <div class="option-content">
+                            <span class="option-label">${option.label}</span>
+                            ${option.hint ? `<span class="option-hint">${option.hint}</span>` : ''}
+                            ${option.hasInput ? `
+                                <input type="text" 
+                                       class="option-input" 
+                                       placeholder="${option.inputPlaceholder}"
+                                       value="${answers[question.id] && answers[question.id][option.value + '_name'] || ''}"
+                                       onchange="handleInputAnswer('${question.id}', '${option.value}', this.value)"
+                                       onclick="event.stopPropagation()">
+                            ` : ''}
+                        </div>
+                    </label>
+                `;
+            });
+
+            if (question.maxSelect) {
+                html += `<div class="limit-warning" id="limit-warning">Можна обрати максимум ${question.maxSelect} варіанти</div>`;
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = html;
+            updateProgress();
+            updateButtons();
+        }
+
+        // Handle Answer
+        function handleAnswer(questionId, value, type, maxSelect) {
+            const question = quizData.questions[currentQuestion];
+            
+            if (type === 'radio') {
+                answers[questionId] = value;
+                
+                // Update UI
+                document.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                event.target.closest('.option').classList.add('selected');
+            } else if (type === 'checkbox') {
+                // Handle "nothing" exclusive selection
+                if (value === 'nothing') {
+                    if (event.target.checked) {
+                        // Uncheck all others
+                        answers[questionId] = { nothing: true };
+                        document.querySelectorAll(`input[type="checkbox"]`).forEach(cb => {
+                            if (cb.value !== 'nothing') cb.checked = false;
+                        });
+                        document.querySelectorAll('.option').forEach(opt => {
+                            if (opt.dataset.value !== 'nothing') opt.classList.remove('selected');
+                        });
+                    } else {
+                        delete answers[questionId].nothing;
+                    }
+                } else {
+                    // Uncheck "nothing" if selecting something else
+                    if (answers[questionId] && answers[questionId].nothing) {
+                        delete answers[questionId].nothing;
+                        const nothingCheckbox = document.querySelector(`input[value="nothing"]`);
+                        if (nothingCheckbox) nothingCheckbox.checked = false;
+                        const nothingOption = document.querySelector(`.option[data-value="nothing"]`);
+                        if (nothingOption) nothingOption.classList.remove('selected');
+                    }
+
+                    if (!answers[questionId]) answers[questionId] = {};
+
+                    if (event.target.checked) {
+                        // Check if max limit reached
+                        const selectedCount = Object.keys(answers[questionId]).filter(k => !k.endsWith('_name')).length;
+                        if (maxSelect && selectedCount >= maxSelect) {
+                            event.target.checked = false;
+                            document.getElementById('limit-warning').classList.add('active');
+                            setTimeout(() => {
+                                document.getElementById('limit-warning').classList.remove('active');
+                            }, 3000);
+                            return;
+                        }
+                        answers[questionId][value] = true;
+                    } else {
+                        delete answers[questionId][value];
+                        delete answers[questionId][value + '_name'];
+                    }
+                }
+
+                // Update UI
+                if (event.target.checked) {
+                    event.target.closest('.option').classList.add('selected');
+                } else {
+                    event.target.closest('.option').classList.remove('selected');
+                }
+            }
+
+            updateButtons();
+        }
+
+        // Handle Input Answer
+        function handleInputAnswer(questionId, value, inputValue) {
+            if (!answers[questionId]) answers[questionId] = {};
+            answers[questionId][value + '_name'] = inputValue;
+        }
+
+        // Update Progress
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData.questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('current-q').textContent = currentQuestion + 1;
+        }
+
+        // Update Buttons
+        function updateButtons() {
+            const question = quizData.questions[currentQuestion];
+            const backBtn = document.getElementById('btn-back');
+            const nextBtn = document.getElementById('btn-next');
+
+            // Back button
+            backBtn.disabled = currentQuestion === 0;
+
+            // Next button
+            let canProceed = false;
+            if (question.type === 'radio') {
+                canProceed = answers[question.id] !== '';
+            } else if (question.type === 'checkbox') {
+                canProceed = answers[question.id] && Object.keys(answers[question.id]).some(k => !k.endsWith('_name'));
+            }
+
+            nextBtn.disabled = !canProceed;
+
+            // Update next button text
+            if (currentQuestion === quizData.questions.length - 1) {
+                nextBtn.textContent = 'Отримати результат →';
+            }
+        }
+
+        // Next Question
+        function nextQuestion() {
+            if (currentQuestion < quizData.questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                // Go to contact form
+                document.getElementById('quiz').classList.remove('active');
+                document.getElementById('contact-form').classList.add('active');
+            }
+        }
+
+        // Previous Question
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        // Back to Quiz
+        function backToQuiz() {
+            document.getElementById('contact-form').classList.remove('active');
+            document.getElementById('quiz').classList.add('active');
+        }
+
+        // Handle call time radio
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'call-time') {
+                if (e.target.value === 'other') {
+                    document.getElementById('other-time-group').classList.remove('hidden');
+                } else {
+                    document.getElementById('other-time-group').classList.add('hidden');
+                }
+            }
+        });
+
+        // Submit Quiz
+        function submitQuiz() {
+            // Validate contact form
+            const name = document.getElementById('contact-name').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const privacy = document.getElementById('privacy').checked;
+
+            if (!name) {
+                alert('Будь ласка, вкажіть ваше ім\'я');
+                return;
+            }
+
+            if (!phone) {
+                alert('Будь ласка, вкажіть телефон');
+                return;
+            }
+
+            if (!privacy) {
+                alert('Підтвердіть згоду з політикою конфіденційності');
+                return;
+            }
+
+            // Save contact info
+            answers.contact = {
+                name: name,
+                phone: phone,
+                email: document.getElementById('contact-email').value.trim(),
+                callTime: document.querySelector('input[name="call-time"]:checked').value,
+                otherTime: document.getElementById('other-time').value.trim()
+            };
+
+            // Determine client type
+            const clientType = determineClientType();
+            
+            // Show result
+            showResult(clientType);
+
+            // Here you would send data to your backend/CRM
+            console.log('Quiz Data:', { answers, clientType });
+        }
+
+        // Determine Client Type
+        function determineClientType() {
+            const teamSize = answers.teamSize;
+            const systems = answers.systems || {};
+            const hasCRM = systems.crm === true;
+            const hasAccounting = systems.accounting === true;
+            const hasNothing = systems.nothing === true;
+
+            // Startup (not suitable)
+            if (teamSize === '1-3' && (hasNothing || !hasAccounting)) {
+                return 'startup';
+            }
+
+            // Ideal client (has accounting, no CRM)
+            if (hasAccounting && !hasCRM) {
+                return 'ideal';
+            }
+
+            // Large business
+            if (teamSize === '35+') {
+                return 'large';
+            }
+
+            // Medium business without systems (risk)
+            if (teamSize === '15-35' && (hasNothing || (!hasCRM && !hasAccounting))) {
+                return 'medium-risk';
+            }
+
+            // Has CRM (optimization)
+            if (hasCRM) {
+                return 'has-crm';
+            }
+
+            // Small business (START package)
+            if (teamSize === '3-15' && !hasCRM) {
+                return 'small';
+            }
+
+            // Default to small
+            return 'small';
+        }
+
+        // Show Result
+        function showResult(type) {
+            document.getElementById('contact-form').classList.remove('active');
+            document.getElementById('result').classList.add('active');
+
+            const resultContent = document.getElementById('result-content');
+            const results = getResultContent(type);
+
+            resultContent.innerHTML = results;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Get Result Content
+        function getResultContent(type) {
+            const profile = generateProfile();
+            
+            const results = {
+                'startup': `
+                    <div class="result-icon-wrapper"><div class="result-icon">[NOT_SUITABLE]</div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-content">
+                        <h4>ЧЕСНА РЕКОМЕНДАЦІЯ</h4>
+                        <p>На вашому етапі CRM може бути зайвою.</p>
+                        
+                        <p style="margin-top: 24px;"><strong>Зараз вам важливіше:</strong></p>
+                        <ul class="result-list">
+                            <li>Налагодити потік клієнтів</li>
+                            <li>Відпрацювати продажі</li>
+                            <li>Зробити перші гроші</li>
+                        </ul>
+
+                        <div class="result-box">
+                            <h5>Що ми можемо для вас</h5>
+                            <p style="margin: 12px 0;"><strong>Мінімальний пакет за 5,000₴</strong></p>
+                            <p style="font-size: 0.9375rem;">
+                                • Налаштування базових статусів та полів<br>
+                                • 1-2 прості автоматизації<br>
+                                • 3 дні підтримки в чаті<br>
+                                • 30-хвилинний вебінар
+                            </p>
+                            <p style="margin-top: 16px; font-size: 0.9375rem;"><em>Підходить якщо у вас вже є готова CRM і дуже прості процеси.</em></p>
+                        </div>
+
+                        <p><strong>Або повернутися коли буде:</strong></p>
+                        <ul class="result-list">
+                            <li>5-10 постійних клієнтів</li>
+                            <li>Стабільний потік заявок</li>
+                            <li>3+ менеджери в команді</li>
+                        </ul>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Все одно хочу обговорити</button>
+                        <button class="btn" onclick="window.location.href='#contact'">Зв'яжіться зі мною через місяць</button>
+                    </div>
+
+                    <div class="result-secondary">
+                        <p style="text-align: center; color: #404040;">
+                            <strong>Ми цінуємо ваш час і свій</strong><br><br>
+                            Краще відверто сказати що зараз не час, ніж взяти гроші за те що не принесе результату.<br><br>
+                            Успіхів у розвитку бізнесу!
+                        </p>
+                    </div>
+                `,
+
+                'small': `
+                    <div class="result-icon-wrapper"><div class="result-icon">[RECOMMENDED]</div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-content">
+                        <h4>НАША РЕКОМЕНДАЦІЯ: ПАКЕТ СТАРТ</h4>
+                        
+                        <p><strong>Чому саме він:</strong></p>
+                        <ul class="result-list">
+                            <li>Швидкий результат (2-3 тижні)</li>
+                            <li>Почнете бачити всі угоди</li>
+                            <li>Менеджери працюватимуть в одній системі</li>
+                            <li>Перші автоматизації</li>
+                        </ul>
+
+                        <div class="result-box">
+                            <h5>Що входить</h5>
+                            <ul class="result-list" style="margin: 12px 0;">
+                                <li>Обов'язковий аудит (2 години)</li>
+                                <li>Підбір CRM під ваш бізнес</li>
+                                <li>Налаштування воронок та статусів</li>
+                                <li>До 3 базових інтеграцій</li>
+                                <li>Базові автоматизації</li>
+                                <li>Вебінар для команди (1-2 години)</li>
+                                <li>Тиждень технічної підтримки</li>
+                            </ul>
+                            <p style="margin-top: 16px;"><strong>Орієнтовна вартість: від 25,000₴</strong></p>
+                            <p style="margin-top: 8px; font-size: 0.9375rem;">⏱️ Типовий термін: 2-3 тижні</p>
+                        </div>
+
+                        <p style="margin-top: 32px;"><strong>Що далі:</strong></p>
+                        <p>1. Проведемо аудит (2 години, безкоштовно)<br>
+                           2. Покажемо як буде працювати<br>
+                           3. Запустимо перші продажі за місяць</p>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Замовити безкоштовний аудит</button>
+                    </div>
+
+                    <div class="result-secondary">
+                        <p style="text-align: center;">
+                            <strong>Не впевнені? Маєте питання?</strong><br><br>
+                            <button class="btn" onclick="window.location.href='#telegram'" style="margin-right: 12px;">Написати в Telegram</button>
+                            <button class="btn" onclick="window.location.href='#cases'">Подивитися кейси</button>
+                        </p>
+                    </div>
+                `,
+
+                'medium-risk': `
+                    <div class="result-icon-wrapper"><div class="result-icon"></div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-warning">
+                        <h5> Важливе попередження</h5>
+                        <p>У компаніях вашого розміру БЕЗ систем зазвичай проблема не в технологіях, а в менеджменті.</p>
+                        <p style="margin-top: 12px;"><strong> CRM не замінить управління!</strong></p>
+                        
+                        <p style="margin-top: 16px;">Якщо у вас:</p>
+                        <ul style="margin: 8px 0; padding-left: 20px;">
+                            <li>Немає чіткого розподілу відповідальності</li>
+                            <li>Люди не виконують завдання в строк</li>
+                            <li>Відсутні базові процедури</li>
+                        </ul>
+                        
+                        <p style="margin-top: 12px;">CRM тільки "підсвітить" ці проблеми, але не вирішить їх автоматично.</p>
+                    </div>
+
+                    <div class="result-content">
+                        <h4> Наша рекомендація: Поетапне впровадження</h4>
+                        
+                        <div class="result-box" style="background: #F8F9FA; margin: 24px 0;">
+                            <p style="margin-bottom: 16px;"><strong>Етап 1: Корпоративний портал (1-1.5 міс)</strong></p>
+                            <ul class="result-list">
+                                <li>Люди звикають до роботи в системі</li>
+                                <li>Налагоджуються завдання та комунікація</li>
+                                <li>З'являється дисципліна виконання</li>
+                            </ul>
+                            
+                            <p style="margin: 24px 0 16px 0;"><strong>Етап 2: CRM (після звикання до системи)</strong></p>
+                            <ul class="result-list">
+                                <li>Впроваджуємо систему продажів</li>
+                                <li>Інтеграції та автоматизація</li>
+                                <li>Контроль угод</li>
+                            </ul>
+                            
+                            <p style="margin-top: 24px;"><strong>Орієнтовна вартість: від 70,000₴</strong><br>
+                            Термін: 2-3 місяці</p>
+                        </div>
+
+                        <p><strong>Чому це важливо:</strong></p>
+                        <p>Якщо впровадити тільки CRM без підготовки — ризик провалу 70-80%. Люди просто не будуть користуватися системою.</p>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Обговорити проєкт</button>
+                        <button class="btn" onclick="window.location.href='#contact'">Хочу тільки CRM (розумію ризики)</button>
+                    </div>
+                `,
+
+                'ideal': `
+                    <div class="result-icon-wrapper"><div class="result-icon">[IDEAL]</div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-content">
+                        <h4> Ви — ідеальний клієнт для впровадження!</h4>
+                        
+                        <p><strong>Чому:</strong></p>
+                        <ul class="result-list">
+                            <li>Базові процеси вже налаштовані в обліку</li>
+                            <li>Є розуміння систематизації</li>
+                            <li>Команда готова до нових інструментів</li>
+                            <li>Чітко видно проблему</li>
+                        </ul>
+
+                        <p style="margin-top: 24px;"><strong>Типова ситуація в таких компаніях:</strong></p>
+                        <p>Менеджери працюють зі старою базою клієнтів<br>
+                           Нові ліди обробляються погано<br>
+                           Власник не бачить воронку продажів<br>
+                           Немає зв'язку між лідами та продажами</p>
+
+                        <div class="result-box">
+                            <h5> Наша рекомендація: Пакет ПРОФЕСІЙНИЙ</h5>
+                            
+                            <p style="margin: 16px 0;"><strong>Що зробимо:</strong></p>
+                            <ul class="result-list">
+                                <li>CRM з інтеграцією в облікову систему</li>
+                                <li>Автоматична передача даних (угоди → накладні)</li>
+                                <li>Контроль роботи менеджерів</li>
+                                <li>Воронка для нових лідів</li>
+                                <li>Звітність для власника/РОПа</li>
+                                <li>n8n автоматизація рутини</li>
+                            </ul>
+                            
+                            <p style="margin-top: 24px;">
+                                <strong>Орієнтовна вартість: від 70,000₴</strong><br>
+                                Термін впровадження: 1-2 місяці<br>
+                                Окупність: 3-4 місяці
+                            </p>
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 24px; margin: 32px 0; border: 1px solid #E5E5E5;">
+                            <p><strong> Типовий результат після впровадження:</strong></p>
+                            <ul class="result-list" style="margin: 16px 0;">
+                                <li>Менеджери починають обробляти нових клієнтів</li>
+                                <li>Власник бачить всю воронку продажів</li>
+                                <li>Дані автоматично йдуть в облік</li>
+                                <li>Ріст продажів на 20-30% за перші 3 місяці</li>
+                            </ul>
+                            <p style="margin-top: 16px; font-style: italic; color: #404040;">
+                                "До впровадження менеджери працювали тільки зі старими клієнтами. Після — кожен веде 10-15 нових угод щомісяця"<br>
+                                — типовий відгук
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Замовити безкоштовний аудит</button>
+                    </div>
+
+                    <div class="result-secondary">
+                        <p style="text-align: center;">
+                            <strong>Схожі кейси:</strong><br><br>
+                            <button class="btn" onclick="window.location.href='#case-vmkk'" style="margin-right: 12px;">Меблева ВМКК</button>
+                            <button class="btn" onclick="window.location.href='#case-itcomms'">PR-агентство ITComms</button>
+                        </p>
+                    </div>
+                `,
+
+                'large': `
+                    <div class="result-icon-wrapper"><div class="result-icon">[PREMIUM]</div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-content">
+                        <h4> Ви — наш профільний клієнт</h4>
+                        
+                        <p><strong>Чому ми підходимо для великих компаній:</strong></p>
+                        <ul class="result-list">
+                            <li>10+ років досвіду</li>
+                            <li>Розуміємо складні організаційні структури</li>
+                            <li>Працювали з компаніями 100+ осіб</li>
+                            <li>Знаємо як впроваджувати без зупинки бізнесу</li>
+                            <li>Поетапний підхід з мінімізацією ризиків</li>
+                        </ul>
+
+                        <div class="result-box">
+                            <h5> Наша рекомендація: ІНДИВІДУАЛЬНИЙ підхід</h5>
+                            
+                            <p style="margin: 16px 0;"><strong>Типовий план впровадження:</strong></p>
+                            
+                            <p><strong>Фаза 1: Корпоративний портал (2-3 міс)</strong></p>
+                            <p style="font-size: 0.9375rem; margin: 8px 0 16px 0;">
+                                → Завдання, комунікація, документообіг<br>
+                                → Люди звикають до системи<br>
+                                → Налагоджується внутрішня взаємодія
+                            </p>
+                            
+                            <p><strong>Фаза 2: CRM + інтеграція обліку (2-3 міс)</strong></p>
+                            <p style="font-size: 0.9375rem; margin: 8px 0 16px 0;">
+                                → Система продажів<br>
+                                → Автоматичний обмін даними<br>
+                                → Контроль угод
+                            </p>
+                            
+                            <p><strong>Фаза 3: Автоматизація процесів (ongoing)</strong></p>
+                            <p style="font-size: 0.9375rem; margin: 8px 0 16px 0;">
+                                → Складні бізнес-процеси<br>
+                                → AI інтеграції<br>
+                                → Кастомні модулі
+                            </p>
+                            
+                            <p style="margin-top: 24px;">
+                                <strong>Орієнтовна вартість: від 120,000₴</strong><br>
+                                Термін: від 4 місяців<br>
+                                Окупність: 2-3 місяці
+                            </p>
+                        </div>
+
+                        <div style="background: #F8F9FA; padding: 24px; margin: 32px 0; border: 1px solid #E5E5E5;">
+                            <p><strong>Що важливо для великих проєктів:</strong></p>
+                            <ul style="margin: 12px 0; padding-left: 20px;">
+                                <li>→ Виділений менеджер проєкту з нашого боку</li>
+                                <li>→ Поетапне впровадження (без "big bang")</li>
+                                <li>→ Мінімум ризиків через правильну послідовність</li>
+                                <li>→ Залучення ключових співробітників на кожному етапі</li>
+                                <li>→ 3 місяці супроводу після запуску</li>
+                                <li>→ Документація та навчальні матеріали</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Обговорити проєкт</button>
+                    </div>
+
+                    <div class="result-secondary">
+                        <p style="text-align: center;">
+                            <strong>Схожі проєкти:</strong><br><br>
+                            <button class="btn" onclick="window.location.href='#case-vmkk'" style="margin-right: 12px;">Меблева фабрика ВМКК - 80 осіб</button>
+                            <button class="btn" onclick="window.location.href='#case-itcomms'">PR-агентство ITComms - 25 осіб</button>
+                        </p>
+                    </div>
+                `,
+
+                'has-crm': `
+                    <div class="result-icon-wrapper"><div class="result-icon">[OK]</div>
+                    <h2 class="result-title">РЕЗУЛЬТАТ ДІАГНОСТИКИ</h2>
+                    
+                    ${profile}
+
+                    <div class="result-content">
+                        <h4> Наша рекомендація: Аудит + Оптимізація</h4>
+                        
+                        <p><strong>Типові проблеми існуючих CRM:</strong></p>
+                        <div style="background: #F8F9FA; padding: 20px; margin: 16px 0; border: 1px solid #E5E5E5;">
+                            <p>☐ Налаштована не під ваші процеси<br>
+                               <span style="margin-left: 20px; color: #404040;">Менеджери використовують на 30-40%</span></p>
+                            
+                            <p style="margin-top: 12px;">☐ Менеджери обходять систему<br>
+                               <span style="margin-left: 20px; color: #404040;">→ Ведуть Excel паралельно</span></p>
+                            
+                            <p style="margin-top: 12px;">☐ Немає потрібних інтеграцій<br>
+                               <span style="margin-left: 20px; color: #404040;">→ Ручне перенесення даних</span></p>
+                            
+                            <p style="margin-top: 12px;">☐ Складно використовувати<br>
+                               <span style="margin-left: 20px; color: #404040;">→ Багато зайвих функцій</span></p>
+                            
+                            <p style="margin-top: 12px;">☐ Немає навчання<br>
+                               <span style="margin-left: 20px; color: #404040;">→ Кожен працює по-своєму</span></p>
+                        </div>
+
+                        <div class="result-box">
+                            <h5>Що ми можемо</h5>
+                            
+                            <p style="margin: 16px 0;"><strong>1. Аудит поточної системи (2-4 години)</strong></p>
+                            <ul class="result-list">
+                                <li>Проаналізуємо як налаштована CRM</li>
+                                <li>Знайдемо де втрачаються клієнти</li>
+                                <li>Виявимо що заважає роботі</li>
+                            </ul>
+                            
+                            <p style="margin: 24px 0 16px 0;"><strong>2. Оптимізація (1-2 тижні)</strong></p>
+                            <ul class="result-list">
+                                <li>Оптимізуємо процеси під ваші задачі</li>
+                                <li>Прибираємо зайве, додаємо потрібне</li>
+                                <li>Налаштуємо інтеграції</li>
+                            </ul>
+                            
+                            <p style="margin: 24px 0 16px 0;"><strong>3. Навчання команди (1 день)</strong></p>
+                            <ul class="result-list">
+                                <li>Покажемо як правильно працювати</li>
+                                <li>Створимо інструкції</li>
+                                <li>Відповімо на питання</li>
+                            </ul>
+                            
+                            <p style="margin-top: 24px;"><strong>Орієнтовна вартість: від 25,000₴</strong></p>
+                            
+                            <p style="margin-top: 16px; font-size: 0.9375rem;">
+                                Якщо потрібен переїзд на іншу CRM:<br>
+                                → Від 70,000₴ (залежно від обсягу даних)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="result-cta">
+                        <button class="btn btn-primary" onclick="window.location.href='#contact'">Замовити аудит системи</button>
+                    </div>
+
+                    <div class="result-secondary">
+                        <p style="text-align: center;">
+                            <strong>Цікавить супровід?</strong><br><br>
+                            <button class="btn" onclick="window.location.href='#support'">Детальніше про супровід</button><br>
+                            <span style="font-size: 0.875rem; color: #404040;">(від 12,500₴/міс — відповіді на питання, допрацювання, навчання нових співробітників)</span>
+                        </p>
+                    </div>
+                `
+            };
+
+            return results[type] || results['small'];
+        }
+
+        // Generate Profile
+        function generateProfile() {
+            const businessType = {
+                'b2b': 'B2B бізнес',
+                'b2c': 'B2C бізнес',
+                'both': 'B2B + B2C'
+            }[answers.businessType] || '';
+
+            const teamSize = {
+                '1-3': '1-3 особи',
+                '3-15': '3-15 осіб',
+                '15-35': '15-35 осіб',
+                '35+': '35-100+ осіб'
+            }[answers.teamSize] || '';
+
+            let systems = [];
+            if (answers.systems) {
+                if (answers.systems.nothing) systems.push('Немає систем');
+                if (answers.systems.crm) {
+                    const crmName = answers.systems.crm_name ? ` (${answers.systems.crm_name})` : '';
+                    systems.push('Є CRM' + crmName);
+                }
+                if (answers.systems.accounting) {
+                    const accName = answers.systems.accounting_name ? ` (${answers.systems.accounting_name})` : '';
+                    systems.push('Є облікова система' + accName);
+                }
+                if (answers.systems.tasks) systems.push('Є таск-менеджер');
+                if (answers.systems.portal) systems.push('Є портал');
+            }
+
+            const pains = {
+                'lost_clients': 'втрачаємо клієнтів',
+                'unknown_source': 'не знаємо звідки клієнт',
+                'old_base': 'менеджери зі старою базою',
+                'no_control': 'немає контролю',
+                'hard_training': 'складно навчити нових',
+                'task_chaos': 'хаос у завданнях',
+                'reporting_time': 'багато часу на звіти',
+                'no_visibility': 'керівник не бачить картину'
+            };
+
+            const painsList = answers.pains.map(p => pains[p]).filter(Boolean);
+
+            const decisionMaker = {
+                'owner': 'Власник',
+                'director': 'Директор (найманий)',
+                'head': 'Керівник відділу',
+                'responsible': 'Відповідальний за проєкт'
+            }[answers.decisionMaker] || '';
+
+            return `
+                <div class="result-profile">
+                    <h3>Ваш профіль</h3>
+                    <ul>
+                        ${businessType ? `<li>${businessType}</li>` : ''}
+                        ${teamSize ? `<li>${teamSize} у команді</li>` : ''}
+                        ${systems.length > 0 ? systems.map(s => `<li>${s}</li>`).join('') : ''}
+                        ${painsList.length > 0 ? `<li>Болить: ${painsList.join(', ')}</li>` : ''}
+                        ${decisionMaker ? `<li>ЛПР: ${decisionMaker}</li>` : ''}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('CRM Customs Quiz loaded');
+        });
+    </script>
+</body>
+</html>

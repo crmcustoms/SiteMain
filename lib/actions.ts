@@ -1129,14 +1129,18 @@ function generateQuizResultHTML(clientType: string, profile: any): string {
 function generateRecommendationsHTML(clientType: string): string {
   const recommendations: Record<string, string> = {
     'startup': `
-      <h2>ЧЕСНА РЕКОМЕНДАЦІЯ</h2>
-      <p>На вашому етапі CRM може бути зайвою.</p>
+      <h2>НАША РЕКОМЕНДАЦІЯ</h2>
+      <div style="background: #D4EDDA; border: 2px solid #28A745; padding: 20px; margin: 20px 0;">
+        <p style="font-weight: bold; font-size: 18px; margin-bottom: 10px;">Велике впровадження CRM вам поки не потрібно — давайте почнемо з бюджетного варіанту.</p>
+        <p style="margin-bottom: 10px;">У вас поки немає розуміння як вистроїти процеси в CRM, тому спочатку потрібна <strong>безкоштовна консультація</strong>.</p>
+        <p style="font-weight: bold;">Ми обов'язково вам допоможемо!</p>
+      </div>
       
-      <p><strong>Зараз вам важливіше:</strong></p>
+      <p><strong>Що ми запропонуємо:</strong></p>
       <ul>
-        <li><span class="check">✓</span> Налагодити потік клієнтів</li>
-        <li><span class="check">✓</span> Відпрацювати продажі</li>
-        <li><span class="check">✓</span> Зробити перші гроші</li>
+        <li><span class="check">✓</span> <strong>Безкоштовна консультація</strong> — обов'язково призначимо</li>
+        <li><span class="check">✓</span> <strong>Бюджетний варіант</strong> (від 5,000₴) — якщо є готова CRM</li>
+        <li><span class="check">✓</span> <strong>Excel шаблони</strong> для обліку — безкоштовно</li>
       </ul>
 
       <div class="highlight">
@@ -2133,8 +2137,13 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
     }
 
     console.log("=== WEBHOOK REQUEST ===")
+    console.log("Form Type:", params.formType)
     console.log("URL:", webhookUrl)
-    console.log("Payload:", JSON.stringify(payload, null, 2))
+    console.log("Has answers:", !!params.answers)
+    console.log("Has clientType:", !!params.clientType)
+    console.log("Has htmlContent:", !!params.htmlContent)
+    console.log("Has managerRecommendations:", !!params.managerRecommendations)
+    console.log("Payload keys:", Object.keys(payload))
     console.log("=======================\n")
 
     // Відправка даних на вебхук

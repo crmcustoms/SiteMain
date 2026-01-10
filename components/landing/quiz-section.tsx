@@ -375,6 +375,11 @@ export default function QuizSection() {
 
   // Отправка квиза
   const submitQuiz = async () => {
+    // Защита от двойной отправки
+    if (isSubmitting) {
+      return
+    }
+
     const name = answers.contact?.name?.trim()
     const phone = answers.contact?.phone?.trim()
     const privacy = true // В реальности нужно проверить чекбокс
@@ -508,22 +513,26 @@ export default function QuizSection() {
     const results: Record<ClientType, JSX.Element> = {
       'startup': (
         <>
-          <h4 className="text-2xl font-bold mb-4">ЧЕСНА РЕКОМЕНДАЦІЯ</h4>
-          <p className="mb-6">На вашому етапі CRM може бути зайвою.</p>
+          <h4 className="text-2xl font-bold mb-4">НАША РЕКОМЕНДАЦІЯ</h4>
+          <div className="bg-[#D4EDDA] border border-[#28A745] p-6 mb-6">
+            <p className="mb-4 font-bold text-lg">Велике впровадження CRM вам поки не потрібно — давайте почнемо з бюджетного варіанту.</p>
+            <p className="mb-4">У вас поки немає розуміння як вистроїти процеси в CRM, тому спочатку потрібна <strong>безкоштовна консультація</strong>.</p>
+            <p className="font-bold">Ми обов'язково вам допоможемо!</p>
+          </div>
           
-          <p className="mb-4"><strong>Зараз вам важливіше:</strong></p>
+          <p className="mb-4"><strong>Що ми запропонуємо:</strong></p>
           <ul className="space-y-2 mb-6">
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span>Налагодити потік клієнтів</span>
+              <span><strong>Безкоштовна консультація</strong> — обов'язково призначимо, розберемося що вам потрібно</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span>Відпрацювати продажі</span>
+              <span><strong>Бюджетний варіант</strong> (від 5,000₴) — якщо є готова CRM</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span>Зробити перші гроші</span>
+              <span><strong>Excel шаблони</strong> для обліку — безкоштовно</span>
             </li>
           </ul>
 
@@ -998,9 +1007,9 @@ export default function QuizSection() {
 
         {/* Intro Screen */}
         {currentScreen === 'intro' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Content */}
-            <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500">
+          <div className="w-full">
+            {/* Content - full width */}
+            <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500 max-w-4xl mx-auto">
               <div className="absolute -top-3 left-8 bg-white px-2">
                 <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
               </div>
@@ -1046,40 +1055,6 @@ export default function QuizSection() {
               >
                 Отримати результат зараз →
               </button>
-            </div>
-
-            {/* Right side - Manager image with geometric background */}
-            <div className="relative flex items-center justify-center min-h-[600px] hidden lg:flex">
-              {/* Large yellow circle background */}
-              <div className="absolute w-[400px] h-[400px] rounded-full bg-[#FFD700] transition-transform duration-300 ease-out" />
-
-              {/* Decorative rings */}
-              <div className="absolute w-[500px] h-[500px] rounded-full border border-black/5" />
-              <div className="absolute w-[600px] h-[600px] rounded-full border border-black/5" />
-
-              {/* Manager image */}
-              <div className="relative z-10 transition-transform duration-300 ease-out w-full h-full flex items-center justify-center">
-                <Image
-                  src="/images/sketch.jpeg"
-                  alt="Менеджер CRM Customs"
-                  width={500}
-                  height={600}
-                  quality={95}
-                  priority
-                  unoptimized
-                  className="w-full h-full object-cover drop-shadow-2xl"
-                />
-              </div>
-
-              {/* Floating tech UI element - top left */}
-              <div className="absolute top-20 left-0 border border-black/20 bg-white p-3 text-xs font-mono shadow-lg">
-                <div className="text-black/40">QUIZ</div>
-                <div className="text-[#FFD700] font-bold">● ACTIVE</div>
-              </div>
-
-              {/* Decorative corner elements */}
-              <div className="absolute -bottom-4 -left-4 w-12 h-12 border-l-2 border-b-2 border-[#FFD700]" />
-              <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-[#FFD700]" />
             </div>
           </div>
         )}

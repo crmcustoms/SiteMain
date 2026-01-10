@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { submitForm } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 
@@ -992,52 +993,88 @@ export default function QuizSection() {
 
         {/* Intro Screen */}
         {currentScreen === 'intro' && (
-          <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500">
-            <div className="absolute -top-3 left-8 bg-white px-2">
-              <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Не впевнені що вам підходить?</h1>
-            <p className="text-lg text-black/60 mb-6 max-w-2xl">
-              Відповісте на 5 питань — отримайте персональну рекомендацію <strong className="text-black">тут і зараз</strong>
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left side - Content */}
+            <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500">
+              <div className="absolute -top-3 left-8 bg-white px-2">
+                <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">Не впевнені що вам підходить?</h1>
+              <p className="text-lg text-black/60 mb-6 max-w-2xl">
+                Відповісте на 5 питань — отримайте персональну рекомендацію <strong className="text-black">тут і зараз</strong>
+              </p>
 
-            {/* Акцентный блок с результатом */}
-            <div className="bg-[#FFD700] border border-black p-6 mb-10 max-w-2xl relative">
-              <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-black" />
-              <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-black" />
-              <div className="flex items-start gap-3">
-                <span className="text-2xl font-bold">⚡</span>
-                <div>
-                  <p className="font-bold text-lg mb-1">Результат одразу після проходження</p>
-                  <p className="text-sm text-black/80">
-                    Після відповідей ви одразу побачите персональну рекомендацію, орієнтовну вартість та план дій — без очікування та дзвінків
-                  </p>
+              {/* Акцентный блок с результатом */}
+              <div className="bg-[#FFD700] border border-black p-6 mb-10 max-w-2xl relative">
+                <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-black" />
+                <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-black" />
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl font-bold">⚡</span>
+                  <div>
+                    <p className="font-bold text-lg mb-1">Результат одразу після проходження</p>
+                    <p className="text-sm text-black/80">
+                      Після відповідей ви одразу побачите персональну рекомендацію, орієнтовну вартість та план дій — без очікування та дзвінків
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-8 mb-10">
-              <div className="flex items-center gap-2 text-sm font-mono">
-                <span className="text-[#FFD700] text-xl">✓</span>
-                <span>Займе 60 секунд</span>
+              
+              <div className="flex flex-wrap gap-8 mb-10">
+                <div className="flex items-center gap-2 text-sm font-mono">
+                  <span className="text-[#FFD700] text-xl">✓</span>
+                  <span>Займе 60 секунд</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-mono">
+                  <span className="text-[#FFD700] text-xl">✓</span>
+                  <span>Результат одразу</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-mono">
+                  <span className="text-[#FFD700] text-xl">✓</span>
+                  <span>Орієнтовна вартість</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm font-mono">
-                <span className="text-[#FFD700] text-xl">✓</span>
-                <span>Результат одразу</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm font-mono">
-                <span className="text-[#FFD700] text-xl">✓</span>
-                <span>Орієнтовна вартість</span>
-              </div>
+
+              <button
+                onClick={startQuiz}
+                className="px-8 py-4 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-all duration-200 hover:scale-105 hover:shadow-lg"
+              >
+                Отримати результат зараз →
+              </button>
             </div>
 
-            <button
-              onClick={startQuiz}
-              className="px-8 py-4 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-all duration-200 hover:scale-105 hover:shadow-lg"
-            >
-              Отримати результат зараз →
-            </button>
+            {/* Right side - Manager image with geometric background */}
+            <div className="relative flex items-center justify-center min-h-[600px] hidden lg:flex">
+              {/* Large yellow circle background */}
+              <div className="absolute w-[400px] h-[400px] rounded-full bg-[#FFD700] transition-transform duration-300 ease-out" />
+
+              {/* Decorative rings */}
+              <div className="absolute w-[500px] h-[500px] rounded-full border border-black/5" />
+              <div className="absolute w-[600px] h-[600px] rounded-full border border-black/5" />
+
+              {/* Manager image */}
+              <div className="relative z-10 transition-transform duration-300 ease-out w-full h-full flex items-center justify-center">
+                <Image
+                  src="/images/callcenter.png"
+                  alt="Менеджер CRM Customs"
+                  width={500}
+                  height={600}
+                  quality={95}
+                  priority
+                  className="w-full h-full object-cover drop-shadow-2xl"
+                />
+              </div>
+
+              {/* Floating tech UI element - top left */}
+              <div className="absolute top-20 left-0 border border-black/20 bg-white p-3 text-xs font-mono shadow-lg">
+                <div className="text-black/40">QUIZ</div>
+                <div className="text-[#FFD700] font-bold">● ACTIVE</div>
+              </div>
+
+              {/* Decorative corner elements */}
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 border-l-2 border-b-2 border-[#FFD700]" />
+              <div className="absolute -top-4 -right-4 w-12 h-12 border-t-2 border-r-2 border-[#FFD700]" />
+            </div>
           </div>
         )}
 

@@ -1059,14 +1059,22 @@ export default function QuizSection() {
 
               {/* Manager image */}
               <div className="relative z-10 transition-transform duration-300 ease-out w-full h-full flex items-center justify-center">
-                <Image
+                <img
                   src="/images/callcenter.png"
                   alt="Менеджер CRM Customs"
                   width={500}
                   height={600}
-                  quality={95}
-                  priority
                   className="w-full h-full object-cover drop-shadow-2xl"
+                  onError={(e) => {
+                    console.error("Ошибка загрузки изображения callcenter.png")
+                    const target = e.target as HTMLImageElement
+                    if (target) {
+                      target.onerror = null // Предотвращаем бесконечный цикл
+                      target.src = `/api/placeholder?width=500&height=600&text=${encodeURIComponent('Менеджер')}`
+                    }
+                  }}
+                  loading="eager"
+                  style={{ maxWidth: '100%', height: 'auto' }}
                 />
               </div>
 

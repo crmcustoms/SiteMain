@@ -1060,7 +1060,7 @@ export default function QuizSection() {
               {/* Manager image */}
               <div className="relative z-10 transition-transform duration-300 ease-out w-full h-full flex items-center justify-center">
                 <Image
-                  src="/images/callcenter.png"
+                  src="/images/sketch.jpeg"
                   alt="Менеджер CRM Customs"
                   width={500}
                   height={600}

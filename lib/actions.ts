@@ -58,13 +58,36 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         }
       }
 
+      // Парсим answers из JSON строки
+      let answersData = {}
+      try {
+        const answersStr = formData.get("answers") as string
+        if (answersStr) {
+          answersData = JSON.parse(answersStr)
+        }
+      } catch (e) {
+        console.error("Помилка парсингу answers:", e)
+      }
+
+      // Парсим result из JSON строки
+      let resultData = {}
+      try {
+        const resultStr = formData.get("result") as string
+        if (resultStr) {
+          resultData = JSON.parse(resultStr)
+        }
+      } catch (e) {
+        console.error("Помилка парсингу result:", e)
+      }
+
       // Відправка даних квиза
       console.log("Дані квиза:", {
         name: validatedFields.data.name,
         phone: validatedFields.data.phone,
         email: validatedFields.data.email,
-        answers: formData.get("answers"),
+        answers: answersData,
         clientType: formData.get("clientType"),
+        result: resultData,
       })
 
       const response = await sendEmailNotification({
@@ -74,8 +97,9 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         email: validatedFields.data.email || "Не вказано",
         phone: validatedFields.data.phone || "Не вказано",
         formType: "quiz",
-        answers: formData.get("answers") as string,
+        answers: answersData, // Отправляем как объект, а не строку
         clientType: formData.get("clientType") as string,
+        result: resultData, // Отправляем результат
         callTime: formData.get("callTime") as string,
         otherTime: formData.get("otherTime") as string,
         date: new Date().toLocaleString(),

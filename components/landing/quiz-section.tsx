@@ -401,8 +401,11 @@ export default function QuizSection() {
       formData.append('email', answers.contact?.email || '')
       formData.append('callTime', answers.contact?.callTime || 'today_18')
       formData.append('otherTime', answers.contact?.otherTime || '')
+      // Отправляем answers как JSON объект
       formData.append('answers', JSON.stringify(answers))
+      // Отправляем результат (clientType)
       formData.append('clientType', type)
+      formData.append('result', JSON.stringify({ clientType: type, profile: generateProfile() }))
 
       const result = await submitForm(formData)
 
@@ -953,7 +956,7 @@ export default function QuizSection() {
   const progress = ((currentQuestion + 1) / quizData.questions.length) * 100
 
   return (
-    <div className="relative w-full bg-white pt-16 pb-20 overflow-hidden">
+    <div className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div
@@ -966,7 +969,7 @@ export default function QuizSection() {
         />
       </div>
 
-      <div className="relative max-w-[900px] mx-auto px-8">
+      <div className="relative max-w-[1400px] mx-auto px-8">
         {/* Section Header */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-6">
@@ -983,17 +986,17 @@ export default function QuizSection() {
 
         {/* Intro Screen */}
         {currentScreen === 'intro' && (
-          <div className="border border-black p-12 md:p-16 relative text-center animate-in fade-in duration-500">
+          <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500">
             <div className="absolute -top-3 left-8 bg-white px-2">
               <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Не впевнені що вам підходить?</h1>
-            <p className="text-lg text-black/60 mb-10 max-w-2xl mx-auto">
+            <p className="text-lg text-black/60 mb-10 max-w-2xl">
               Відповісте на 5 питань — ми підготуємо персональну рекомендацію та підберемо оптимальне рішення
             </p>
             
-            <div className="flex flex-wrap justify-center gap-8 mb-10">
+            <div className="flex flex-wrap gap-8 mb-10">
               <div className="flex items-center gap-2 text-sm font-mono">
                 <span className="text-[#FFD700] text-xl">✓</span>
                 <span>Займе 60 секунд</span>

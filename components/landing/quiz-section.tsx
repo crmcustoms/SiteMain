@@ -410,6 +410,11 @@ export default function QuizSection() {
 
       const result = await submitForm(formData)
 
+      // Проверяем, что результат существует
+      if (!result) {
+        throw new Error("Не вдалося отримати відповідь від сервера")
+      }
+
       if (result.success) {
         setCurrentScreen('result')
         // Прокручиваем к результату, а не в самый верх
@@ -422,7 +427,7 @@ export default function QuizSection() {
       } else {
         toast({
           title: "Помилка",
-          description: result.message,
+          description: result.message || "Сталася помилка при відправці",
           variant: "destructive",
         })
       }

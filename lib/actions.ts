@@ -119,22 +119,28 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         date: new Date().toLocaleString(),
       })
 
-      // Отправка email пользователю с HTML анализом (если email указан)
-      if (validatedFields.data.email) {
-        await sendQuizResultToUser({
-          to: validatedFields.data.email,
-          name: validatedFields.data.name,
-          clientType: clientType,
-          htmlContent: htmlAnalysis, // Отправляем HTML версию (как на сайте)
-          profile: profile,
-        })
-      }
-
       if (!response) {
         console.error("Webhook failed for quiz form");
         return {
           success: false,
           message: "Помилка при відправці на сервер. Спробуйте ще раз.",
+        }
+      }
+
+      // Отправка email пользователю с HTML анализом (если email указан)
+      // Делаем это после успешной отправки на вебхук, чтобы не блокировать основной процесс
+      if (validatedFields.data.email) {
+        try {
+          await sendQuizResultToUser({
+            to: validatedFields.data.email,
+            name: validatedFields.data.name,
+            clientType: clientType,
+            htmlContent: htmlAnalysis, // Отправляем HTML версию (как на сайте)
+            profile: profile,
+          })
+        } catch (emailError) {
+          // Логируем ошибку, но не прерываем процесс
+          console.error("Помилка відправки email користувачу:", emailError)
         }
       }
 

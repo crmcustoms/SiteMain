@@ -129,19 +129,36 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
 
       // Отправка email пользователю с HTML анализом (если email указан)
       // Делаем это после успешной отправки на вебхук, чтобы не блокировать основной процесс
-      if (validatedFields.data.email) {
+      if (validatedFields.data.email && validatedFields.data.email.trim()) {
+        console.log("=== ATTEMPTING TO SEND EMAIL TO USER ===")
+        console.log("Email:", validatedFields.data.email)
+        console.log("Name:", validatedFields.data.name)
+        console.log("Client Type:", clientType)
+        
         try {
-          await sendQuizResultToUser({
-            to: validatedFields.data.email,
+          const emailResult = await sendQuizResultToUser({
+            to: validatedFields.data.email.trim(),
             name: validatedFields.data.name,
             clientType: clientType,
             htmlContent: htmlAnalysis, // Отправляем HTML версию (как на сайте)
             profile: profile,
           })
+          
+          if (emailResult) {
+            console.log("✓ Email успешно отправлен пользователю")
+          } else {
+            console.error("✗ Email не был отправлен (sendQuizResultToUser вернул false)")
+          }
         } catch (emailError) {
           // Логируем ошибку, но не прерываем процесс
-          console.error("Помилка відправки email користувачу:", emailError)
+          console.error("✗ Помилка відправки email користувачу:", emailError)
+          if (emailError instanceof Error) {
+            console.error("Error message:", emailError.message)
+            console.error("Error stack:", emailError.stack)
+          }
         }
+      } else {
+        console.log("Email не указан или пустой, пропускаем отправку email пользователю")
       }
 
       return {
@@ -691,10 +708,17 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
       throw new Error(`Помилка відправки даних: ${response.status} ${response.statusText}`)
     }
 
-    await response.json().catch(() => ({}))
+    const responseData = await response.json().catch(() => ({}))
+    console.log("✓ Email запрос успешно отправлен на вебхук")
+    console.log("Response status:", response.status)
+    console.log("Response data:", responseData)
     return true
   } catch (error) {
-    console.error("Помилка відправки даних на вебхук:", error)
+    console.error("✗ Помилка відправки email на вебхук:", error)
+    if (error instanceof Error) {
+      console.error("Error message:", error.message)
+      console.error("Error stack:", error.stack)
+    }
     return false
   }
 }

@@ -29,7 +29,10 @@ RUN npm cache clean --force && \
     mkdir -p .next/standalone/public && \
     cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
     cp express-server.js .next/standalone/ 2>/dev/null || true && \
-    cp api-routes.js .next/standalone/ 2>/dev/null || true
+    cp api-routes.js .next/standalone/ 2>/dev/null || true && \
+    echo "Checking build output..." && \
+    ls -la .next/ || echo "Warning: .next directory not found" && \
+    ls -la .next/static/ 2>/dev/null || echo "Warning: .next/static not found - this may cause issues"
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -49,7 +52,18 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
 # Next.js создаёт статику в /app/.next/static/, но это НЕ входит в /app/.next/standalone/
 # Без этой строки будут 404 на все CSS/JS/шрифты!
 # Смотри DOCKER_BUILD_TROUBLESHOOTING.md для деталей
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static /app/.next/static
+# Копируем через временную директорию с проверкой существования
+RUN --mount=type=bind,from=builder,source=/app/.next,target=/tmp/next \
+    mkdir -p /app/.next && \
+    if [ -d /tmp/next/static ]; then \
+      cp -r /tmp/next/static /app/.next/static && \
+      chown -R nextjs:nodejs /app/.next/static && \
+      echo "✓ Static files copied successfully"; \
+    else \
+      echo "⚠ Warning: .next/static not found in builder stage"; \
+      mkdir -p /app/.next/static && \
+      chown -R nextjs:nodejs /app/.next/static; \
+    fi
 
 # Копируем публичные файлы из исходного кода
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public

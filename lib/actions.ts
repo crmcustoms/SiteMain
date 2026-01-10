@@ -2055,6 +2055,17 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
     `
   }
 
+  // Если рекомендации не сгенерированы (неизвестный тип), возвращаем базовую версию
+  if (!recommendations || recommendations.trim().length === 0) {
+    recommendations = `
+      <div style="margin: 30px 0;">
+        <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">1. ТИП КЛІЄНТА</h3>
+        <p style="font-size: 16px; margin-bottom: 20px;">Тип клієнта: ${clientType || 'Не визначено'}</p>
+        <p style="margin-bottom: 20px;">Потрібна додаткова інформація для формування рекомендацій.</p>
+      </div>
+    `
+  }
+
   return separator + header + recommendations
 }
 

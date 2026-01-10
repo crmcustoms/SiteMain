@@ -25,14 +25,25 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # Build Next.js application
 RUN npm cache clean --force && \
-    npx next build && \
+    npx next build || (echo "❌ Next.js build failed!" && exit 1) && \
+    echo "✓ Next.js build completed" && \
+    echo "=== Checking build output ===" && \
+    ls -la .next/ || (echo "❌ .next directory not found!" && exit 1) && \
+    if [ ! -d .next/standalone ]; then \
+      echo "❌ ERROR: .next/standalone directory not found!" && \
+      echo "Build output structure:" && \
+      ls -la .next/ && \
+      echo "Checking if standalone output exists:" && \
+      find .next -name "standalone" -type d 2>/dev/null || echo "No standalone directory found anywhere" && \
+      exit 1; \
+    fi && \
+    echo "✓ .next/standalone found" && \
     mkdir -p .next/standalone/public && \
     cp -r public/* .next/standalone/public/ 2>/dev/null || true && \
     cp express-server.js .next/standalone/ 2>/dev/null || true && \
     cp api-routes.js .next/standalone/ 2>/dev/null || true && \
-    echo "Checking build output..." && \
-    ls -la .next/ || echo "Warning: .next directory not found" && \
-    ls -la .next/static/ 2>/dev/null || echo "Warning: .next/static not found - this may cause issues"
+    ls -la .next/static/ 2>/dev/null || echo "⚠ Warning: .next/static not found - will be handled in runner stage" && \
+    echo "=== Build verification complete ==="
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -46,7 +57,18 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Копируем всё из standalone build - это содержит .next, node_modules и всё необходимое
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone/ /app/
+# Используем RUN с проверкой существования для надежности
+RUN --mount=type=bind,from=builder,source=/app/.next/standalone,target=/tmp/standalone \
+    if [ ! -d /tmp/standalone ]; then \
+      echo "❌ ERROR: .next/standalone not found in builder stage!" && \
+      echo "This means the Next.js build failed or standalone output was not created." && \
+      exit 1; \
+    fi && \
+    echo "✓ .next/standalone found, copying..." && \
+    cp -r /tmp/standalone/* /app/ && \
+    cp -r /tmp/standalone/.[!.]* /app/ 2>/dev/null || true && \
+    chown -R nextjs:nodejs /app && \
+    echo "✓ Standalone files copied successfully"
 
 # ⚠️ CRITICAL: Копируем static файлы из .next/static
 # Next.js создаёт статику в /app/.next/static/, но это НЕ входит в /app/.next/standalone/

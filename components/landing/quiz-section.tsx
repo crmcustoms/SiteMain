@@ -992,9 +992,24 @@ export default function QuizSection() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Не впевнені що вам підходить?</h1>
-            <p className="text-lg text-black/60 mb-10 max-w-2xl">
-              Відповісте на 5 питань — ми підготуємо персональну рекомендацію та підберемо оптимальне рішення
+            <p className="text-lg text-black/60 mb-6 max-w-2xl">
+              Відповісте на 5 питань — отримайте персональну рекомендацію <strong className="text-black">тут і зараз</strong>
             </p>
+
+            {/* Акцентный блок с результатом */}
+            <div className="bg-[#FFD700] border border-black p-6 mb-10 max-w-2xl relative">
+              <div className="absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-black" />
+              <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-black" />
+              <div className="flex items-start gap-3">
+                <span className="text-2xl font-bold">⚡</span>
+                <div>
+                  <p className="font-bold text-lg mb-1">Результат одразу після проходження</p>
+                  <p className="text-sm text-black/80">
+                    Після відповідей ви одразу побачите персональну рекомендацію, орієнтовну вартість та план дій — без очікування та дзвінків
+                  </p>
+                </div>
+              </div>
+            </div>
             
             <div className="flex flex-wrap gap-8 mb-10">
               <div className="flex items-center gap-2 text-sm font-mono">
@@ -1003,7 +1018,7 @@ export default function QuizSection() {
               </div>
               <div className="flex items-center gap-2 text-sm font-mono">
                 <span className="text-[#FFD700] text-xl">✓</span>
-                <span>Персональна рекомендація</span>
+                <span>Результат одразу</span>
               </div>
               <div className="flex items-center gap-2 text-sm font-mono">
                 <span className="text-[#FFD700] text-xl">✓</span>
@@ -1015,7 +1030,7 @@ export default function QuizSection() {
               onClick={startQuiz}
               className="px-8 py-4 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-all duration-200 hover:scale-105 hover:shadow-lg"
             >
-              Пройти діагностику
+              Отримати результат зараз →
             </button>
           </div>
         )}

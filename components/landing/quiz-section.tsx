@@ -1008,8 +1008,8 @@ export default function QuizSection() {
         {/* Intro Screen */}
         {currentScreen === 'intro' && (
           <div className="w-full">
-            {/* Content - full width */}
-            <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500 max-w-4xl mx-auto">
+            {/* Content - left aligned like other sections */}
+            <div className="border border-black p-12 md:p-16 relative animate-in fade-in duration-500 max-w-4xl">
               <div className="absolute -top-3 left-8 bg-white px-2">
                 <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
               </div>
@@ -1061,7 +1061,7 @@ export default function QuizSection() {
 
         {/* Quiz Screen */}
         {currentScreen === 'quiz' && (
-          <div className="border border-black p-8 md:p-12 relative animate-in fade-in slide-in-from-right duration-300">
+          <div className="border border-black p-8 md:p-12 relative animate-in fade-in slide-in-from-right duration-300 max-w-4xl">
             <div className="absolute -top-3 left-8 bg-white px-2">
               <span className="text-xs font-mono text-black/60 tracking-wider uppercase">
                 ПИТАННЯ {currentQuestion + 1} З {quizData.questions.length}
@@ -1319,7 +1319,7 @@ export default function QuizSection() {
 
         {/* Result Screen */}
         {currentScreen === 'result' && clientType && (
-          <div id="quiz-result" className="border border-black p-8 md:p-12 relative animate-in fade-in zoom-in duration-500">
+          <div id="quiz-result" className="border border-black p-8 md:p-12 relative animate-in fade-in zoom-in duration-500 max-w-4xl">
             <div className="absolute -top-3 left-8 bg-white px-2">
               <span className="text-xs font-mono text-black/60 tracking-wider uppercase">
                 {clientType === 'startup' ? '[NOT_SUITABLE]' :

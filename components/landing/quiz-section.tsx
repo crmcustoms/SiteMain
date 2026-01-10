@@ -233,6 +233,28 @@ export default function QuizSection() {
     if (type === 'radio') {
       setAnswers(prev => ({ ...prev, [questionId]: value }))
     } else if (type === 'checkbox') {
+      // Специальная обработка для pains - это должен быть массив
+      if (questionId === 'pains') {
+        setAnswers(prev => {
+          const current = (prev.pains || []) as string[]
+          const isSelected = current.includes(value)
+          
+          if (isSelected) {
+            // Удаляем из массива
+            return { ...prev, pains: current.filter(p => p !== value) }
+          } else {
+            // Проверка лимита
+            if (maxSelect && current.length >= maxSelect) {
+              return prev
+            }
+            // Добавляем в массив
+            return { ...prev, pains: [...current, value] }
+          }
+        })
+        return
+      }
+      
+      // Для остальных checkbox вопросов (systems) используем объект
       setAnswers(prev => {
         const current = prev[questionId] as Record<string, boolean | string> || {}
         const newValue = { ...current }
@@ -285,8 +307,15 @@ export default function QuizSection() {
     if (question.type === 'radio') {
       if (!answers[question.id]) return
     } else {
-      const selected = answers[question.id] as Record<string, boolean | string> | undefined
-      if (!selected || Object.keys(selected).filter(k => !k.endsWith('_name')).length === 0) return
+      // Специальная проверка для pains (массив)
+      if (question.id === 'pains') {
+        const painsArray = answers.pains || []
+        if (!Array.isArray(painsArray) || painsArray.length === 0) return
+      } else {
+        // Для остальных checkbox (объект)
+        const selected = answers[question.id] as Record<string, boolean | string> | undefined
+        if (!selected || Object.keys(selected).filter(k => !k.endsWith('_name')).length === 0) return
+      }
     }
 
     if (currentQuestion < quizData.questions.length - 1) {
@@ -1021,9 +1050,17 @@ export default function QuizSection() {
               {/* Options */}
               <div className="space-y-4">
                 {currentQuestionData.options.map((option) => {
-                  const isSelected = currentQuestionData.type === 'radio'
-                    ? answers[currentQuestionData.id] === option.value
-                    : (answers[currentQuestionData.id] as Record<string, boolean | string>)?.[option.value] === true
+                  let isSelected = false
+                  if (currentQuestionData.type === 'radio') {
+                    isSelected = answers[currentQuestionData.id] === option.value
+                  } else if (currentQuestionData.id === 'pains') {
+                    // Для pains проверяем массив
+                    const painsArray = answers.pains || []
+                    isSelected = Array.isArray(painsArray) && painsArray.includes(option.value)
+                  } else {
+                    // Для остальных checkbox (systems) проверяем объект
+                    isSelected = (answers[currentQuestionData.id] as Record<string, boolean | string>)?.[option.value] === true
+                  }
 
                   return (
                     <label

@@ -10,7 +10,7 @@ import AuditWhy from "@/components/landing/audit-why"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
-const CaseStudies = dynamic(() => import("@/components/landing/case-studies"), { ssr: true })
+const QuizSection = dynamic(() => import("@/components/landing/quiz-section"), { ssr: false })
 const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), { ssr: true })
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })
@@ -59,7 +59,7 @@ export default async function Home({
       <TeamSection />
       <Pricing />
       <AuditWhy />
-      <CaseStudies dict={dict.landing.caseStudies} />
+      <QuizSection />
       <Testimonials dict={dict.landing.testimonials} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />

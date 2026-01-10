@@ -31,7 +31,70 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
     const formType = (formData.get("formType") as string) || "contact"
 
     // Валідуємо дані в залежності від типу форми
-    if (formType === "subscribe") {
+    if (formType === "quiz") {
+      // Валідація форми квиза
+      const validatedFields = contactFormSchema.safeParse({
+        name: (formData.get("name") as string)?.trim() || "",
+        email: (formData.get("email") as string)?.trim() || undefined,
+        phone: (formData.get("phone") as string)?.trim() || "",
+        message: formData.get("answers") ? JSON.stringify({
+          answers: formData.get("answers"),
+          clientType: formData.get("clientType"),
+          callTime: formData.get("callTime"),
+          otherTime: formData.get("otherTime"),
+        }) : "",
+        formType,
+      })
+
+      if (!validatedFields.success) {
+        const errors = validatedFields.error.flatten();
+        const errorMessages = Object.entries(errors.fieldErrors)
+          .map(([, msgs]) => msgs?.join(', '))
+          .filter(Boolean)
+          .join('\n');
+        return {
+          success: false,
+          message: errorMessages || "Помилка валідації форми. Перевірте введені дані.",
+        }
+      }
+
+      // Відправка даних квиза
+      console.log("Дані квиза:", {
+        name: validatedFields.data.name,
+        phone: validatedFields.data.phone,
+        email: validatedFields.data.email,
+        answers: formData.get("answers"),
+        clientType: formData.get("clientType"),
+      })
+
+      const response = await sendEmailNotification({
+        to: "your-email@example.com",
+        subject: "Нова заявка з квиза діагностики",
+        name: validatedFields.data.name,
+        email: validatedFields.data.email || "Не вказано",
+        phone: validatedFields.data.phone || "Не вказано",
+        formType: "quiz",
+        answers: formData.get("answers") as string,
+        clientType: formData.get("clientType") as string,
+        callTime: formData.get("callTime") as string,
+        otherTime: formData.get("otherTime") as string,
+        date: new Date().toLocaleString(),
+      })
+
+      if (!response) {
+        console.error("Webhook failed for quiz form");
+        return {
+          success: false,
+          message: "Помилка при відправці на сервер. Спробуйте ще раз.",
+        }
+      }
+
+      return {
+        success: true,
+        message: "Дякуємо за проходження діагностики! Ми зв'яжемося з вами найближчим часом.",
+        data: validatedFields.data,
+      }
+    } else if (formType === "subscribe") {
       // Валідація форми підписки
       const validatedFields = subscribeFormSchema.safeParse({
         email: (formData.get("email") as string)?.trim() || undefined,

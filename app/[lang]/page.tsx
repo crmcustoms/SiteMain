@@ -10,7 +10,7 @@ import AuditWhy from "@/components/landing/audit-why"
 
 // Используем динамический импорт для остальных компонентов лендинга с SSR
 const HeroSection = dynamic(() => import("@/components/landing/hero-section"), { ssr: true })
-const QuizSection = dynamic(() => import("@/components/landing/quiz-section"), { ssr: false })
+const QuizSection = dynamic(() => import("@/components/landing/quiz-section"), { ssr: true })
 const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), { ssr: true })
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })

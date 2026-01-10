@@ -89,6 +89,14 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
       // Формируем текстовую версию для вебхука
       const textAnalysis = formatQuizAnalysis(answersData, resultData, clientType)
 
+      // Генерируем рекомендации для менеджера
+      const managerRecs = generateManagerRecommendationsHTML(clientType, answersData, profile)
+      console.log("=== MANAGER RECOMMENDATIONS ===")
+      console.log("Client Type:", clientType)
+      console.log("Recommendations length:", managerRecs.length)
+      console.log("First 200 chars:", managerRecs.substring(0, 200))
+      console.log("================================\n")
+
       // Відправка даних квиза
       console.log("Дані квиза:", {
         name: validatedFields.data.name,
@@ -114,9 +122,9 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         analysisText: textAnalysis, // Текстовая версия анализа
         analysisHTML: htmlAnalysis, // HTML версия анализа (как на сайте) - только для клиента
         // HTML с рекомендациями для менеджера (клиентский результат + разделитель + рекомендации)
-        htmlContent: htmlAnalysis + generateManagerRecommendationsHTML(clientType, answersData, profile),
+        htmlContent: htmlAnalysis + managerRecs,
         recommendations: generateRecommendationsHTML(clientType), // Рекомендации отдельно (старая версия, для совместимости)
-        managerRecommendations: generateManagerRecommendationsHTML(clientType, answersData, profile), // Новые рекомендации для менеджера
+        managerRecommendations: managerRecs, // Новые рекомендации для менеджера
         callTime: formData.get("callTime") as string,
         otherTime: formData.get("otherTime") as string,
         date: new Date().toLocaleString(),
@@ -1412,54 +1420,55 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
     recommendations = `
       <div style="margin: 30px 0;">
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">1. ТИП КЛІЄНТА</h3>
-        <p style="font-size: 16px; margin-bottom: 20px;">Стартап (не підходить для повного впровадження)</p>
+        <p style="font-size: 16px; margin-bottom: 20px;">Стартап - початок шляху (потрібен бюджетний підхід)</p>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">2. ХАРАКТЕРИСТИКА</h3>
         <ul style="margin: 10px 0; padding-left: 20px;">
           <li>Команда: ${teamSize}</li>
           <li>Немає CRM, немає обліку</li>
-          <li>Не розуміють що хочуть від автоматизації</li>
-          <li>Шукають "рожевого єдинорога"</li>
-          <li>Немає грошей на повноцінне впровадження</li>
+          <li>Тільки починають розуміти що потрібно від автоматизації</li>
+          <li>Шукають просте рішення</li>
+          <li>Обмежений бюджет</li>
           <li>Власник в операційці 24/7</li>
         </ul>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">3. ЧОГО ХОЧЕ КЛІЄНТ</h3>
         <ul style="margin: 10px 0; padding-left: 20px;">
           <li>Швидко і недорого</li>
-          <li>"Магічну кнопку" яка вирішить всі проблеми</li>
-          <li>Не розуміє що йому потрібна система продажів, а не CRM</li>
-          <li>Думає що CRM дасть йому клієнтів</li>
+          <li>Просте рішення для початку</li>
+          <li>Розуміння як вистроїти процеси в CRM</li>
+          <li>Допомога з першими кроками</li>
         </ul>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">4. ХТО ЛПР</h3>
         <p style="margin-bottom: 20px;">${decisionMaker || 'Власник (єдиний)'}</p>
 
-        <div style="background: #FEF2F2; border: 2px solid #DC2626; padding: 20px; margin: 20px 0;">
-          <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #DC2626;">5. РЕКОМЕНДАЦІЯ ДЛЯ МЕНЕДЖЕРА</h3>
-          <p style="font-weight: bold; margin-bottom: 10px;">⚠️ НЕ ВІДМОВЛЯЙ КЛІЄНТУ ВІДРАЗУ!</p>
-          <p style="margin-bottom: 10px;">Завжди пропонуй альтернативи:</p>
+        <div style="background: #D4EDDA; border: 2px solid #28A745; padding: 20px; margin: 20px 0;">
+          <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #155724;">5. РЕКОМЕНДАЦІЯ ДЛЯ МЕНЕДЖЕРА</h3>
+          <p style="font-weight: bold; margin-bottom: 10px; font-size: 18px;">✓ ОБОВ'ЯЗКОВО ДОПОМОЖЕМ! ЗАВЖДИ ПРОПОНУЙ РІШЕННЯ!</p>
+          <p style="margin-bottom: 10px;"><strong>Ключова фраза:</strong> "Велике впровадження вам поки не потрібно - давайте почнемо з бюджетного варіанту. У вас поки немає розуміння як вистроїти процеси в CRM, тому спочатку потрібна безкоштовна консультація."</p>
+          <p style="margin-bottom: 10px;"><strong>Обов'язково запропонуй:</strong></p>
           <ul style="margin: 10px 0; padding-left: 20px;">
-            <li>Мінімальний пакет 5,000₴ - якщо є готова CRM</li>
-            <li>Консультація по процесах - допоможи визначити що реально потрібно</li>
-            <li>"Повернутися пізніше" - коли буде 5-10 клієнтів, 3+ менеджери</li>
-            <li>Інші послуги компанії</li>
+            <li>✓ <strong>Безкоштовну консультацію</strong> - обов'язково призначити!</li>
+            <li>✓ Бюджетний варіант (мінімальний пакет 5,000₴) - якщо є готова CRM</li>
+            <li>✓ Консультація по процесах - допомогти визначити що реально потрібно</li>
+            <li>✓ Excel шаблони для обліку - безкоштовно</li>
           </ul>
-          <p style="margin-top: 15px;"><strong>Наша мета:</strong> залишити позитивне враження. Вони можуть повернутися або порекомендувати нас!</p>
+          <p style="margin-top: 15px; font-weight: bold; color: #155724;">Завжди завіряй: "Ми обов'язково вам допоможемо! Почнемо з безкоштовної консультації."</p>
         </div>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">6. ЩО ПРОПОНУВАТИ</h3>
-        <p style="margin-bottom: 10px;"><strong>Зараз НЕ підходить:</strong></p>
+        <p style="margin-bottom: 10px;"><strong>Почнемо з малого:</strong></p>
         <ul style="margin: 10px 0; padding-left: 20px;">
-          <li>Повне впровадження CRM - передчасно</li>
-          <li>Складна автоматизація - не потягнуть</li>
-        </ul>
-        <p style="margin-top: 15px; margin-bottom: 10px;"><strong>Можна запропонувати:</strong></p>
-        <ul style="margin: 10px 0; padding-left: 20px;">
-          <li>Мінімальний пакет (5К) - якщо є розуміння та готова CRM</li>
-          <li>Консультація по процесах (5-10К) - розібратися що потрібно</li>
+          <li>Безкоштовна консультація (обов'язково!) - розберемося що потрібно, як вистроїти процеси</li>
+          <li>Бюджетний варіант (мінімальний пакет 5К) - якщо є розуміння та готова CRM</li>
           <li>Excel шаблони для обліку - безкоштовно/символічно</li>
-          <li>Повернутися через 3-6 місяців</li>
+          <li>Консультація "Як підготуватися до впровадження" - 5-10К</li>
+        </ul>
+        <p style="margin-top: 15px; margin-bottom: 10px;"><strong>Коли виросте (через 3-6 міс):</strong></p>
+        <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Повноцінне впровадження СТАРТ - 25К</li>
+          <li>Підтримка після самостійного налаштування</li>
         </ul>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">7. ЯК ПРАЦЮВАТИ</h3>
@@ -1473,19 +1482,21 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
               <li>Які плани на зростання?</li>
             </ul>
           </li>
-          <li style="margin-bottom: 10px;"><strong>Поясни чесно:</strong> "На вашому етапі CRM не вирішить проблему. Зараз важливіше налагодити потік клієнтів та продажі. Коли буде 5-10 постійних клієнтів - повертайтеся."</li>
-          <li style="margin-bottom: 10px;"><strong>Запропонуй альтернативу:</strong> консультацію, мінімальний пакет, інші послуги, перенесення на 3-6 місяців</li>
-          <li style="margin-bottom: 10px;"><strong>Залиш позитивне враження:</strong> дай корисну пораду, порекомендуй безкоштовні інструменти, додай в список "розігріву", нагадай через 3 місяці</li>
+          <li style="margin-bottom: 10px;"><strong>Поясни позитивно:</strong> "Велике впровадження CRM вам поки не потрібно - давайте почнемо з бюджетного варіанту. У вас поки немає розуміння як вистроїти процеси в CRM, тому спочатку потрібна безкоштовна консультація. Ми обов'язково вам допоможемо!"</li>
+          <li style="margin-bottom: 10px;"><strong>Обов'язково призначи безкоштовну консультацію:</strong> "Давайте зустрінемося на безкоштовній консультації, розберемося що вам потрібно, як вистроїти процеси. Після консультації запропоную оптимальний варіант."</li>
+          <li style="margin-bottom: 10px;"><strong>Запропонуй бюджетний варіант:</strong> мінімальний пакет, Excel шаблони, консультацію по процесах</li>
+          <li style="margin-bottom: 10px;"><strong>Залиш позитивне враження:</strong> завіряй що обов'язково допоможемо, дай корисну пораду, порекомендуй безкоштовні інструменти, додай в список "розігріву"</li>
         </ol>
 
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">8. НА ЩО ЗВЕРНУТИ УВАГУ</h3>
-        <div style="background: #FFF3CD; border: 1px solid #FFC107; padding: 15px; margin: 15px 0;">
-          <p style="margin-bottom: 10px;"><strong>Ризики якщо все ж взятися:</strong></p>
+        <div style="background: #E7F3FF; border: 1px solid #0066CC; padding: 15px; margin: 15px 0;">
+          <p style="margin-bottom: 10px;"><strong>Важливо:</strong></p>
           <ul style="margin: 5px 0; padding-left: 20px;">
-            <li>Не буде результату - не готові до систем</li>
-            <li>Негативний відгук - очікування не виправдаються</li>
-            <li>Втрата часу - постійні зміни вимог</li>
-            <li>Невиплата - немає грошей</li>
+            <li>✓ Ніколи не кажи що не можемо допомогти</li>
+            <li>✓ Завжди пропонуй безкоштовну консультацію</li>
+            <li>✓ Завжди завіряй що обов'язково допоможемо</li>
+            <li>✓ Почни з малого - бюджетний варіант або консультація</li>
+            <li>✓ Після консультації вони можуть вирости і повернутися</li>
           </ul>
         </div>
         <p style="margin-top: 15px;"><strong>Можна братися якщо:</strong> є досвід роботи з стартапами, готовий до консалтингу та навчання, домовилися про етапну оплату, власник адекватний та готовий вчитися</p>
@@ -1493,9 +1504,10 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
         <h3 style="font-size: 20px; font-weight: bold; margin: 20px 0 10px; color: #000;">9. ДОДАТКОВІ МОЖЛИВОСТІ</h3>
         <p style="margin-bottom: 10px;"><strong>Що можна продати зараз:</strong></p>
         <ul style="margin: 10px 0; padding-left: 20px;">
+          <li>Безкоштовна консультація (обов'язково!)</li>
+          <li>Бюджетний пакет (5К) - якщо є розуміння та готова CRM</li>
           <li>Консультація "Як підготуватися до впровадження" - 5-10К</li>
-          <li>Аудит бізнес-процесів - 10-15К</li>
-          <li>Навчальний курс по CRM (якщо є)</li>
+          <li>Excel шаблони для обліку - безкоштовно</li>
           <li>Готові шаблони для самостійного налаштування</li>
         </ul>
         <p style="margin-top: 15px; margin-bottom: 10px;"><strong>Що продати потім (через 3-6 міс):</strong></p>

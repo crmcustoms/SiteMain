@@ -82,9 +82,6 @@ export function HeroSection() {
         <div className="flex items-center gap-12">
           <div className="font-bold text-xl text-black tracking-tight">CRM CUSTOMS</div>
           <div className="hidden md:flex items-center gap-8 text-sm text-black/70 font-medium">
-            <a href="#services" className="hover:text-[#FFD700] transition-colors">
-              Послуги
-            </a>
             <a href="#cases" className="hover:text-[#FFD700] transition-colors">
               Кейси
             </a>

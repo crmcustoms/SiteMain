@@ -147,9 +147,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
       <nav className="relative z-50 flex items-center justify-between px-8 py-6 border-b border-black/5">
         <div className="font-bold text-xl tracking-tight"><span className="text-[#FFD700]">CRM</span><span className="text-black">CUSTOMS</span></div>
         <div className="hidden md:flex items-center gap-12 text-base text-black/70 font-medium absolute left-1/2 transform -translate-x-1/2">
-          <a href={`/${lang}/landing/implementation-crm`} className="hover:text-[#FFD700] transition-colors">
-            Послуги
-          </a>
           <a href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors">
             Кейси
           </a>

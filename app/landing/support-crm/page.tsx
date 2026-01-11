@@ -3,6 +3,7 @@ import { getDictionary } from "@/lib/dictionaries"
 import { Button } from "@/components/ui/button"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
 import FinalCta from "@/components/landing/final-cta"
+import { BookingButton } from "@/components/booking-button"
 
 export async function generateMetadata(): Promise<Metadata> {
   // Используем только украинский язык
@@ -40,6 +41,9 @@ export default async function SupportCrmPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <BookingButton>
+                    Записатися на консультацію
+                  </BookingButton>
                   <ContactFormDialog
                     trigger={<Button>Замовити підтримку</Button>}
                     title={commonDict.form.supportFormTitle || "Замовити технічну підтримку"}

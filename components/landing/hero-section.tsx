@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
+import { BookingButton } from "@/components/booking-button"
 
 const services = [
   {
@@ -271,18 +272,27 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             </div>
 
             {/* CTA */}
-            <div className="flex items-center gap-4 pt-4">
-              <button onClick={() => setShowAuditForm(true)} className="relative group px-8 py-4 bg-black text-white font-bold overflow-hidden hover:cursor-pointer">
-                <span className="relative z-10">БЕЗКОШТОВНИЙ АУДИТ</span>
-                <div className="absolute inset-0 bg-[#FFD700] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-                <span className="absolute inset-0 flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold z-20">
-                  БЕЗКОШТОВНИЙ АУДИТ
-                </span>
-              </button>
-              <div className="border-l-2 border-black/20 pl-4">
-                <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
-                <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
+            <div className="flex flex-col gap-3 pt-4">
+              <div className="flex items-center gap-4">
+                <button onClick={() => setShowAuditForm(true)} className="relative group px-8 py-4 bg-black text-white font-bold overflow-hidden hover:cursor-pointer">
+                  <span className="relative z-10">БЕЗКОШТОВНИЙ АУДИТ</span>
+                  <div className="absolute inset-0 bg-[#FFD700] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                  <span className="absolute inset-0 flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold z-20">
+                    БЕЗКОШТОВНИЙ АУДИТ
+                  </span>
+                </button>
+                <div className="border-l-2 border-black/20 pl-4">
+                  <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
+                  <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
+                </div>
               </div>
+              <BookingButton 
+                variant="outline" 
+                size="lg"
+                className="w-full border-2 border-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
+              >
+                ЗАПИСАТИСЯ НА КОНСУЛЬТАЦІЮ
+              </BookingButton>
             </div>
 
             {/* Decorative tech lines */}

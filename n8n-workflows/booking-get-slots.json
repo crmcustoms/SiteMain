@@ -1,0 +1,104 @@
+{
+  "name": "Booking - Get Available Slots",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-slots",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "booking-slots"
+    },
+    {
+      "parameters": {
+        "calendar": "={{ $json.calendarId }}",
+        "options": {
+          "timeMin": "={{ $json.startDate }}",
+          "timeMax": "={{ $json.endDate }}"
+        }
+      },
+      "id": "google-calendar",
+      "name": "Google Calendar - Get Events",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_GOOGLE_CALENDAR_CREDENTIALS_ID",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Получаем параметры из webhook\nconst startDate = new Date($input.first().json.startDate);\nconst endDate = new Date($input.first().json.endDate);\nconst duration = 30; // Длительность слота в минутах\nconst workStart = 9; // Начало рабочего дня (9:00)\nconst workEnd = 18; // Конец рабочего дня (18:00)\nconst minLeadTime = 24; // Минимум за 24 часа\n\n// Получаем занятые события из Google Calendar\nconst busyEvents = $input.all().map(item => ({\n  start: new Date(item.json.start.dateTime || item.json.start.date),\n  end: new Date(item.json.end.dateTime || item.json.end.date)\n}));\n\n// Функция проверки, занят ли слот\nfunction isSlotBusy(slotStart, slotEnd, busyEvents) {\n  return busyEvents.some(event => {\n    return (slotStart < event.end && slotEnd > event.start);\n  });\n}\n\n// Функция проверки рабочего времени\nfunction isWorkingHours(date) {\n  const hours = date.getHours();\n  const day = date.getDay();\n  // Исключаем выходные (0 = воскресенье, 6 = суббота)\n  if (day === 0 || day === 6) return false;\n  return hours >= workStart && hours < workEnd;\n}\n\n// Генерация всех возможных слотов\nconst availableSlots = [];\nconst now = new Date();\nconst minBookingTime = new Date(now.getTime() + minLeadTime * 60 * 60 * 1000);\n\nlet currentDate = new Date(startDate);\n\nwhile (currentDate < endDate) {\n  // Пропускаем прошедшее время и слоты раньше минимального времени бронирования\n  if (currentDate < minBookingTime) {\n    currentDate = new Date(currentDate.getTime() + 30 * 60 * 1000);\n    continue;\n  }\n\n  const slotEnd = new Date(currentDate.getTime() + duration * 60 * 1000);\n  \n  // Проверяем, что это рабочее время\n  if (isWorkingHours(currentDate)) {\n    // Проверяем, что слот не пересекается с занятыми событиями\n    if (!isSlotBusy(currentDate, slotEnd, busyEvents)) {\n      availableSlots.push({\n        date: currentDate.toISOString().split('T')[0],\n        time: currentDate.toTimeString().slice(0, 5),\n        datetime: currentDate.toISOString(),\n        endDatetime: slotEnd.toISOString(),\n        displayTime: currentDate.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),\n        period: currentDate.getHours() < 12 ? 'morning' : currentDate.getHours() < 15 ? 'afternoon' : 'evening'\n      });\n    }\n  }\n  \n  currentDate = new Date(currentDate.getTime() + duration * 60 * 1000);\n}\n\n// Группируем слоты по датам для удобства\nconst slotsByDate = availableSlots.reduce((acc, slot) => {\n  if (!acc[slot.date]) {\n    acc[slot.date] = [];\n  }\n  acc[slot.date].push(slot);\n  return acc;\n}, {});\n\nreturn {\n  json: {\n    success: true,\n    slots: availableSlots,\n    slotsByDate: slotsByDate,\n    totalSlots: availableSlots.length\n  }\n};"
+      },
+      "id": "code-calculate-slots",
+      "name": "Calculate Available Slots",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar - Get Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Get Events": {
+      "main": [
+        [
+          {
+            "node": "Calculate Available Slots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Available Slots": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-11T00:00:00.000Z",
+  "versionId": "1"
+}

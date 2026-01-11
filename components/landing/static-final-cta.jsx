@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { submitForm } from "@/lib/actions"
 import { useToast } from "@/hooks/use-toast"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
+import { BookingButton } from "@/components/booking-button"
 
 export default function StaticFinalCta({ dict, commonDict, lang = "uk" }) {
   const { toast } = useToast()
@@ -116,6 +117,9 @@ export default function StaticFinalCta({ dict, commonDict, lang = "uk" }) {
               </Button>
             </form>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
+              <BookingButton variant="default" size="default">
+                Записатися на консультацію
+              </BookingButton>
               <ContactFormDialog
                 trigger={<Button variant="outline">{dict.auditButton}</Button>}
                 title={commonDict.form.auditFormTitle}

@@ -15,8 +15,8 @@ export async function GET() {
     <link>${baseUrl}</link>
     <language>uk</language>
     <copyright>© 2024 CRM Customs</copyright>
-    <managingEditor>info@crmcustoms.com (CRM Customs)</managingEditor>
-    <webMaster>info@crmcustoms.com (CRM Customs)</webMaster>
+    <managingEditor>tm@crmcustoms.com (CRM Customs)</managingEditor>
+    <webMaster>tm@crmcustoms.com (CRM Customs)</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/api/rss" rel="self" type="application/rss+xml" />
     <image>
@@ -54,7 +54,7 @@ export async function GET() {
       <pubDate>${pubDate}</pubDate>
       ${image ? `<enclosure url="${image}" type="image/jpeg" />` : ''}
       ${categories.map(cat => `<category><![CDATA[${cat}]]></category>`).join('')}
-      <author>info@crmcustoms.com (CRM Customs)</author>
+      <author>tm@crmcustoms.com (CRM Customs)</author>
     </item>`
           })
           .join('')

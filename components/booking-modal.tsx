@@ -240,7 +240,7 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
           <div className="flex items-start gap-2 text-xs text-muted-foreground bg-muted/50 p-3 rounded-md mt-4">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <p>
-              Маєте питання? Зв'яжіться з нами: <a href="mailto:info@crmcustoms.com" className="underline">info@crmcustoms.com</a>
+              Маєте питання? Зв'яжіться з нами: <a href="mailto:tm@crmcustoms.com" className="underline">tm@crmcustoms.com</a>
             </p>
           </div>
         )}

@@ -62,13 +62,11 @@ NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
 
 ### booking-get-slots.json
 
-**Вхідні параметри:**
-```json
-{
-  "calendarId": "your-calendar@gmail.com",
-  "startDate": "2026-01-15T00:00:00Z",
-  "endDate": "2026-01-22T23:59:59Z"
-}
+**Метод:** GET
+
+**Вхідні параметри (Query Parameters):**
+```
+?calendarId=your-calendar@gmail.com&startDate=2026-01-15T00:00:00Z&endDate=2026-01-22T23:59:59Z
 ```
 
 **Відповідь:**
@@ -93,6 +91,8 @@ NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
 ```
 
 ### booking-create.json
+
+**Метод:** POST
 
 **Вхідні параметри:**
 ```json

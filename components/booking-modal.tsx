@@ -51,10 +51,13 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
     setIsLoadingSlots(true)
     try {
       const { startDate, endDate } = getDateRange()
-      const response = await fetch('/api/booking/slots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ startDate, endDate })
+      const url = new URL('/api/booking/slots', window.location.origin)
+      url.searchParams.set('startDate', startDate)
+      url.searchParams.set('endDate', endDate)
+      
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
       })
 
       if (!response.ok) {

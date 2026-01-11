@@ -143,15 +143,12 @@ if (day === 0 || day === 6) return false; // Воскресенье и субб�
 
 ## API Endpoints
 
-**POST /api/booking/slots**
-```json
-Request:
-{
-  "startDate": "2026-01-15T00:00:00Z",
-  "endDate": "2026-01-22T23:59:59Z"
-}
+**GET /api/booking/slots**
+```
+Request (Query Parameters):
+?startDate=2026-01-15T00:00:00Z&endDate=2026-01-22T23:59:59Z
 
-Response:
+Response (JSON):
 {
   "success": true,
   "slots": [...],

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { startDate, endDate } = body
+    const searchParams = request.nextUrl.searchParams
+    const startDate = searchParams.get('startDate')
+    const endDate = searchParams.get('endDate')
 
     // Валідація вхідних даних
     if (!startDate || !endDate) {
@@ -25,17 +26,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Запрос к n8n webhook
-    const response = await fetch(n8nUrl, {
-      method: 'POST',
+    // Формуємо URL з query параметрами
+    const url = new URL(n8nUrl)
+    url.searchParams.set('calendarId', calendarId || '')
+    url.searchParams.set('startDate', startDate)
+    url.searchParams.set('endDate', endDate)
+
+    // Запрос к n8n webhook через GET
+    const response = await fetch(url.toString(), {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        calendarId: calendarId,
-        startDate,
-        endDate
-      })
+        'Accept': 'application/json'
+      }
     })
 
     if (!response.ok) {
@@ -55,21 +57,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
-
-// Метод GET для тестування
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const startDate = searchParams.get('startDate')
-  const endDate = searchParams.get('endDate')
-
-  if (!startDate || !endDate) {
-    return NextResponse.json(
-      { error: 'Missing required parameters: startDate, endDate' },
-      { status: 400 }
-    )
-  }
-
-  // Перенаправляємо на POST
-  return POST(request)
 }

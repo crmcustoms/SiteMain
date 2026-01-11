@@ -28,7 +28,7 @@
 - `booking-progress.tsx` - Визуальный прогресс-бар (1/3 → 2/3 → 3/3)
 
 **API Routes:**
-- `/api/booking/slots` - POST получение доступных слотов
+- `/api/booking/slots` - GET получение доступных слотов
 - `/api/booking/create` - POST создание бронирования
 
 **Утилиты и типы:**

@@ -92,13 +92,15 @@
       ]
     }
   },
-  "pinData": {},
+  "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "tags": [],
-  "triggerCount": 0,
-  "updatedAt": "2026-01-11T00:00:00.000Z",
-  "versionId": "1"
+  "versionId": "1",
+  "id": "booking-get-slots",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "n8n"
+  },
+  "tags": []
 }

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
 import FinalCta from "@/components/landing/final-cta"
 import Link from "next/link"
-import { BookingButton } from "@/components/booking-button"
 
 export async function generateMetadata(): Promise<Metadata> {
   // Используем только украинский язык
@@ -42,9 +41,6 @@ export default async function IndustrySolutionsPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <BookingButton>
-                    Записатися на консультацію
-                  </BookingButton>
                   <ContactFormDialog
                     trigger={<Button>Підібрати рішення</Button>}
                     title={commonDict.form.solutionFormTitle || "Підібрати галузеве рішення"}

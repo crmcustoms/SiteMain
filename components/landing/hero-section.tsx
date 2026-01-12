@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
-import { BookingButton } from "@/components/booking-button"
 
 const services = [
   {
@@ -286,13 +285,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                   <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
                 </div>
               </div>
-              <BookingButton 
-                variant="outline" 
-                size="lg"
-                className="w-full border-2 border-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
-              >
-                ЗАПИСАТИСЯ НА КОНСУЛЬТАЦІЮ
-              </BookingButton>
             </div>
 
             {/* Decorative tech lines */}

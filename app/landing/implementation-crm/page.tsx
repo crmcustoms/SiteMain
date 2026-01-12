@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { getDictionary } from "@/lib/dictionaries"
 import { Button } from "@/components/ui/button"
 import { ContactFormDialog } from "@/components/contact-form-dialog"
-import { BookingButton } from "@/components/booking-button"
 
 export async function generateMetadata(): Promise<Metadata> {
   // Используем только украинский язык
@@ -43,9 +42,6 @@ export default async function ImplementationCrmPage() {
             </div>
             
             <div className="flex gap-4 flex-col sm:flex-row">
-              <BookingButton size="lg">
-                Записатися на консультацію
-              </BookingButton>
               <ContactFormDialog
                 trigger={<Button className="bg-amber hover:bg-amber-hover text-black" size="lg">Замовити впровадження</Button>}
                 title="Замовити впровадження CRM"

@@ -64,7 +64,6 @@ export default async function Home({
       <Testimonials dict={dict.landing.testimonials} />
       <Faq dict={dict.landing.faq} commonDict={dict.common} />
       <BookingDemoSection />
-      <StaticFinalCta dict={dict.landing.finalCta} commonDict={dict.common} lang={safeLocale} />
     </div>
   )
 }

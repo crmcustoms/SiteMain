@@ -4,6 +4,7 @@ import { Inter, Montserrat } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/components/language-provider"
 import { Toaster } from "@/components/toaster"
+import { Analytics } from "@/components/analytics"
 import "@/app/globals.css"
 import { getDictionary } from "@/lib/dictionaries"
 import Script from "next/script"
@@ -181,6 +182,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${inter.className} ${montserrat.variable} min-h-screen flex flex-col`}>
+        <Analytics />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <LanguageProvider lang={locale} initialDict={dict}>
             {children}

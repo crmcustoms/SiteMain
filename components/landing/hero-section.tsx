@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
+import Link from "next/link"
+import { BookingButton } from "@/components/booking-button"
 
 const services = [
   {
@@ -272,14 +274,17 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
 
             {/* CTA */}
             <div className="flex flex-col gap-3 pt-4">
-              <div className="flex items-center gap-4">
-                <button onClick={() => setShowAuditForm(true)} className="relative group px-8 py-4 bg-black text-white font-bold overflow-hidden hover:cursor-pointer">
-                  <span className="relative z-10">БЕЗКОШТОВНИЙ АУДИТ</span>
-                  <div className="absolute inset-0 bg-[#FFD700] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-                  <span className="absolute inset-0 flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold z-20">
-                    БЕЗКОШТОВНИЙ АУДИТ
-                  </span>
-                </button>
+              <div className="flex items-center gap-4 flex-wrap">
+                <Link href="/quiz" className="relative group px-8 py-4 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-block border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
+                  <span className="relative z-10">ПРОЙТИ ДІАГНОСТИКУ</span>
+                </Link>
+                <BookingButton 
+                  variant="outline" 
+                  size="lg"
+                  className="px-8 py-4 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
+                >
+                  ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
+                </BookingButton>
                 <div className="border-l-2 border-black/20 pl-4">
                   <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
                   <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>

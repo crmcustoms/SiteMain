@@ -17,16 +17,8 @@ export default function StaticFinalCta({ dict, commonDict, lang = "uk" }) {
           </div>
           <div className="flex flex-col gap-2 min-[400px]:flex-row">
             <BookingButton size="lg">
-              Записатися на консультацію
+              Забронювати консультацію
             </BookingButton>
-            <ContactFormDialog
-              trigger={<Button variant="outline" size="lg">{dict.auditButton}</Button>}
-              title={commonDict.form.auditFormTitle}
-              description={commonDict.form.auditFormDescription}
-              formType="final_audit"
-              buttonText={commonDict.form.submitButton}
-              dict={commonDict}
-            />
           </div>
         </div>
       </div>

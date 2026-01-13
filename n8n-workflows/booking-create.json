@@ -11,34 +11,32 @@
       "id": "webhook-trigger",
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1.1,
+      "typeVersion": 2,
       "position": [240, 300],
       "webhookId": "booking-create"
     },
     {
       "parameters": {
-        "calendar": "={{ $json.calendarId }}",
-        "start": "={{ $json.startDateTime }}",
-        "end": "={{ $json.endDateTime }}",
-        "summary": "Консультація: {{ $json.clientName }}",
-        "description": "Клієнт: {{ $json.clientName }}\\nEmail: {{ $json.clientEmail }}\\nТелефон: {{ $json.clientPhone }}\\n\\nКоментар: {{ $json.notes || 'Немає' }}",
-        "attendees": "={{ $json.clientEmail }}",
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $json.body.calendarId }}",
+          "mode": "id"
+        },
+        "start": "={{ $json.body.startDateTime }}",
+        "end": "={{ $json.body.endDateTime }}",
+        "title": "Консультація: {{ $json.body.clientName }}",
+        "description": "Клієнт: {{ $json.body.clientName }}\nEmail: {{ $json.body.clientEmail }}\nТелефон: {{ $json.body.clientPhone }}\n\nКоментар: {{ $json.body.notes || 'Немає' }}",
+        "attendees": "={{ $json.body.clientEmail }}",
         "sendUpdates": "all",
         "options": {
-          "conferenceData": {
-            "createRequest": {
-              "requestId": "={{ $runIndex }}-{{ $json.clientEmail }}",
-              "conferenceSolutionKey": {
-                "type": "hangoutsMeet"
-              }
-            }
-          }
+          "conferenceDataVersion": 1
         }
       },
       "id": "google-calendar-create",
       "name": "Google Calendar - Create Event",
       "type": "n8n-nodes-base.googleCalendar",
-      "typeVersion": 1,
+      "typeVersion": 2,
       "position": [460, 300],
       "credentials": {
         "googleCalendarOAuth2Api": {
@@ -50,15 +48,14 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://={{ $json.planfixAccount }}.planfix.ru/rest/task/",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "=https://{{ $('Webhook Trigger').item.json.body.planfixAccount }}.planfix.ru/rest/task/",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer ={{ $json.planfixToken }}"
+              "value": "=Bearer {{ $('Webhook Trigger').item.json.body.planfixToken }}"
             },
             {
               "name": "Content-Type",
@@ -67,22 +64,8 @@
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "title",
-              "value": "Консультація: ={{ $input.first().json.clientName }}"
-            },
-            {
-              "name": "description",
-              "value": "Бронювання консультації\\n\\nКлієнт: ={{ $input.first().json.clientName }}\\nEmail: ={{ $input.first().json.clientEmail }}\\nТелефон: ={{ $input.first().json.clientPhone }}\\n\\nДата та час: ={{ $input.first().json.startDateTime }}\\n\\nКоментар: ={{ $input.first().json.notes || 'Немає' }}\\n\\nGoogle Calendar Event ID: ={{ $json.id }}"
-            },
-            {
-              "name": "project",
-              "value": "={{ $input.first().json.planfixProjectId }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"Консультація: {{ $('Webhook Trigger').item.json.body.clientName }}\",\n  \"description\": \"Бронювання консультації\\n\\nКлієнт: {{ $('Webhook Trigger').item.json.body.clientName }}\\nEmail: {{ $('Webhook Trigger').item.json.body.clientEmail }}\\nТелефон: {{ $('Webhook Trigger').item.json.body.clientPhone }}\\n\\nДата та час: {{ $('Webhook Trigger').item.json.body.startDateTime }}\\n\\nКоментар: {{ $('Webhook Trigger').item.json.body.notes || 'Немає' }}\\n\\nGoogle Calendar Event ID: {{ $json.id }}\",\n  \"project\": {{ $('Webhook Trigger').item.json.body.planfixProjectId }}\n}",
         "options": {}
       },
       "id": "planfix-create-task",
@@ -93,12 +76,13 @@
     },
     {
       "parameters": {
-        "fromEmail": "={{ $input.first().json.fromEmail }}",
-        "toEmail": "={{ $input.first().json.clientEmail }}",
+        "sendTo": "={{ $('Webhook Trigger').item.json.body.clientEmail }}",
         "subject": "Підтвердження бронювання консультації",
-        "emailFormat": "html",
-        "message": "<!DOCTYPE html>\\n<html>\\n<head>\\n  <style>\\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\\n    .header { background: #4F46E5; color: white; padding: 20px; text-align: center; }\\n    .content { background: #f9fafb; padding: 20px; }\\n    .info-block { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4F46E5; }\\n    .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; }\\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\\n  </style>\\n</head>\\n<body>\\n  <div class=\\"container\\">\\n    <div class=\\"header\\">\\n      <h1>Ваше бронювання підтверджено!</h1>\\n    </div>\\n    <div class=\\"content\\">\\n      <p>Вітаємо, ={{ $input.first().json.clientName }}!</p>\\n      <p>Дякуємо за бронювання консультації. Ми з нетерпінням чекаємо зустрічі з вами.</p>\\n      \\n      <div class=\\"info-block\\">\\n        <strong>📅 Дата та час:</strong><br>\\n        ={{ $json.start.dateTime }}\\n      </div>\\n      \\n      <div class=\\"info-block\\">\\n        <strong>⏱️ Тривалість:</strong><br>\\n        30 хвилин\\n      </div>\\n      \\n      <div class=\\"info-block\\">\\n        <strong>📧 Ваш email:</strong><br>\\n        ={{ $input.first().json.clientEmail }}\\n      </div>\\n      \\n      <div class=\\"info-block\\">\\n        <strong>📱 Ваш телефон:</strong><br>\\n        ={{ $input.first().json.clientPhone }}\\n      </div>\\n      \\n      ={{ $json.hangoutLink ? '<div class=\\"info-block\\"><strong>🎥 Посилання на Google Meet:</strong><br><a href=\\"' + $json.hangoutLink + '\\">' + $json.hangoutLink + '</a></div>' : '' }}\\n      \\n      <p style=\\"margin-top: 20px;\\">\\n        <a href=\\"={{ $json.htmlLink }}\\" class=\\"button\\">Додати до Google Calendar</a>\\n      </p>\\n      \\n      <p style=\\"margin-top: 30px; font-size: 14px; color: #666;\\">\\n        <strong>Важливо:</strong> Якщо вам потрібно перенести або скасувати зустріч, будь ласка, зв'яжіться з нами за ={{ $input.first().json.fromEmail }}\\n      </p>\\n    </div>\\n    <div class=\\"footer\\">\\n      <p>CRM Customs - Автоматизація бізнесу</p>\\n      <p>https://crmcustoms.com</p>\\n    </div>\\n  </div>\\n</body>\\n</html>",
-        "options": {}
+        "emailType": "html",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #4F46E5; color: white; padding: 20px; text-align: center; }\n    .content { background: #f9fafb; padding: 20px; }\n    .info-block { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4F46E5; }\n    .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; }\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Ваше бронювання підтверджено!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Вітаємо, {{ $('Webhook Trigger').item.json.body.clientName }}!</p>\n      <p>Дякуємо за бронювання консультації. Ми з нетерпінням чекаємо зустрічі з вами.</p>\n      \n      <div class=\"info-block\">\n        <strong>📅 Дата та час:</strong><br>\n        {{ $('Google Calendar - Create Event').item.json.start.dateTime }}\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>⏱️ Тривалість:</strong><br>\n        30 хвилин\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>📧 Ваш email:</strong><br>\n        {{ $('Webhook Trigger').item.json.body.clientEmail }}\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>📱 Ваш телефон:</strong><br>\n        {{ $('Webhook Trigger').item.json.body.clientPhone }}\n      </div>\n      \n      {{ $('Google Calendar - Create Event').item.json.hangoutLink ? '<div class=\"info-block\"><strong>🎥 Посилання на Google Meet:</strong><br><a href=\"' + $('Google Calendar - Create Event').item.json.hangoutLink + '\">' + $('Google Calendar - Create Event').item.json.hangoutLink + '</a></div>' : '' }}\n      \n      <p style=\"margin-top: 20px;\">\n        <a href=\"{{ $('Google Calendar - Create Event').item.json.htmlLink }}\" class=\"button\">Додати до Google Calendar</a>\n      </p>\n      \n      <p style=\"margin-top: 30px; font-size: 14px; color: #666;\">\n        <strong>Важливо:</strong> Якщо вам потрібно перенести або скасувати зустріч, будь ласка, зв'яжіться з нами за {{ $('Webhook Trigger').item.json.body.fromEmail }}\n      </p>\n    </div>\n    <div class=\"footer\">\n      <p>CRM Customs - Автоматизація бізнесу</p>\n      <p>https://crmcustoms.com</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {
+          "allowUnauthorizedCerts": false
+        }
       },
       "id": "send-email",
       "name": "Send Confirmation Email",
@@ -115,12 +99,12 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { \"success\": true, \"eventId\": $('Google Calendar - Create Event').item.json.id, \"planfixTaskId\": $json.id, \"message\": \"Бронювання успішно створено\" } }}"
+        "responseBody": "={{ {\n  \"success\": true,\n  \"eventId\": $('Google Calendar - Create Event').item.json.id,\n  \"planfixTaskId\": $('Planfix - Create Task').item.json.id,\n  \"message\": \"Бронювання успішно створено\"\n} }}"
       },
       "id": "respond-webhook",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
+      "typeVersion": 1.1,
       "position": [1120, 300]
     }
   ],
@@ -170,15 +154,13 @@
       ]
     }
   },
-  "active": false,
+  "pinData": {},
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "1",
-  "id": "booking-create",
-  "meta": {
-    "templateCredsSetupCompleted": false,
-    "instanceId": "n8n"
-  },
-  "tags": []
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-12T00:00:00.000Z",
+  "versionId": "1"
 }

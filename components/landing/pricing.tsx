@@ -2,6 +2,7 @@
 
 import React from "react"
 import { CheckCircle2, Star } from "lucide-react"
+import { BookingButton } from "@/components/booking-button"
 
 export default function Pricing() {
   const plans = [
@@ -11,6 +12,7 @@ export default function Pricing() {
       price: "від 25,000₴",
       duration: "2-4 тижні",
       description: "Базове впровадження для швидкого старту",
+      buttonText: "Почати з 25К",
       features: [
         "Обов'язковий аудит (5,000₴, 2 години)",
         "Підбір CRM під ваш бізнес",
@@ -30,6 +32,7 @@ export default function Pricing() {
       price: "від 70,000₴",
       duration: "1-2 місяці",
       description: "Повне впровадження з автоматизацією",
+      buttonText: "Обговорити проєкт",
       features: [
         "Глибокий аудит бізнес-процесів (2-3 дні)",
         "CRM впровадження під ключ",
@@ -50,6 +53,7 @@ export default function Pricing() {
       price: "від 120,000₴",
       duration: "від 2 місяців",
       description: "Комплексні рішення для складних завдань",
+      buttonText: "Розрахувати вартість",
       features: [
         "Передпроєктне дослідження",
         "Детальний аналіз бізнес-процесів",
@@ -144,13 +148,15 @@ export default function Pricing() {
                 <p className="text-sm font-medium text-black/80">{plan.forWho}</p>
               </div>
 
-              <button className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
-                plan.popular
-                  ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
-                  : "border-2 border-black/20 text-black hover:border-[#FFD700] hover:bg-[#FFD700] hover:text-black"
-              }`}>
-                Розглянути варіант
-              </button>
+              <BookingButton 
+                className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
+                  plan.popular
+                    ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                    : "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                }`}
+              >
+                {plan.buttonText}
+              </BookingButton>
             </div>
           ))}
         </div>

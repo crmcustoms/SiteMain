@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
+import { BookingButton } from "@/components/booking-button"
 
 export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any }) {
   const [activeTab, setActiveTab] = useState("price")
@@ -125,11 +126,11 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-black text-black mb-4">Залишились питання?</h3>
           <p className="text-black/60 mb-8 max-w-2xl mx-auto">
-            Замовте безкоштовний аудит — відповімо на всі питання та покажемо як це буде працювати.
+            Зателефонуємо за 5 хвилин та відповімо на всі ваші запитання
           </p>
-          <button className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-black hover:text-[#FFD700] transition-all border-2 border-[#FFD700]">
-            Отримати безкоштовний аудит
-          </button>
+          <BookingButton className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-black hover:text-[#FFD700] transition-all border-2 border-[#FFD700]">
+            Зателефонуємо за 5 хв
+          </BookingButton>
         </div>
       </div>
     </div>

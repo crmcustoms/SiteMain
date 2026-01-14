@@ -100,9 +100,7 @@ export default async function RootLayout({
     <html lang="uk" suppressHydrationWarning>
       <head>
         {/* Google Tag Manager */}
-        <Script
-          id="google-tag-manager"
-          strategy="afterInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

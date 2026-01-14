@@ -91,43 +91,38 @@ RUN --mount=type=bind,from=builder,source=/app/.next,target=/tmp/next \
 COPY --from=builder --chown=nextjs:nodejs /app/public /app/public
 
 # Копируем или создаем server.js для запуска приложения
-RUN sh << 'SETUPSCRIPT'
-if [ -f /app/server.js ]; then
-  echo "✓ server.js уже существует"
-else
-  cat > /app/server.js << 'JSEOF'
-const { createServer } = require('http')
-const { parse } = require('url')
-const next = require('next')
-
-const dev = process.env.NODE_ENV !== 'production'
-const hostname = process.env.HOSTNAME || 'localhost'
-const port = parseInt(process.env.PORT || '3000', 10)
-
-const app = next({ dev, hostname, port })
-const handle = app.getRequestHandler()
-
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true)
-      await handle(req, res, parsedUrl)
-    } catch (err) {
-      console.error(err)
-      res.statusCode = 500
-      res.end('Internal server error')
-    }
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`Ready on http://${hostname}:${port}`)
-  })
-})
-JSEOF
-  echo "✓ server.js создан"
-fi
-ls -la /app/server.js
-[ -f /app/server.js ] && echo "✓ Готово к запуску" || (echo "✗ Ошибка" && exit 1)
-SETUPSCRIPT
+# В standalone режиме Next.js создает server.js автоматически, но на всякий случай проверяем
+RUN if [ -f /app/server.js ]; then \
+      echo "✓ server.js уже существует"; \
+    else \
+      echo "⚠ server.js не найден, создаем fallback..."; \
+      echo 'const { createServer } = require("http");' > /app/server.js && \
+      echo 'const { parse } = require("url");' >> /app/server.js && \
+      echo 'const next = require("next");' >> /app/server.js && \
+      echo 'const dev = process.env.NODE_ENV !== "production";' >> /app/server.js && \
+      echo 'const hostname = process.env.HOSTNAME || "localhost";' >> /app/server.js && \
+      echo 'const port = parseInt(process.env.PORT || "3000", 10);' >> /app/server.js && \
+      echo 'const app = next({ dev, hostname, port });' >> /app/server.js && \
+      echo 'const handle = app.getRequestHandler();' >> /app/server.js && \
+      echo 'app.prepare().then(() => {' >> /app/server.js && \
+      echo '  createServer(async (req, res) => {' >> /app/server.js && \
+      echo '    try {' >> /app/server.js && \
+      echo '      const parsedUrl = parse(req.url, true);' >> /app/server.js && \
+      echo '      await handle(req, res, parsedUrl);' >> /app/server.js && \
+      echo '    } catch (err) {' >> /app/server.js && \
+      echo '      console.error(err);' >> /app/server.js && \
+      echo '      res.statusCode = 500;' >> /app/server.js && \
+      echo '      res.end("Internal server error");' >> /app/server.js && \
+      echo '    }' >> /app/server.js && \
+      echo '  }).listen(port, (err) => {' >> /app/server.js && \
+      echo '    if (err) throw err;' >> /app/server.js && \
+      echo '    console.log(`Ready on http://${hostname}:${port}`);' >> /app/server.js && \
+      echo '  });' >> /app/server.js && \
+      echo '});' >> /app/server.js && \
+      echo "✓ server.js создан"; \
+    fi && \
+    ls -la /app/server.js && \
+    [ -f /app/server.js ] && echo "✓ Готово к запуску" || (echo "✗ Ошибка" && exit 1)
 
 # Переключаемся на непривилегированного пользователя
 USER nextjs

@@ -56,7 +56,10 @@ export async function GET(request: NextRequest) {
       });
     }
     
-    console.log(`S3 Proxy: Запрос к ${isPresigned ? 'пресайнутому' : 'обычному'} URL: ${url.toString().substring(0, 100)}...`);
+    // Логируем только в development режиме для отладки
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`S3 Proxy: Запрос к ${isPresigned ? 'пресайнутому' : 'обычному'} URL: ${url.toString().substring(0, 100)}...`);
+    }
     
     // Выполняем запрос к оригинальному URL
     const response = await fetchWithTimeout(url.toString(), {

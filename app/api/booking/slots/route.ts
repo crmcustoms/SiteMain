@@ -18,12 +18,13 @@ export async function GET(request: NextRequest) {
     const n8nUrl = process.env.NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL
     const calendarId = process.env.NEXT_PUBLIC_GOOGLE_CALENDAR_ID
 
-    console.log('[API] Environment check:', {
-      n8nUrl: n8nUrl ? 'SET' : 'NOT SET',
-      n8nUrlValue: n8nUrl,
-      calendarId: calendarId ? 'SET' : 'NOT SET',
-      allEnvKeys: Object.keys(process.env).filter(k => k.includes('N8N') || k.includes('BOOKING'))
-    })
+    // Логируем только в development режиме или при ошибке конфигурации
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[API] Environment check:', {
+        n8nUrl: n8nUrl ? 'SET' : 'NOT SET',
+        calendarId: calendarId ? 'SET' : 'NOT SET'
+      });
+    }
 
     if (!n8nUrl) {
       console.error('NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL not configured')

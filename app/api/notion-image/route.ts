@@ -20,7 +20,10 @@ export async function GET(request: NextRequest) {
     
     // Для пресайнутых URL выполняем прямой запрос без изменений
     if (isPresigned) {
-      console.log(`Прямой доступ к пресайнутому изображению: ${imageUrl.substring(0, 100)}...`);
+      // Логируем только в development режиме для отладки
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Прямой доступ к пресайнутому изображению: ${imageUrl.substring(0, 100)}...`);
+      }
       
       // Выполняем запрос к оригинальному URL
       const response = await fetch(imageUrl);

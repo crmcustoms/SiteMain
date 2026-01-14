@@ -57,11 +57,6 @@ export default function BookingDemoSection() {
               Записатися на консультацію
             </BookingButton>
           </div>
-
-          {/* Примітка */}
-          <p className="text-sm text-muted-foreground">
-            Це демо версія системи бронювання. Для роботи потрібно налаштувати n8n workflows.
-          </p>
         </div>
       </div>
     </section>

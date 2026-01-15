@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
-    const data = parsedBody.data
+    const parsedData = parsedBody.data
     const {
       date,
       time,
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       clientEmail,
       clientPhone,
       notes
-    } = data
+    } = parsedData
 
     // Валідація вхідних даних
     if (!startDateTime || !endDateTime || !clientName || !clientEmail || !clientPhone) {
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       throw new Error(`n8n webhook returned ${response.status}`)
     }
 
-    const data = await response.json()
+    const responseData = await response.json()
 
     // Логування успішного бронювання
     console.log('Booking created successfully:', {
@@ -135,14 +135,14 @@ export async function POST(request: NextRequest) {
       time,
       clientName,
       clientEmail,
-      eventId: data.eventId
+      eventId: responseData.eventId
     })
 
     return NextResponse.json(
       {
         success: true,
         message: 'Бронювання успішно створено',
-        ...data
+        ...responseData
       },
       { status: 200 }
     )

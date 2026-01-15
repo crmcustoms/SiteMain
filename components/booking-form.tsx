@@ -162,7 +162,7 @@ export function BookingForm({
 
       {/* Примітка */}
       <p className="text-xs text-muted-foreground text-center">
-        Після бронювання ви отримаєте підтвердження на email
+        Після бронювання ми зв'яжемося з вами для підтвердження
       </p>
     </form>
   )

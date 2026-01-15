@@ -3,9 +3,19 @@ import { NextRequest, NextResponse } from 'next/server';
 /**
  * Генерирует SVG-изображение заглушку
  */
+function escapeXml(input: string) {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 function generatePlaceholderSVG(width = 800, height = 600, text = 'Изображение недоступно'): string {
   // Вычисляем размер шрифта в зависимости от размера изображения
   const fontSize = Math.max(16, Math.min(24, Math.floor(Math.min(width, height) / 20)));
+  const safeText = escapeXml(text.slice(0, 120));
   
   // Создаем SVG с градиентом для фона
   return `
@@ -19,7 +29,7 @@ function generatePlaceholderSVG(width = 800, height = 600, text = 'Изобра�
       <rect width="100%" height="100%" fill="url(#grad)"/>
       <rect x="10" y="10" width="${width - 20}" height="${height - 20}" fill="none" stroke="#ccc" stroke-width="2" stroke-dasharray="5,5" />
       <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${fontSize}" text-anchor="middle" dominant-baseline="middle" fill="#666666">
-        ${text}
+        ${safeText}
       </text>
       <text x="50%" y="${height - 30}" font-family="Arial, sans-serif" font-size="${fontSize * 0.6}" text-anchor="middle" fill="#999999">
         ${width} × ${height}

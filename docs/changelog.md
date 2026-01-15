@@ -7,13 +7,13 @@
 - **n8n автоматизация**: Созданы 2 workflows для автоматизации бронирования
 - **Frontend компоненты**: 7 React компонентов для UI системы бронирования
 - **API Routes**: 2 Next.js endpoints для интеграции с n8n
-- **Интеграции**: Google Calendar, Планфікс, Gmail
+- **Интеграции**: Google Calendar, Планфікс
 
 ### Подробно реализовано
 
 **Backend (n8n workflows):**
 - `booking-get-slots.json` - Получение свободных временных слотов из Google Calendar
-- `booking-create.json` - Создание события + задача в Планфікс + email подтверждение
+- `booking-create.json` - Создание события + задача в Планфікс
 - Автоматическая проверка занятости (рабочие часы 9:00-18:00, исключение выходных)
 - Минимум 24 часа до встречи
 - Интеграция Google Meet для видеозвонков
@@ -53,7 +53,6 @@
 - ✅ Визуальные индикаторы доступности (количество свободных слотов)
 - ✅ Группировка времени: 🌅 Утро / ☀️ День / 🌆 Вечер
 - ✅ Форма с валидацией (имя, email, телефон, комментарий)
-- ✅ Email с подтверждением и Google Meet ссылкой
 - ✅ Генерация .ics файла "Добавить в календарь"
 - ✅ Полностью адаптивный дизайн для мобильных устройств
 
@@ -61,7 +60,6 @@
 - ✅ Автоматическая синхронизация с Google Calendar
 - ✅ Проверка занятости перед бронированием
 - ✅ Сохранение данных клиента в Планфікс
-- ✅ Email подтверждение с деталями встречи
 - ✅ Настраиваемые рабочие часы и длительность консультаций
 - ✅ Защита от бронирования меньше чем за 24 часа
 
@@ -76,7 +74,7 @@
 ### Технологии
 - **Frontend**: React 18, TypeScript, Radix UI, react-day-picker, date-fns
 - **Backend**: n8n workflows
-- **API**: Google Calendar, Планфікс, Gmail
+- **API**: Google Calendar, Планфікс
 - **Валидация**: react-hook-form + zod
 - **Уведомления**: sonner toast
 
@@ -93,11 +91,10 @@
 
 ### Настройка
 Требуется создать `.env.local` с переменными:
-- `NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL` - URL webhook n8n
-- `NEXT_PUBLIC_N8N_BOOKING_CREATE_URL` - URL webhook n8n
-- `NEXT_PUBLIC_GOOGLE_CALENDAR_ID` - ID календаря
-- `NEXT_PUBLIC_PLANFIX_*` - Данные Планфікс API
-- `NEXT_PUBLIC_FROM_EMAIL` - Email для отправки
+- `N8N_BOOKING_SLOTS_URL` - URL webhook n8n
+- `N8N_BOOKING_CREATE_URL` - URL webhook n8n
+- `GOOGLE_CALENDAR_ID` - ID календаря
+- `PLANFIX_*` - Данные Планфікс API
 
 ### Результат
 ✅ **Полноценная система бронирования готова к использованию**

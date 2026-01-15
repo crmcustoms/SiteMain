@@ -155,7 +155,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
           <a href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors">
             Блог
           </a>
-          <a href={`/${lang}`} className="hover:text-[#FFD700] transition-colors">
+          <a href="#about" className="hover:text-[#FFD700] transition-colors">
             Про нас
           </a>
         </div>

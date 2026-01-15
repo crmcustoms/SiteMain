@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Реализована полноценная система онлайн-бронирования консультаций с интеграциями Google Calendar, Планфікс и автоматической отправкой email.
+Реализована полноценная система онлайн-бронирования консультаций с интеграциями Google Calendar и Планфікс.
 
 ## Архитектура
 
@@ -15,8 +15,7 @@ Next.js API Routes (/api/booking/*)
     ↓
 n8n Webhooks
     ├→ Google Calendar API (проверка + создание)
-    ├→ Планфікс API (сохранение данных)
-    └→ Gmail API (отправка email)
+    └→ Планфікс API (сохранение данных)
 ```
 
 ## Компоненты
@@ -55,8 +54,7 @@ n8n Webhooks
 
 1. Импортируйте оба файла из `n8n-workflows/`
 2. Настройте Google Calendar OAuth2 credentials
-3. Настройте Gmail OAuth2 credentials
-4. Активируйте workflows и скопируйте webhook URLs
+3. Активируйте workflows и скопируйте webhook URLs
 
 ### 2. Переменные окружения
 
@@ -64,19 +62,17 @@ n8n Webhooks
 
 ```env
 # n8n Webhooks
-NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL=https://your-n8n.com/webhook/booking-slots
-NEXT_PUBLIC_N8N_BOOKING_CREATE_URL=https://your-n8n.com/webhook/booking-create
+N8N_BOOKING_SLOTS_URL=https://your-n8n.com/webhook/booking-slots
+N8N_BOOKING_CREATE_URL=https://your-n8n.com/webhook/booking-create
 
-# Google Calendar
-NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your-calendar@gmail.com
+# Google Calendar (опционально, если ID задаётся в n8n)
+GOOGLE_CALENDAR_ID=your-calendar@gmail.com
 
 # Планфікс
-NEXT_PUBLIC_PLANFIX_ACCOUNT=your-account
-NEXT_PUBLIC_PLANFIX_TOKEN=your-api-token
-NEXT_PUBLIC_PLANFIX_PROJECT_ID=123
+PLANFIX_ACCOUNT=your-account
+PLANFIX_TOKEN=your-api-token
+PLANFIX_PROJECT_ID=123
 
-# Email
-NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
 ```
 
 ### Получение данных:
@@ -96,7 +92,6 @@ NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
 - ✅ Выбор даты и времени из календаря
 - ✅ Группировка слотов (утро/день/вечер)
 - ✅ Форма с валидацией (имя, email, телефон)
-- ✅ Email с подтверждением и Google Meet ссылкой
 - ✅ Кнопка "Добавить в календарь" (.ics файл)
 - ✅ Адаптивный дизайн для мобильных
 
@@ -195,10 +190,8 @@ Response:
 - Проверьте формат даты/времени в запросе
 - Просмотрите логи в n8n
 
-### Не приходит email
-- Проверьте Gmail OAuth credentials
-- Проверьте email в `NEXT_PUBLIC_FROM_EMAIL`
-- Проверьте папку спам
+### Email
+- Email отправляется средствами Планфікс (на стороне CRM)
 
 ### Не создается задача в Планфікс
 - Проверьте API токен
@@ -221,7 +214,6 @@ Response:
 - n8n (автоматизация)
 - Google Calendar API
 - Планфікс API
-- Gmail API
 
 ## Безопасность
 

@@ -5,7 +5,7 @@ import { CheckCircle2 } from "lucide-react"
 
 export default function TeamSection() {
   return (
-    <div className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
+    <div id="about" className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div

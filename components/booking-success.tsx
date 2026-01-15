@@ -24,7 +24,7 @@ export function BookingSuccess({
       selectedSlot.endDatetime,
       'Консультація - CRM Customs',
       `Консультація з ${formData.name}\n\nEmail: ${formData.email}\nТелефон: ${formData.phone}\n\n${formData.notes ? `Коментар: ${formData.notes}` : ''}`,
-      'Online (посилання буде в email)'
+      'Online (посилання узгодимо окремо)'
     )
     
     downloadICSFile(icsContent, `consultation-${selectedDate.toISOString().split('T')[0]}.ics`)
@@ -43,7 +43,7 @@ export function BookingSuccess({
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Чудово! Консультацію заброньовано</h2>
         <p className="text-muted-foreground">
-          Підтвердження надіслано на ваш email
+          Ми зв'яжемося з вами для підтвердження
         </p>
       </div>
 
@@ -74,16 +74,6 @@ export function BookingSuccess({
         </div>
       </div>
 
-      {/* Додаткова інформація */}
-      <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-4 text-sm">
-        <p className="text-blue-900 dark:text-blue-100">
-          <strong>📧 Перевірте свою пошту</strong>
-        </p>
-        <p className="text-blue-700 dark:text-blue-300 mt-1">
-          Ми надіслали лист з підтвердженням та посиланням на відеодзвінок (Google Meet)
-        </p>
-      </div>
-
       {/* Кнопки */}
       <div className="space-y-3">
         <Button
@@ -107,7 +97,7 @@ export function BookingSuccess({
 
       {/* Примітка */}
       <p className="text-xs text-muted-foreground">
-        Потрібно перенести або скасувати? Зв'яжіться з нами відповівши на email з підтвердженням
+        Потрібно перенести або скасувати? Напишіть нам у месенджері або зателефонуйте
       </p>
     </div>
   )

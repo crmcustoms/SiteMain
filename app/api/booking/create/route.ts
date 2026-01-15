@@ -1,8 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from "zod"
+import { parsePhoneNumberFromString } from "libphonenumber-js"
+import { checkRateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
   try {
+    const contentLength = Number(request.headers.get('content-length') || '0')
+    if (contentLength && contentLength > 20_000) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:5',message:'booking_create_payload_too_large',data:{contentLength},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json({ success: false, error: 'Payload too large' }, { status: 413 })
+    }
+
+    const clientIp =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "unknown"
+    const rate = await checkRateLimit(`booking:create:${clientIp}`)
+    if (!rate.ok) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:18',message:'booking_create_rate_limited',data:{clientIp,remaining:rate.remaining},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json({ success: false, error: "Too many requests" }, { status: 429 })
+    }
+
+    const secret = request.headers.get("x-webhook-secret")
+    if (!secret || secret !== process.env.WEBHOOK_SECRET) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:26',message:'booking_create_unauthorized',data:{hasSecret:!!secret},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await request.json()
+    const bookingSchema = z.object({
+      date: z.string().optional(),
+      time: z.string().optional(),
+      startDateTime: z.string().min(1),
+      endDateTime: z.string().min(1),
+      clientName: z.string().min(1),
+      clientEmail: z.string().email(),
+      clientPhone: z.string().min(1),
+      notes: z.string().optional(),
+    })
+    const parsedBody = bookingSchema.safeParse(body)
+    if (!parsedBody.success) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:43',message:'booking_create_validation_failed',data:{issues:parsedBody.error.issues.map(i=>i.path.join("."))},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json(
+        { success: false, error: "Некоректні дані" },
+        { status: 400 }
+      )
+    }
+    const data = parsedBody.data
     const {
       date,
       time,
@@ -12,7 +64,7 @@ export async function POST(request: NextRequest) {
       clientEmail,
       clientPhone,
       notes
-    } = body
+    } = data
 
     // Валідація вхідних даних
     if (!startDateTime || !endDateTime || !clientName || !clientEmail || !clientPhone) {
@@ -22,19 +74,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Валідація email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(clientEmail)) {
-      return NextResponse.json(
-        { error: 'Некоректна email адреса' },
-        { status: 400 }
-      )
-    }
-
-    // Валідація телефону (український формат)
-    const phoneRegex = /^(\+?380|0)\d{9}$/
-    const cleanPhone = clientPhone.replace(/[\s\-\(\)]/g, '')
-    if (!phoneRegex.test(cleanPhone)) {
+    // Валідація телефону через бібліотеку
+    const phoneParsed = parsePhoneNumberFromString(clientPhone, "UA")
+    if (!phoneParsed || !phoneParsed.isValid()) {
       return NextResponse.json(
         { error: 'Некоректний номер телефону' },
         { status: 400 }
@@ -42,15 +84,14 @@ export async function POST(request: NextRequest) {
     }
 
     // URL n8n webhook та інші параметри з переменних окружения
-    const n8nUrl = process.env.NEXT_PUBLIC_N8N_BOOKING_CREATE_URL
-    const calendarId = process.env.NEXT_PUBLIC_GOOGLE_CALENDAR_ID
-    const planfixAccount = process.env.NEXT_PUBLIC_PLANFIX_ACCOUNT
-    const planfixToken = process.env.NEXT_PUBLIC_PLANFIX_TOKEN
-    const planfixProjectId = process.env.NEXT_PUBLIC_PLANFIX_PROJECT_ID
-    const fromEmail = process.env.NEXT_PUBLIC_FROM_EMAIL
+    const n8nUrl = process.env.N8N_BOOKING_CREATE_URL
+    const calendarId = process.env.GOOGLE_CALENDAR_ID
+    const planfixAccount = process.env.PLANFIX_ACCOUNT
+    const planfixToken = process.env.PLANFIX_TOKEN
+    const planfixProjectId = process.env.PLANFIX_PROJECT_ID
 
     if (!n8nUrl) {
-      console.error('NEXT_PUBLIC_N8N_BOOKING_CREATE_URL not configured')
+      console.error('N8N_BOOKING_CREATE_URL not configured')
       return NextResponse.json(
         { error: 'Сервіс бронювання тимчасово недоступний' },
         { status: 503 }
@@ -58,12 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Форматування телефону
-    let formattedPhone = cleanPhone
-    if (cleanPhone.startsWith('0')) {
-      formattedPhone = '+38' + cleanPhone
-    } else if (cleanPhone.startsWith('380')) {
-      formattedPhone = '+' + cleanPhone
-    }
+    const formattedPhone = phoneParsed.number
 
     // Запрос к n8n webhook
     const response = await fetch(n8nUrl, {
@@ -72,7 +108,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        calendarId,
+        ...(calendarId ? { calendarId } : {}),
         startDateTime,
         endDateTime,
         clientName,
@@ -81,8 +117,7 @@ export async function POST(request: NextRequest) {
         notes: notes || '',
         planfixAccount,
         planfixToken,
-        planfixProjectId,
-        fromEmail
+        planfixProjectId
       })
     })
 

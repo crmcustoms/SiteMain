@@ -27,8 +27,7 @@
         "end": "={{ $json.body.endDateTime }}",
         "title": "Консультація: {{ $json.body.clientName }}",
         "description": "Клієнт: {{ $json.body.clientName }}\nEmail: {{ $json.body.clientEmail }}\nТелефон: {{ $json.body.clientPhone }}\n\nКоментар: {{ $json.body.notes || 'Немає' }}",
-        "attendees": "={{ $json.body.clientEmail }}",
-        "sendUpdates": "all",
+        "sendUpdates": "none",
         "options": {
           "conferenceDataVersion": 1
         }
@@ -76,28 +75,6 @@
     },
     {
       "parameters": {
-        "sendTo": "={{ $('Webhook Trigger').item.json.body.clientEmail }}",
-        "subject": "Підтвердження бронювання консультації",
-        "emailType": "html",
-        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #4F46E5; color: white; padding: 20px; text-align: center; }\n    .content { background: #f9fafb; padding: 20px; }\n    .info-block { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4F46E5; }\n    .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 20px 0; }\n    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Ваше бронювання підтверджено!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Вітаємо, {{ $('Webhook Trigger').item.json.body.clientName }}!</p>\n      <p>Дякуємо за бронювання консультації. Ми з нетерпінням чекаємо зустрічі з вами.</p>\n      \n      <div class=\"info-block\">\n        <strong>📅 Дата та час:</strong><br>\n        {{ $('Google Calendar - Create Event').item.json.start.dateTime }}\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>⏱️ Тривалість:</strong><br>\n        30 хвилин\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>📧 Ваш email:</strong><br>\n        {{ $('Webhook Trigger').item.json.body.clientEmail }}\n      </div>\n      \n      <div class=\"info-block\">\n        <strong>📱 Ваш телефон:</strong><br>\n        {{ $('Webhook Trigger').item.json.body.clientPhone }}\n      </div>\n      \n      {{ $('Google Calendar - Create Event').item.json.hangoutLink ? '<div class=\"info-block\"><strong>🎥 Посилання на Google Meet:</strong><br><a href=\"' + $('Google Calendar - Create Event').item.json.hangoutLink + '\">' + $('Google Calendar - Create Event').item.json.hangoutLink + '</a></div>' : '' }}\n      \n      <p style=\"margin-top: 20px;\">\n        <a href=\"{{ $('Google Calendar - Create Event').item.json.htmlLink }}\" class=\"button\">Додати до Google Calendar</a>\n      </p>\n      \n      <p style=\"margin-top: 30px; font-size: 14px; color: #666;\">\n        <strong>Важливо:</strong> Якщо вам потрібно перенести або скасувати зустріч, будь ласка, зв'яжіться з нами за {{ $('Webhook Trigger').item.json.body.fromEmail }}\n      </p>\n    </div>\n    <div class=\"footer\">\n      <p>CRM Customs - Автоматизація бізнесу</p>\n      <p>https://crmcustoms.com</p>\n    </div>\n  </div>\n</body>\n</html>",
-        "options": {
-          "allowUnauthorizedCerts": false
-        }
-      },
-      "id": "send-email",
-      "name": "Send Confirmation Email",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [900, 300],
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "YOUR_GMAIL_CREDENTIALS_ID",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "respondWith": "json",
         "responseBody": "={{ {\n  \"success\": true,\n  \"eventId\": $('Google Calendar - Create Event').item.json.id,\n  \"planfixTaskId\": $('Planfix - Create Task').item.json.id,\n  \"message\": \"Бронювання успішно створено\"\n} }}"
       },
@@ -132,17 +109,6 @@
       ]
     },
     "Planfix - Create Task": {
-      "main": [
-        [
-          {
-            "node": "Send Confirmation Email",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send Confirmation Email": {
       "main": [
         [
           {

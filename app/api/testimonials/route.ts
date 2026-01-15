@@ -169,6 +169,15 @@ export async function GET() {
 // Функция для добавления нового отзыва (для будущего использования)
 export async function POST(request: Request) {
   try {
+    const apiKey = process.env.TESTIMONIALS_API_KEY
+    const providedKey = request.headers.get('x-api-key') || ''
+    if (!apiKey || providedKey !== apiKey) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/testimonials/route.ts:172',message:'testimonials_post_blocked',data:{hasApiKey:!!apiKey,provided:!!providedKey},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 })
+    }
+
     const body = await request.json()
     
     // Здесь можно добавить валидацию данных

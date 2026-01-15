@@ -2,11 +2,39 @@
 
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
-import { BookingButton } from "@/components/booking-button"
+import { submitForm } from "@/lib/actions"
 
 export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any }) {
   const [activeTab, setActiveTab] = useState("price")
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [callForm, setCallForm] = useState({ name: "", phone: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleCallSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const formData = new FormData()
+      formData.append("name", callForm.name)
+      formData.append("phone", callForm.phone)
+      formData.append("formType", "contact")
+
+      const result = await submitForm(formData)
+
+      if (result.success) {
+        setCallForm({ name: "", phone: "" })
+        alert(result.message)
+      } else {
+        alert(result.message)
+      }
+    } catch (error) {
+      console.error("Помилка при відправці:", error)
+      alert("Помилка при відправці. Спробуйте ще раз.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const categories = [
     { id: "price", label: "Ціна та окупність" },
@@ -128,9 +156,33 @@ export default function Faq({ dict, commonDict }: { dict?: any; commonDict?: any
           <p className="text-black/60 mb-8 max-w-2xl mx-auto">
             Зателефонуємо за 5 хвилин та відповімо на всі ваші запитання
           </p>
-          <BookingButton className="px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-black hover:text-[#FFD700] transition-all border-2 border-[#FFD700]">
-            Зателефонуємо за 5 хв
-          </BookingButton>
+          <form onSubmit={handleCallSubmit} className="max-w-2xl mx-auto">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <input
+                type="text"
+                required
+                value={callForm.name}
+                onChange={(e) => setCallForm({ ...callForm, name: e.target.value })}
+                className="w-full px-4 py-3 border-2 border-black/10 bg-white text-black placeholder-black/40 focus:outline-none focus:border-[#FFD700] transition-colors"
+                placeholder="Ваше ім'я"
+              />
+              <input
+                type="tel"
+                required
+                value={callForm.phone}
+                onChange={(e) => setCallForm({ ...callForm, phone: e.target.value })}
+                className="w-full px-4 py-3 border-2 border-black/10 bg-white text-black placeholder-black/40 focus:outline-none focus:border-[#FFD700] transition-colors"
+                placeholder="+380671706703"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-4 px-8 py-4 bg-[#FFD700] text-black font-bold uppercase tracking-wide hover:bg-black hover:text-[#FFD700] transition-all border-2 border-[#FFD700] disabled:opacity-50 cursor-disabled"
+            >
+              {isSubmitting ? "Відправлення..." : "Зателефонуємо за 5 хв"}
+            </button>
+          </form>
         </div>
       </div>
     </div>

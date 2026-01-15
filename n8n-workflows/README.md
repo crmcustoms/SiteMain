@@ -35,13 +35,7 @@
 }
 ```
 
-### 4. Налаштування Email (Gmail)
-
-1. В n8n створіть credentials типу "Gmail OAuth2"
-2. Авторизуйтесь через Google
-3. Замініть `YOUR_GMAIL_CREDENTIALS_ID` в workflow `booking-create.json`
-
-### 5. Активація workflows
+### 4. Активація workflows
 
 1. Відкрийте кожен workflow
 2. Натисніть "Active" щоб активувати
@@ -49,13 +43,12 @@
 4. Додайте ці URL в `.env.local` вашого сайту:
 
 ```env
-NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL=https://your-n8n.com/webhook/booking-slots
-NEXT_PUBLIC_N8N_BOOKING_CREATE_URL=https://your-n8n.com/webhook/booking-create
-NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your-calendar@gmail.com
-NEXT_PUBLIC_PLANFIX_ACCOUNT=your-account
-NEXT_PUBLIC_PLANFIX_TOKEN=your-token
-NEXT_PUBLIC_PLANFIX_PROJECT_ID=123
-NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
+N8N_BOOKING_SLOTS_URL=https://your-n8n.com/webhook/booking-slots
+N8N_BOOKING_CREATE_URL=https://your-n8n.com/webhook/booking-create
+GOOGLE_CALENDAR_ID=your-calendar@gmail.com
+PLANFIX_ACCOUNT=your-account
+PLANFIX_TOKEN=your-token
+PLANFIX_PROJECT_ID=123
 ```
 
 ## Структура workflows
@@ -106,8 +99,7 @@ NEXT_PUBLIC_FROM_EMAIL=your-email@gmail.com
   "notes": "Хочу обговорити впровадження CRM",
   "planfixAccount": "your-account",
   "planfixToken": "your-token",
-  "planfixProjectId": "123",
-  "fromEmail": "your-email@gmail.com"
+  "planfixProjectId": "123"
 }
 ```
 

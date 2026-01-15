@@ -12,19 +12,17 @@
 
 ### 2. Налаштування credentials в n8n
 - Google Calendar OAuth2 - авторизуйтесь
-- Gmail OAuth2 - авторизуйтесь
 - Замініть `YOUR_*_CREDENTIALS_ID` в workflows
 - Активуйте workflows та скопіюйте webhook URLs
 
 ### 3. Створіть `.env.local`
 ```env
-NEXT_PUBLIC_N8N_BOOKING_SLOTS_URL=https://...
-NEXT_PUBLIC_N8N_BOOKING_CREATE_URL=https://...
-NEXT_PUBLIC_GOOGLE_CALENDAR_ID=your@gmail.com
-NEXT_PUBLIC_PLANFIX_ACCOUNT=account
-NEXT_PUBLIC_PLANFIX_TOKEN=token
-NEXT_PUBLIC_PLANFIX_PROJECT_ID=123
-NEXT_PUBLIC_FROM_EMAIL=your@gmail.com
+N8N_BOOKING_SLOTS_URL=https://...
+N8N_BOOKING_CREATE_URL=https://...
+GOOGLE_CALENDAR_ID=your@gmail.com # опционально, если ID задаётся в n8n
+PLANFIX_ACCOUNT=account
+PLANFIX_TOKEN=token
+PLANFIX_PROJECT_ID=123
 ```
 
 ### 4. Запуск та перегляд
@@ -51,7 +49,6 @@ http://localhost:3000
 - Кнопки на всіх сторінках послуг ✓
 - Демо секція перед футером ✓
 - Модальне вікно з календарем ✓
-- Автоматичні email ✓
 - Інтеграція з Планфікс ✓
 - Google Meet посилання ✓
 

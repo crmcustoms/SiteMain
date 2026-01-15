@@ -143,7 +143,7 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
       setStep('success')
       
       toast.success('Бронювання створено!', {
-        description: 'Перевірте свій email для підтвердження'
+        description: 'Ми зв\'яжемося з вами для підтвердження'
       })
     } catch (error) {
       console.error('Error creating booking:', error)

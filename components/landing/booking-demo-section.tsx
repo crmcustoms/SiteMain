@@ -46,7 +46,7 @@ export default function BookingDemoSection() {
               </div>
               <h3 className="font-semibold">Google Meet</h3>
               <p className="text-sm text-muted-foreground">
-                Посилання одразу на email
+                Посилання після підтвердження
               </p>
             </div>
           </div>

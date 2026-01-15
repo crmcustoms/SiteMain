@@ -138,40 +138,6 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
         }
       }
 
-      // Отправка email пользователю с HTML анализом (если email указан)
-      // Делаем это после успешной отправки на вебхук, чтобы не блокировать основной процесс
-      if (validatedFields.data.email && validatedFields.data.email.trim()) {
-        console.log("=== ATTEMPTING TO SEND EMAIL TO USER ===")
-        console.log("Email:", validatedFields.data.email)
-        console.log("Name:", validatedFields.data.name)
-        console.log("Client Type:", clientType)
-        
-        try {
-          const emailResult = await sendQuizResultToUser({
-            to: validatedFields.data.email.trim(),
-            name: validatedFields.data.name,
-            clientType: clientType,
-            htmlContent: htmlAnalysis, // Отправляем HTML версию (как на сайте)
-            profile: profile,
-          })
-          
-          if (emailResult) {
-            console.log("✓ Email успешно отправлен пользователю")
-          } else {
-            console.error("✗ Email не был отправлен (sendQuizResultToUser вернул false)")
-          }
-        } catch (emailError) {
-          // Логируем ошибку, но не прерываем процесс
-          console.error("✗ Помилка відправки email користувачу:", emailError)
-          if (emailError instanceof Error) {
-            console.error("Error message:", emailError.message)
-            console.error("Error stack:", emailError.stack)
-          }
-        }
-      } else {
-        console.log("Email не указан или пустой, пропускаем отправку email пользователю")
-      }
-
       return {
         success: true,
         message: "Дякуємо за проходження діагностики! Ми зв'яжемося з вами найближчим часом.",
@@ -216,7 +182,7 @@ export async function submitForm(formData: FormData): Promise<FormResult> {
 
       return {
         success: true,
-        message: "Дякуємо за підписку! Ми надіслали вам лист для підтвердження.",
+        message: "Дякуємо за підписку!",
         data: validatedFields.data,
       }
     } else {
@@ -2071,56 +2037,6 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
   }
 
   return separator + header + recommendations
-}
-
-// Функція для відправки результата квиза на email пользователю
-async function sendQuizResultToUser(params: {
-  to: string
-  name: string
-  clientType: string
-  htmlContent: string
-  profile: any
-}): Promise<boolean> {
-  try {
-    const webhookUrl = "https://n8n.crmcustoms.com/webhook/f14880e5-5d4a-4c6d-bc8c-69d82ef68acc"
-
-    const payload = {
-      emailType: "quiz_result",
-      to: params.to,
-      subject: "Результат діагностики CRM",
-      name: params.name,
-      clientType: params.clientType,
-      htmlContent: params.htmlContent, // HTML версия результата (как на сайте)
-      profile: params.profile,
-      timestamp: new Date().toISOString(),
-    }
-
-    console.log("=== SENDING QUIZ RESULT EMAIL ===")
-    console.log("To:", params.to)
-    console.log("Payload:", JSON.stringify(payload, null, 2))
-    console.log("==================================\n")
-
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => '')
-      console.error("✗ Email webhook error:", response.status, response.statusText, errorText)
-      throw new Error(`Помилка відправки email: ${response.status} ${response.statusText}`)
-    }
-
-    const responseData = await response.json().catch(() => ({}))
-    console.log("✓ Email webhook response:", response.status, responseData)
-    return true
-  } catch (error) {
-    console.error("Помилка відправки результата на email:", error)
-    return false
-  }
 }
 
 // Функція для відправки email повідомлення

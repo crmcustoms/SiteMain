@@ -1,10 +1,12 @@
-import { redirect } from 'next/navigation';
+import { i18n } from "@/lib/i18n-config"
+import LangBlogPage, { generateMetadata as generateLangMetadata } from "../[lang]/blog/page"
 
-// Редирект с корневой страницы блога на локализованную версию
-export default function BlogPage() {
-  // По умолчанию перенаправляем на украинскую версию
-  redirect('/uk/blog');
+export async function generateMetadata() {
+  return generateLangMetadata({ params: Promise.resolve({ lang: i18n.defaultLocale }) })
 }
 
-// Включаем SSG с редким обновлением
-export const revalidate = 86400; // 24 часа 
+export default async function BlogPage() {
+  return LangBlogPage({ params: Promise.resolve({ lang: i18n.defaultLocale }) })
+}
+
+export const revalidate = 86400

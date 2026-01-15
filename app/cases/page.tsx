@@ -1,10 +1,12 @@
-import { redirect } from "next/navigation";
+import { i18n } from "@/lib/i18n-config"
+import LangCasesPage, { generateMetadata as generateLangMetadata } from "../[lang]/cases/page"
 
-// Редирект с корневой страницы кейсов на локализованную версию
-export default function CasesPage() {
-  // По умолчанию перенаправляем на украинскую версию
-  redirect('/uk/cases');
+export async function generateMetadata() {
+  return generateLangMetadata({ params: Promise.resolve({ lang: i18n.defaultLocale }) })
 }
 
-// Включаем SSG с редким обновлением
-export const revalidate = 86400; // 24 часа 
+export default async function CasesPage() {
+  return LangCasesPage({ params: Promise.resolve({ lang: i18n.defaultLocale }) })
+}
+
+export const revalidate = 86400

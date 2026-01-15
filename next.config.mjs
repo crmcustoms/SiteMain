@@ -61,35 +61,9 @@ const nextConfig = {
       },
     ];
   },
-  // Добавляем редиректы с корневых маршрутов на локализованные версии
+  // Редиректы не используем (языковой префикс отключён)
   async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/uk',
-        permanent: true,
-      },
-      {
-        source: '/blog',
-        destination: '/uk/blog',
-        permanent: true,
-      },
-      {
-        source: '/blog/:slug',
-        destination: '/uk/blog/:slug',
-        permanent: true,
-      },
-      {
-        source: '/cases',
-        destination: '/uk/cases',
-        permanent: true,
-      },
-      {
-        source: '/cases/:slug',
-        destination: '/uk/cases/:slug',
-        permanent: true,
-      },
-    ];
+    return [];
   },
   // Отключаем кеширование webpack для предотвращения ошибок с файловой системой
   webpack: (config, { dev, isServer }) => {

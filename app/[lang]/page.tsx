@@ -2,6 +2,7 @@ import { getDictionary } from "@/lib/dictionaries"
 import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
 import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
+import { headers } from "next/headers"
 
 import StaticFinalCta from "@/components/landing/static-final-cta"
 import TeamSection from "@/components/landing/team-section"
@@ -22,6 +23,12 @@ export default async function Home({
 }: {
   params: Promise<{ lang: string }>
 }) {
+  const hdrs = headers()
+  const host = hdrs.get("host") || ""
+  const proto = hdrs.get("x-forwarded-proto") || ""
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'redirect-pre',hypothesisId:'H3',location:'app/[lang]/page.tsx:25',message:'lang_page_render',data:{host,proto},timestamp:Date.now()})}).catch(()=>{});
+  // #endregion
   // Получаем параметр языка безопасно с await
   const resolvedParams = await params;
   const lang = resolvedParams?.lang || '';

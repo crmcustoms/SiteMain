@@ -1,10 +1,22 @@
-import { redirect } from 'next/navigation';
+import { i18n } from "@/lib/i18n-config"
+import LangBlogDetailPage, {
+  generateMetadata as generateLangMetadata,
+  generateStaticParams as generateLangParams,
+} from "../../[lang]/blog/[slug]/page"
 
-// Редирект с корневой страницы блога на локализованную версию
-export default function BlogDetailPage({ params }: { params: { slug: string } }) {
-  // По умолчанию перенаправляем на украинскую версию
-  redirect(`/uk/blog/${params.slug}`);
+export async function generateStaticParams() {
+  const params = await generateLangParams()
+  return params
+    .filter((p) => p.lang === i18n.defaultLocale)
+    .map((p) => ({ slug: p.slug }))
 }
 
-// Включаем SSG с редким обновлением
-export const revalidate = 86400; // 24 часа 
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  return generateLangMetadata({ params: { slug: params.slug, lang: i18n.defaultLocale } })
+}
+
+export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+  return LangBlogDetailPage({ params: { slug: params.slug, lang: i18n.defaultLocale } })
+}
+
+export const revalidate = 86400

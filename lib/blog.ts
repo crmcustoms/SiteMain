@@ -143,20 +143,21 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
   const webhookSecret = process.env.WEBHOOK_SECRET
+  const method = options.method || "GET"
   if (!webhookSecret) {
     console.error("WEBHOOK_SECRET not configured for content fetch")
   }
   
   try {
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:138',message:'content_fetch_start',data:{url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:138',message:'content_fetch_start',data:{url:new URL(url).origin + new URL(url).pathname,method,hasWebhookSecret:!!webhookSecret},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
     const response = await fetch(url, {
       ...options,
       signal: controller.signal,
       headers: {
         ...(options.headers || {}),
-        ...(webhookSecret ? { "x-webhook-secret": webhookSecret } : {}),
+        ...(webhookSecret ? { "x-webhook-secret": webhookSecret, "WEBHOOK_SECRET": webhookSecret } : {}),
       },
       next: { revalidate: 3600 }
     });
@@ -176,6 +177,9 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     return response;
   } catch (error) {
     clearTimeout(id);
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:155',message:'content_fetch_error',data:{errorName:(error as Error)?.name || 'Unknown',errorMessage:(error as Error)?.message || 'Unknown'},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if ((error as Error).name === 'AbortError') {
       throw new Error('Таймаут запроса');
     }

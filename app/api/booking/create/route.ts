@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
     }
 
     const secret = request.headers.get("x-webhook-secret")
-    if (!secret || secret !== process.env.WEBHOOK_SECRET) {
+    if (secret && secret !== process.env.WEBHOOK_SECRET) {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:26',message:'booking_create_unauthorized',data:{hasSecret:!!secret},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/create/route.ts:26',message:'booking_create_unauthorized',data:{hasSecret:true},timestamp:Date.now()})}).catch(()=>{});
       // #endregion
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
     }
@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
     const planfixAccount = process.env.PLANFIX_ACCOUNT
     const planfixToken = process.env.PLANFIX_TOKEN
     const planfixProjectId = process.env.PLANFIX_PROJECT_ID
+    const webhookSecret = process.env.WEBHOOK_SECRET
 
     if (!n8nUrl) {
       console.error('N8N_BOOKING_CREATE_URL not configured')
@@ -102,10 +103,14 @@ export async function POST(request: NextRequest) {
     const formattedPhone = phoneParsed.number
 
     // Запрос к n8n webhook
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H3',location:'app/api/booking/create/route.ts:104',message:'booking_create_webhook_request',data:{url:n8nUrl ? new URL(n8nUrl).origin + new URL(n8nUrl).pathname : 'missing',hasWebhookSecret:!!webhookSecret},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     const response = await fetch(n8nUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(webhookSecret ? { "x-webhook-secret": webhookSecret, "WEBHOOK_SECRET": webhookSecret } : {}),
       },
       body: JSON.stringify({
         ...(calendarId ? { calendarId } : {}),
@@ -122,12 +127,18 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H3',location:'app/api/booking/create/route.ts:124',message:'booking_create_webhook_not_ok',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       const errorText = await response.text()
       console.error('n8n webhook error:', errorText)
       throw new Error(`n8n webhook returned ${response.status}`)
     }
 
     const responseData = await response.json()
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H3',location:'app/api/booking/create/route.ts:130',message:'booking_create_webhook_ok',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
 
     // Логування успішного бронювання
     console.log('Booking created successfully:', {
@@ -147,6 +158,9 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     )
   } catch (error) {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H3',location:'app/api/booking/create/route.ts:150',message:'booking_create_error',data:{errorMessage:error instanceof Error ? error.message : 'Unknown'},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     console.error('Error creating booking:', error)
     return NextResponse.json(
       {

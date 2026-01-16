@@ -2085,20 +2085,27 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
       headers: {
         "Content-Type": "application/json",
         "x-webhook-secret": webhookSecret,
+        "WEBHOOK_SECRET": webhookSecret,
       },
       body: JSON.stringify(payload),
     })
 
     if (!response.ok) {
+      let responseText = ""
+      try {
+        responseText = await response.text()
+      } catch {
+        responseText = ""
+      }
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2074',message:'orders_webhook_response_error',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2074',message:'orders_webhook_response_error',data:{status:response.status,responseTextLength:responseText.length},timestamp:Date.now()})}).catch(()=>{});
       // #endregion
       throw new Error(`Помилка відправки даних: ${response.status} ${response.statusText}`)
     }
 
     const responseData = await response.json().catch(() => ({}))
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2078',message:'orders_webhook_response_ok',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2078',message:'orders_webhook_response_ok',data:{status:response.status,hasResponseData:!!responseData && Object.keys(responseData).length > 0},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
     console.log("✓ Email запрос успешно отправлен на вебхук")
     console.log("Response status:", response.status)

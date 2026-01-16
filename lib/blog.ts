@@ -111,10 +111,18 @@ let articleContentCache: ContentCache = {}; // для контента кейс�
 let blogContentCache: ContentCache = {}; // для контента блога
 
 // API endpoints
-const ARTICLES_API = "https://n8n.crmcustoms.com/webhook/9c73af6e-7c74-40b3-a04a-0b4edb481358"; // для кейсов
-const ARTICLE_CONTENT_API = "https://n8n.crmcustoms.com/webhook/521ced60-5d5f-4985-ad15-744a7b9fa81e"; // для контента кейсов
-const BLOG_API = "https://n8n.crmcustoms.com/webhook/9a7536da-ef13-4b37-9e64-6d9b0f1fe1a0ListPageBlog"; // для блога
-const BLOG_CONTENT_API = "https://n8n.crmcustoms.com/webhook/bded422c-2a94-416c-ba2a-2d013838ef80"; // для контента блога
+const ARTICLES_API =
+  process.env.N8N_CASES_LIST_URL ||
+  "https://n8n.crmcustoms.com/webhook/list-page-cases" // для кейсов
+const ARTICLE_CONTENT_API =
+  process.env.N8N_CASE_PAGE_URL ||
+  "https://n8n.crmcustoms.com/webhook/get-page-cese" // для контента кейсов
+const BLOG_API =
+  process.env.N8N_BLOG_LIST_URL ||
+  "https://n8n.crmcustoms.com/webhook/ListPageBlog" // для блога
+const BLOG_CONTENT_API =
+  process.env.N8N_BLOG_PAGE_URL ||
+  "https://n8n.crmcustoms.com/webhook/PageNotionBlog" // для контента блога
 
 // Константа времени жизни кеша (15 минут)
 const CACHE_DURATION = 15 * 60 * 1000;
@@ -134,19 +142,36 @@ const FETCH_TIMEOUT = 10000;
 async function fetchWithTimeout(url: string, options: RequestInit = {}) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  const webhookSecret = process.env.WEBHOOK_SECRET
+  if (!webhookSecret) {
+    console.error("WEBHOOK_SECRET not configured for content fetch")
+  }
   
   try {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:138',message:'content_fetch_start',data:{url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     const response = await fetch(url, {
       ...options,
       signal: controller.signal,
+      headers: {
+        ...(options.headers || {}),
+        ...(webhookSecret ? { "x-webhook-secret": webhookSecret } : {}),
+      },
       next: { revalidate: 3600 }
     });
     
     clearTimeout(id);
     
     if (!response.ok) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:147',message:'content_fetch_not_ok',data:{status:response.status,url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       throw new Error(`Ошибка API: ${response.status}`);
     }
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:151',message:'content_fetch_ok',data:{status:response.status,url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     
     return response;
   } catch (error) {

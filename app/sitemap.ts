@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { getBlogArticles } from '@/lib/blog'
 
+export const dynamic = 'force-dynamic'
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://crmcustoms.com'
 
@@ -30,6 +32,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let dynamicPages: MetadataRoute.Sitemap = []
   
   try {
+    const isBuild =
+      process.env.NEXT_PHASE === 'phase-production-build' ||
+      process.env.NETLIFY === 'true'
+    if (isBuild) {
+      return staticPages
+    }
     const articles = await getBlogArticles(true)
     
     if (Array.isArray(articles)) {
@@ -51,4 +59,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [...staticPages, ...dynamicPages]
 }
 
-export const revalidate = 3600 // Обновлять каждый час 
+export const revalidate = 0 // Обновлять на runtime

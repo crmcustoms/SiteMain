@@ -7,9 +7,17 @@ import Link from 'next/link';
 import { i18n } from "@/lib/i18n-config";
 import ErrorBoundary from '../components/ErrorBoundary';
 
+export const dynamic = "force-dynamic";
+
 // Статическая генерация путей для всех статей блога
 export async function generateStaticParams() {
   try {
+    const isBuild =
+      process.env.NEXT_PHASE === "phase-production-build" ||
+      process.env.NETLIFY === "true";
+    if (isBuild) {
+      return [];
+    }
     const posts = await getBlogPostsFromAPI();
     
     return i18n.locales.flatMap(locale => {

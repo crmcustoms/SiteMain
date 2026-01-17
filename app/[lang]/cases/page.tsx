@@ -5,6 +5,8 @@ import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-ca
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
 
+export const dynamic = "force-dynamic"
+
 // Динамическая генерация метаданных
 export async function generateMetadata({
   params
@@ -171,4 +173,4 @@ export default async function CasesPage({
 }
 
 // Уменьшаем время ревалидации до 10 минут для частого обновления данных
-export const revalidate = 600; 
+export const revalidate = 0;

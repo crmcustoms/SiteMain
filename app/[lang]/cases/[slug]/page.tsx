@@ -7,9 +7,17 @@ import { i18n } from "@/lib/i18n-config"
 import StaticCaseDetail from "@/components/landing/static-case-detail"
 import CaseDetailWrapper from "@/components/case-detail-wrapper"
 
+export const dynamic = "force-dynamic"
+
 // Статическая генерация путей для всех кейсов
 export async function generateStaticParams() {
   try {
+    const isBuild =
+      process.env.NEXT_PHASE === "phase-production-build" ||
+      process.env.NETLIFY === "true"
+    if (isBuild) {
+      return []
+    }
     // Получаем все статьи блога, принудительно обновляя кеш
     const articles = await getBlogArticles(true);
     

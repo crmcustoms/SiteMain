@@ -4,6 +4,8 @@ import LangCaseDetailPage, {
   generateStaticParams as generateLangParams,
 } from "../../[lang]/cases/[slug]/page"
 
+export const dynamic = "force-dynamic"
+
 export async function generateStaticParams() {
   const params = await generateLangParams()
   return params
@@ -19,4 +21,4 @@ export default async function CaseDetailPage({ params }: { params: { slug: strin
   return LangCaseDetailPage({ params: Promise.resolve({ slug: params.slug, lang: i18n.defaultLocale }) })
 }
 
-export const revalidate = 86400
+export const revalidate = 0

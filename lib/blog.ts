@@ -133,15 +133,16 @@ const CACHE_TTL = 300 * 1000;
 // В режиме разработки можно отключить кеш через переменную окружения
 const DISABLE_CACHE = process.env.NODE_ENV === 'development' && process.env.DISABLE_BLOG_CACHE === 'true';
 
-// Таймаут для запросов в миллисекундах (10 секунд)
+// Таймаут для запросов в миллисекундах (используем только в dev)
 const FETCH_TIMEOUT = 10000;
 
 /**
  * Функция для выполнения fetch запроса с таймаутом
  */
 async function fetchWithTimeout(url: string, options: RequestInit = {}) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  const useTimeout = process.env.NODE_ENV === 'development';
+  const controller = useTimeout ? new AbortController() : null;
+  const id = useTimeout ? setTimeout(() => controller?.abort(), FETCH_TIMEOUT) : null;
   const webhookSecret = process.env.WEBHOOK_SECRET
   const method = options.method || "GET"
   if (!webhookSecret) {
@@ -154,7 +155,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     // #endregion
     const response = await fetch(url, {
       ...options,
-      signal: controller.signal,
+      ...(controller ? { signal: controller.signal } : {}),
       headers: {
         ...(options.headers || {}),
         ...(webhookSecret ? { "x-webhook-secret": webhookSecret, "WEBHOOK_SECRET": webhookSecret } : {}),
@@ -162,7 +163,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
       next: { revalidate: 3600 }
     });
     
-    clearTimeout(id);
+    if (id) clearTimeout(id);
     
     if (!response.ok) {
       console.error("Content fetch failed:", {
@@ -181,7 +182,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     
     return response;
   } catch (error) {
-    clearTimeout(id);
+    if (id) clearTimeout(id);
     console.error("Content fetch error:", {
       errorName: (error as Error)?.name || "Unknown",
       errorMessage: (error as Error)?.message || "Unknown",

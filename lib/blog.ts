@@ -165,6 +165,11 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     clearTimeout(id);
     
     if (!response.ok) {
+      console.error("Content fetch failed:", {
+        status: response.status,
+        url: new URL(url).origin + new URL(url).pathname,
+        method,
+      });
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:147',message:'content_fetch_not_ok',data:{status:response.status,url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
       // #endregion
@@ -177,6 +182,12 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     return response;
   } catch (error) {
     clearTimeout(id);
+    console.error("Content fetch error:", {
+      errorName: (error as Error)?.name || "Unknown",
+      errorMessage: (error as Error)?.message || "Unknown",
+      url: new URL(url).origin + new URL(url).pathname,
+      method,
+    });
     // #region agent log
     fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:155',message:'content_fetch_error',data:{errorName:(error as Error)?.name || 'Unknown',errorMessage:(error as Error)?.message || 'Unknown'},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
@@ -213,11 +224,16 @@ export async function getBlogArticles(forceRefresh = false) {
     const articles = await response.json();
     
     if (!Array.isArray(articles)) {
-      console.error("API вернул некорректный формат данных (не массив)");
+      console.error("Cases API returned non-array:", {
+        type: Array.isArray(articles) ? "array" : typeof articles,
+        keys: articles && typeof articles === "object" ? Object.keys(articles).slice(0, 8) : [],
+      });
       return Object.keys(articlesCache).length > 0 
         ? Object.values(articlesCache).map(entry => entry.data) 
         : [];
     }
+    
+    console.log("Cases API items:", { count: articles.length });
     
     // Очищаем старый кеш
     Object.keys(articlesCache).forEach(key => delete articlesCache[key]);

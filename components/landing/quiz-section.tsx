@@ -1366,74 +1366,13 @@ export default function QuizSection() {
               {getResultContent(clientType)}
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 mt-10">
-              {clientType === 'startup' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Отримати базовий старт
-                  </button>
-                </>
-              )}
-              {clientType === 'small' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Замовити безкоштовний аудит
-                  </button>
-                </>
-              )}
-              {clientType === 'medium-risk' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Обговорити проєкт
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 border border-black font-mono text-sm uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
-                  >
-                    Хочу тільки CRM (розумію ризики)
-                  </button>
-                </>
-              )}
-              {clientType === 'ideal' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Замовити безкоштовний аудит
-                  </button>
-                </>
-              )}
-              {clientType === 'large' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Обговорити проєкт
-                  </button>
-                </>
-              )}
-              {clientType === 'has-crm' && (
-                <>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
-                  >
-                    Замовити аудит системи
-                  </button>
-                </>
-              )}
+            {/* Next Step */}
+            <div className="mt-10 border border-black p-6 bg-[#F8F9FA]">
+              <p className="mb-3 font-bold">Дякуємо! Ми отримали ваші відповіді.</p>
+              <p className="text-sm text-black/70">
+                Наступний крок: наш спеціаліст зв’яжеться з вами, щоб уточнити деталі та запропонувати найкращий
+                формат старту.
+              </p>
             </div>
           </div>
         )}

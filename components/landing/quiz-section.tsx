@@ -551,7 +551,7 @@ export default function QuizSection() {
               <p>• 30-хвилинний вебінар</p>
             </div>
             <p className="text-sm italic">
-              Підходить якщо у вас вже є готова CRM і прості процеси.
+              Підходить якщо у вас немає CRM, або вже є готова CRM і прості процеси.
             </p>
           </div>
         </>

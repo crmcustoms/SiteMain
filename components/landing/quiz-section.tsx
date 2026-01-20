@@ -515,24 +515,29 @@ export default function QuizSection() {
         <>
           <h4 className="text-2xl font-bold mb-4">НАША РЕКОМЕНДАЦІЯ</h4>
           <div className="bg-[#D4EDDA] border border-[#28A745] p-6 mb-6">
-            <p className="mb-4 font-bold text-lg">Велике впровадження CRM вам поки не потрібно — давайте почнемо з бюджетного варіанту.</p>
-            <p className="mb-4">У вас поки немає розуміння як вистроїти процеси в CRM, тому спочатку потрібна <strong>безкоштовна консультація</strong>.</p>
-            <p className="font-bold">Ми обов'язково вам допоможемо!</p>
+            <p className="mb-4 font-bold text-lg">
+              Велике впровадження CRM вам поки не потрібно — давайте почнемо з базового, доступного старту.
+            </p>
+            <p className="mb-4">
+              У вас ще немає CRM — і це нормально. Ми налаштуємо базову систему та допоможемо команді звикнути
+              до роботи в ній.
+            </p>
+            <p className="font-bold">Ви на правильному шляху — ми допоможемо зробити перший крок правильно.</p>
           </div>
-          
+
           <p className="mb-4"><strong>Що ми запропонуємо:</strong></p>
           <ul className="space-y-2 mb-6">
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span><strong>Безкоштовна консультація</strong> — обов'язково призначимо, розберемося що вам потрібно</span>
+              <span><strong>Безкоштовна консультація</strong> — розберемо процеси та порадимо оптимальний старт</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span><strong>Бюджетний варіант</strong> (від 5,000₴) — якщо є готова CRM</span>
+              <span><strong>Бюджетний варіант</strong> (від 5,000₴) — базове налаштування з навчанням</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-[#FFD700] mt-1">✓</span>
-              <span><strong>Excel шаблони</strong> для обліку — безкоштовно</span>
+              <span><strong>Підтримка та супровід</strong> — щоб команда швидко адаптувалась</span>
             </li>
           </ul>
 
@@ -545,31 +550,9 @@ export default function QuizSection() {
               <p>• 3 дні підтримки в чаті</p>
               <p>• 30-хвилинний вебінар</p>
             </div>
-            <p className="text-sm italic">Підходить якщо у вас вже є готова CRM і дуже прості процеси.</p>
-          </div>
-
-          <p className="mb-4"><strong>Або повернутися коли буде:</strong></p>
-          <ul className="space-y-2 mb-8">
-            <li className="flex items-start gap-2">
-              <span className="text-[#FFD700] mt-1">✓</span>
-              <span>5-10 постійних клієнтів</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#FFD700] mt-1">✓</span>
-              <span>Стабільний потік заявок</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-[#FFD700] mt-1">✓</span>
-              <span>3+ менеджери в команді</span>
-            </li>
-          </ul>
-
-          <div className="text-center py-6 border-t border-black/10">
-            <p className="mb-4"><strong>Ми цінуємо ваш час і свій</strong></p>
-            <p className="text-sm text-black/60 mb-4">
-              Краще відверто сказати що зараз не час, ніж взяти гроші за те що не принесе результату.
+            <p className="text-sm italic">
+              Підходить якщо у вас вже є готова CRM і прості процеси.
             </p>
-            <p className="text-sm">Успіхів у розвитку бізнесу!</p>
           </div>
         </>
       ),
@@ -1322,7 +1305,7 @@ export default function QuizSection() {
           <div id="quiz-result" className="border border-black p-8 md:p-12 relative animate-in fade-in zoom-in duration-500 max-w-4xl">
             <div className="absolute -top-3 left-8 bg-white px-2">
               <span className="text-xs font-mono text-black/60 tracking-wider uppercase">
-                {clientType === 'startup' ? '[NOT_SUITABLE]' :
+                {clientType === 'startup' ? '[START]' :
                  clientType === 'small' ? '[RECOMMENDED]' :
                  clientType === 'ideal' ? '[IDEAL]' :
                  clientType === 'large' ? '[PREMIUM]' :
@@ -1333,7 +1316,7 @@ export default function QuizSection() {
             <div className="text-center mb-8">
           <div className="inline-block px-6 py-3 border-2 border-black bg-[#FFD700] mb-6 transform hover:scale-105 transition-transform duration-200">
               <span className="text-xs font-mono font-bold tracking-widest">
-                {clientType === 'startup' ? 'NOT_SUITABLE' :
+                {clientType === 'startup' ? 'START' :
                  clientType === 'small' ? 'RECOMMENDED' :
                  clientType === 'ideal' ? 'IDEAL' :
                  clientType === 'large' ? 'PREMIUM' :
@@ -1391,13 +1374,7 @@ export default function QuizSection() {
                     onClick={() => window.location.href = '#contact'}
                     className="px-6 py-3 bg-[#FFD700] border border-black text-black font-mono text-sm uppercase tracking-wider hover:bg-[#E6C200] transition-colors"
                   >
-                    Все одно хочу обговорити
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '#contact'}
-                    className="px-6 py-3 border border-black font-mono text-sm uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
-                  >
-                    Зв'яжіться зі мною через місяць
+                    Отримати базовий старт
                   </button>
                 </>
               )}

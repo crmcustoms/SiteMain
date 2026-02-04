@@ -960,7 +960,7 @@ export default function QuizSection() {
   const progress = ((currentQuestion + 1) / quizData.questions.length) * 100
 
   return (
-    <div className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
+    <div id="diagnostics" className="relative w-full bg-white pt-16 pb-0 overflow-hidden">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div

@@ -127,7 +127,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
         {/* End Google tag (gtag.js) */}
-        
+
+        {/* Google Ads Conversion Tracking */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17743669331"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17743669331');
+            `,
+          }}
+        />
+        {/* End Google Ads Conversion Tracking */}
+
         <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicons/favicon-16x16.png" type="image/png" sizes="16x16" />
         <link rel="icon" href="/favicons/favicon-32x32.png" type="image/png" sizes="32x32" />

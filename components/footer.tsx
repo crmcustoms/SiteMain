@@ -60,12 +60,12 @@ export default function Footer({ dict, lang = 'ua' }: { dict: any; lang?: string
             <h3 className="text-lg font-bold">{dict.footer.legal}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-primary">
+                <Link href={`/${lang}/polityka-konfidentsiynosti`} className="text-sm text-muted-foreground hover:text-primary">
                   {dict.footer.privacyPolicy}
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-primary">
+                <Link href={`/${lang}/umovy-vykorystannia`} className="text-sm text-muted-foreground hover:text-primary">
                   {dict.footer.termsOfService}
                 </Link>
               </li>

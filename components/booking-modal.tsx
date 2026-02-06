@@ -42,30 +42,23 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
 
   // Завантаження доступних слотів
   useEffect(() => {
-    console.log('[BookingModal] useEffect triggered, open:', open)
     if (open) {
-      console.log('[BookingModal] Calling loadAvailableSlots')
       loadAvailableSlots()
     }
   }, [open])
 
   const loadAvailableSlots = async () => {
-    console.log('[BookingModal] loadAvailableSlots started')
     setIsLoadingSlots(true)
     try {
       const { startDate, endDate } = getDateRange()
       const url = new URL('/api/booking/slots', window.location.origin)
       url.searchParams.set('startDate', startDate)
       url.searchParams.set('endDate', endDate)
-      
-      console.log('[BookingModal] Fetching slots:', url.toString())
-      
+
       const response = await fetch(url.toString(), {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
       })
-
-      console.log('[BookingModal] Response status:', response.status)
 
       if (!response.ok) {
         const errorText = await response.text()
@@ -74,7 +67,6 @@ export function BookingModal({ open, onOpenChange }: BookingModalProps) {
       }
 
       const data = await response.json()
-      console.log('[BookingModal] Received data:', data)
       setSlotsByDate(data.slotsByDate || {})
 
       // Автоматично вибрати найближчу доступну дату

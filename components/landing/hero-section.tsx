@@ -52,6 +52,22 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
   const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "")
+    if (!digits) return ""
+    if (digits.startsWith("380")) {
+      const rest = digits.slice(3)
+      const parts = [
+        rest.slice(0, 2),
+        rest.slice(2, 5),
+        rest.slice(5, 7),
+        rest.slice(7, 9),
+      ].filter(Boolean)
+      return `+380 ${parts.join(" ")}`
+    }
+    return `+${digits}`
+  }
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!heroRef.current) return
@@ -462,6 +478,9 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                 <X className="w-5 h-5 text-black" />
               </button>
             </div>
+            <div className="text-xs text-black/60 mb-4">
+              Відповідаємо за 5–15 хв
+            </div>
 
             <form onSubmit={handleAuditSubmit} className="space-y-4">
               <div>
@@ -482,10 +501,12 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                   type="tel"
                   required
                   value={contactForm.phone}
-                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                  onChange={(e) => setContactForm({ ...contactForm, phone: formatPhone(e.target.value) })}
                   className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
-                  placeholder="+380671706703"
+                  placeholder="+380 67 123 45 67"
+                  inputMode="tel"
                 />
+                <p className="text-xs text-black/50 mt-2">Формат: +380 67 123 45 67</p>
               </div>
 
               <button
@@ -495,6 +516,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
               >
                 {isSubmitting ? 'Відправлення...' : 'Отримати аудит'}
               </button>
+              <p className="text-xs text-black/50 text-center">Без спаму — тільки по справі.</p>
             </form>
           </div>
         </div>

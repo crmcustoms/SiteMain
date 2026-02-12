@@ -36,10 +36,27 @@ export function BookingForm({
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingFormSchema)
   })
+
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "")
+    if (!digits) return ""
+    if (digits.startsWith("380")) {
+      const rest = digits.slice(3)
+      const parts = [
+        rest.slice(0, 2),
+        rest.slice(2, 5),
+        rest.slice(5, 7),
+        rest.slice(7, 9),
+      ].filter(Boolean)
+      return `+380 ${parts.join(" ")}`
+    }
+    return `+${digits}`
+  }
 
   const handleFormSubmit = async (data: BookingFormData) => {
     await onSubmit(data)
@@ -103,15 +120,18 @@ export function BookingForm({
           <Input
             id="phone"
             type="tel"
-            placeholder="+380501234567"
-            {...register("phone")}
+            placeholder="+380 67 123 45 67"
+            inputMode="tel"
+            {...register("phone", {
+              onChange: (e) => setValue("phone", formatPhone(e.target.value), { shouldValidate: true })
+            })}
             disabled={isSubmitting}
           />
           {errors.phone && (
             <p className="text-sm text-destructive">{errors.phone.message}</p>
           )}
           <p className="text-xs text-muted-foreground">
-            Формат: +380XXXXXXXXX або 0XXXXXXXXX
+            Формат: +380 67 123 45 67
           </p>
         </div>
 
@@ -163,6 +183,9 @@ export function BookingForm({
       {/* Примітка */}
       <p className="text-xs text-muted-foreground text-center">
         Після бронювання ми зв'яжемося з вами для підтвердження
+      </p>
+      <p className="text-xs text-muted-foreground text-center">
+        Без спаму — тільки по справі.
       </p>
     </form>
   )

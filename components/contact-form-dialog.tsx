@@ -45,8 +45,28 @@ export function ContactFormDialog({
     message: "",
   })
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "")
+    if (!digits) return ""
+    if (digits.startsWith("380")) {
+      const rest = digits.slice(3)
+      const parts = [
+        rest.slice(0, 2),
+        rest.slice(2, 5),
+        rest.slice(5, 7),
+        rest.slice(7, 9),
+      ].filter(Boolean)
+      return `+380 ${parts.join(" ")}`
+    }
+    return `+${digits}`
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
+    if (name === "phone") {
+      setFormData((prev) => ({ ...prev, phone: formatPhone(value) }))
+      return
+    }
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -106,6 +126,9 @@ export function ContactFormDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        <div className="text-xs text-black/60">
+          Відповідаємо за 5–15 хв
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-2">
             <Label htmlFor="name">{dict?.form?.nameLabel || "Ім'я"}</Label>
@@ -137,8 +160,10 @@ export function ContactFormDialog({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder={dict?.form?.phonePlaceholder || "Введіть ваш телефон"}
+              placeholder={dict?.form?.phonePlaceholder || "+380 67 123 45 67"}
+              inputMode="tel"
             />
+            <p className="text-xs text-black/50">Формат: +380 67 123 45 67</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="message">{dict?.form?.messageLabel || "Повідомлення"}</Label>
@@ -154,6 +179,7 @@ export function ContactFormDialog({
           <Button type="submit" className="w-full bg-amber hover:bg-amber-hover text-black" disabled={isSubmitting}>
             {isSubmitting ? "Відправка..." : buttonText}
           </Button>
+          <p className="text-xs text-black/50 text-center">Без спаму — тільки по справі.</p>
         </form>
       </DialogContent>
     </Dialog>

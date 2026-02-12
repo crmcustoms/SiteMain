@@ -275,32 +275,34 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
 
             {/* CTA */}
             <div className="flex flex-col gap-3 pt-4">
-              <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-start gap-4 flex-wrap">
                 <CallbackFormDialog
                   title="Зателефонуйте мені"
                   description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
                   buttonText="Зателефонуйте мені"
                   trigger={
-                    <button className="relative group w-[260px] h-12 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-flex items-center justify-center border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
+                    <button className="relative group w-[300px] h-12 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-flex items-center justify-center border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
                       <span className="relative z-10">ЗАМОВИТИ ДЗВІНОК</span>
                     </button>
                   }
                 />
-                <BookingButton
-                  variant="outline"
-                  size="lg"
-                  className="w-[260px] h-12 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
-                >
-                  ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
-                </BookingButton>
+                <div className="flex flex-col items-start gap-2">
+                  <BookingButton
+                    variant="outline"
+                    size="lg"
+                    className="w-[300px] h-12 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all text-[12px] leading-tight text-center whitespace-normal"
+                  >
+                    ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
+                  </BookingButton>
+                  <p className="text-xs text-black/60 max-w-[300px]">
+                    Ця кнопка відкриває мій календар: оберіть вільний час і забронюйте зустріч.
+                  </p>
+                </div>
                 <div className="border-l-2 border-black/20 pl-4">
                   <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
                   <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
                 </div>
               </div>
-              <p className="text-xs text-black/60 max-w-[260px]">
-                Ця кнопка відкриває мій календар: оберіть вільний час і забронюйте зустріч.
-              </p>
             </div>
 
             {/* Decorative tech lines */}

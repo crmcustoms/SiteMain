@@ -223,6 +223,22 @@ export default function QuizSection() {
   const [clientType, setClientType] = useState<ClientType | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "")
+    if (!digits) return ""
+    if (digits.startsWith("380")) {
+      const rest = digits.slice(3)
+      const parts = [
+        rest.slice(0, 2),
+        rest.slice(2, 5),
+        rest.slice(5, 7),
+        rest.slice(7, 9),
+      ].filter(Boolean)
+      return `+380 ${parts.join(" ")}`
+    }
+    return `+${digits}`
+  }
+
   // Начать квиз
   const startQuiz = () => {
     setCurrentScreen('quiz')
@@ -1205,12 +1221,14 @@ export default function QuizSection() {
                   value={answers.contact?.phone || ''}
                   onChange={(e) => setAnswers(prev => ({
                     ...prev,
-                    contact: { ...prev.contact!, phone: e.target.value }
+                    contact: { ...prev.contact!, phone: formatPhone(e.target.value) }
                   }))}
-                  placeholder="+380"
+                  placeholder="+380 67 123 45 67"
+                  inputMode="tel"
                   className="w-full px-4 py-3 border border-black/20 focus:border-black outline-none"
                   required
                 />
+                <p className="text-xs text-black/50 mt-2">Формат: +380 67 123 45 67</p>
               </div>
 
               <div>

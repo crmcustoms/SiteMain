@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { Play, ChevronLeft, ChevronRight, MessageCircle, Phone, Send, X } from "lucide-react"
+import { Play, ChevronLeft, ChevronRight, Send, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
 import Link from "next/link"
 import { BookingButton } from "@/components/booking-button"
+import { CallbackFormDialog } from "@/components/callback-form-dialog"
 
 const services = [
   {
@@ -47,7 +48,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
   const circleRef = useRef<HTMLDivElement>(null)
   const [currentService, setCurrentService] = useState(0)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [showContactForm, setShowContactForm] = useState(false)
   const [showAuditForm, setShowAuditForm] = useState(false)
   const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -76,33 +76,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
 
     return () => clearInterval(interval)
   }, [])
-
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const formData = new FormData()
-      formData.append('name', contactForm.name)
-      formData.append('phone', contactForm.phone)
-      formData.append('formType', 'contact')
-
-      const result = await submitForm(formData)
-
-      if (result.success) {
-        setContactForm({ name: '', email: '', phone: '' })
-        setShowContactForm(false)
-        alert(result.message)
-      } else {
-        alert(result.message)
-      }
-    } catch (error) {
-      console.error('Помилка при відправці:', error)
-      alert('Помилка при відправці. Спробуйте ще раз.')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -160,19 +133,31 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
           </a>
         </div>
         <div className="flex items-center gap-4">
-          <a href="https://t.me/crmcustomsua" target="_blank" rel="noopener noreferrer" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="Telegram">
-            <Send className="w-4 h-4 text-black" />
-          </a>
-          <a href="viber://contact?number=%2B380671706703" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="Viber">
-            <Phone className="w-4 h-4 text-black" />
-          </a>
-          <a href="https://wa.me/380671706703" target="_blank" rel="noopener noreferrer" className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all" title="WhatsApp">
-            <MessageCircle className="w-4 h-4 text-black" />
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://t.me/crmcustomsua"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all"
+              title="Telegram"
+            >
+              <Send className="w-4 h-4 text-black" />
+            </a>
+            <div className="text-xs text-black/60 leading-tight max-w-[220px]">
+              Напишіть нам у Telegram — відповімо одразу, без підключень і перемикань.
+            </div>
+          </div>
           <div className="mx-2 h-4 w-[1px] bg-black/10" />
-          <button onClick={() => setShowContactForm(true)} className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
-            Зателефонуйте мені
-          </button>
+          <CallbackFormDialog
+            title="Зателефонуйте мені"
+            description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
+            buttonText="Зателефонуйте мені"
+            trigger={
+              <button className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
+                Зателефонуйте мені
+              </button>
+            }
+          />
         </div>
       </nav>
 
@@ -275,16 +260,28 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             {/* CTA */}
             <div className="flex flex-col gap-3 pt-4">
               <div className="flex items-center gap-4 flex-wrap">
-                <a href="#diagnostics" className="relative group px-8 py-4 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-block border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
-                  <span className="relative z-10">ПРОЙТИ ДІАГНОСТИКУ</span>
-                </a>
-                <BookingButton 
-                  variant="outline" 
-                  size="lg"
-                  className="px-8 py-4 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
-                >
-                  ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
-                </BookingButton>
+                <CallbackFormDialog
+                  title="Зателефонуйте мені"
+                  description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
+                  buttonText="Зателефонуйте мені"
+                  trigger={
+                    <button className="relative group px-8 py-4 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-block border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
+                      <span className="relative z-10">ЗАМОВИТИ ДЗВІНОК</span>
+                    </button>
+                  }
+                />
+                <div className="flex flex-col items-start gap-2">
+                  <BookingButton
+                    variant="outline"
+                    size="lg"
+                    className="px-8 py-4 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all"
+                  >
+                    ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
+                  </BookingButton>
+                  <p className="text-xs text-black/60 max-w-[260px]">
+                    Ця кнопка відкриває мій календар: оберіть вільний час і забронюйте зустріч.
+                  </p>
+                </div>
                 <div className="border-l-2 border-black/20 pl-4">
                   <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
                   <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
@@ -451,57 +448,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
           <div>SCROLL TO EXPLORE ↓</div>
         </div>
       </div>
-
-      {/* Contact Form Modal */}
-      {showContactForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full border border-black/10 shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-black">Зателефонуйте мені</h2>
-              <button
-                onClick={() => setShowContactForm(false)}
-                className="w-8 h-8 flex items-center justify-center hover:bg-black/5 rounded transition-colors"
-              >
-                <X className="w-5 h-5 text-black" />
-              </button>
-            </div>
-
-            <form onSubmit={handleContactSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-black mb-2">Ім'я</label>
-                <input
-                  type="text"
-                  required
-                  value={contactForm.name}
-                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
-                  placeholder="Ваше ім'я"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-black mb-2">Телефон</label>
-                <input
-                  type="tel"
-                  required
-                  value={contactForm.phone}
-                  onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-black/20 rounded focus:outline-none focus:border-[#FFD700] transition-colors"
-                  placeholder="+380671706703"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full px-6 py-3 bg-black text-white font-medium hover:bg-[#FFD700] hover:text-black transition-colors disabled:opacity-50 cursor-disabled"
-              >
-                {isSubmitting ? 'Відправлення...' : 'Зателефонуйте мені'}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Audit Form Modal */}
       {showAuditForm && (

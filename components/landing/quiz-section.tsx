@@ -1001,6 +1001,10 @@ export default function QuizSection() {
               <p className="text-lg text-black/60 mb-6 max-w-2xl">
                 Відповісте на 5 питань — отримайте персональну рекомендацію <strong className="text-black">тут і зараз</strong>
               </p>
+              <p className="text-sm text-black/60 mb-6 max-w-2xl">
+                Це коротке опитування допоможе нам краще зрозуміти ваш бізнес, а вам — отримати безкоштовну миттєву
+                рекомендацію та орієнтовний бюджет. Результат попередній і не є основою для фінального плану впровадження.
+              </p>
 
               {/* Акцентный блок с результатом */}
               <div className="bg-[#FFD700] border border-black p-6 mb-10 max-w-2xl relative">

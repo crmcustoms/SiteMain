@@ -2,7 +2,7 @@
 
 import React from "react"
 import { CheckCircle2, Star } from "lucide-react"
-import { BookingButton } from "@/components/booking-button"
+import { CallbackFormDialog } from "@/components/callback-form-dialog"
 
 export default function Pricing() {
   const plans = [
@@ -148,15 +148,22 @@ export default function Pricing() {
                 <p className="text-sm font-medium text-black/80">{plan.forWho}</p>
               </div>
 
-              <BookingButton 
-                className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
-                  plan.popular
-                    ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
-                    : "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
-                }`}
-              >
-                {plan.buttonText}
-              </BookingButton>
+              <CallbackFormDialog
+                title="Зателефонуйте мені"
+                description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
+                buttonText="Зателефонуйте мені"
+                trigger={
+                  <button
+                    className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
+                      plan.popular
+                        ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                        : "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                    }`}
+                  >
+                    {plan.buttonText}
+                  </button>
+                }
+              />
             </div>
           ))}
         </div>

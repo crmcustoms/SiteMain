@@ -23,7 +23,7 @@ export default async function LangLayout({
   // Возвращаем только children, но с контекстом словаря
   return (
     <>
-      <Header dict={dict} lang={lang} hideOnHome={true} pathname={`/${lang}`} />
+      <Header dict={dict} lang={lang} hideOnHome={false} pathname={`/${lang}`} />
           <main className="flex-1">{children}</main>
       <Footer dict={dict} lang={lang} />
     </>

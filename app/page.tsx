@@ -20,7 +20,7 @@ export default async function Home() {
   // Рендерим украинскую версию без языкового префикса
   return (
     <>
-      <Header dict={dict} lang={lang} hideOnHome={true} pathname="/" />
+      <Header dict={dict} lang={lang} hideOnHome={false} pathname="/" />
       <main className="flex-1">{content}</main>
       <Footer dict={dict} lang={lang} />
     </>

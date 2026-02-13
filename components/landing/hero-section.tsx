@@ -149,6 +149,12 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
           </a>
         </div>
         <div className="flex items-center gap-4">
+          <div className="flex flex-col items-end leading-tight">
+            <a href="tel:+380671706703" className="text-sm font-semibold hover:text-[#FFD700] transition-colors">
+              +380 67 170 67 03
+            </a>
+            <span className="text-xs text-black/60">Телефон для швидкого зв’язку</span>
+          </div>
           <div className="flex items-center gap-3">
             <a
               href="https://t.me/crmcustomsua"

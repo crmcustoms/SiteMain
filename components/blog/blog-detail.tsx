@@ -37,13 +37,14 @@ export default function BlogDetail({
         
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-2/3">
-            <article className="bg-white rounded-lg shadow-md overflow-hidden">
+            <article className="bg-white rounded-lg shadow-md">
               {coverImageUrl && (
-                <div className="w-full h-64 md:h-96 relative">
+                <div className="w-full bg-gray-100 p-2">
                   <DirectImage 
                     src={coverImageUrl}
                     alt={articleData.name || 'Обложка статьи'}
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto max-h-[70vh] object-contain"
+                    objectFit="contain"
                   />
                 </div>
               )}

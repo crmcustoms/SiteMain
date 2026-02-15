@@ -9,6 +9,7 @@ interface DirectImageProps {
   className?: string;
   width?: number;
   height?: number;
+  objectFit?: 'cover' | 'contain';
 }
 
 /**
@@ -19,7 +20,8 @@ export default function DirectImage({
   alt = '', 
   className = '', 
   width = 800, 
-  height = 600 
+  height = 600,
+  objectFit = 'cover',
 }: DirectImageProps) {
   const [imageSrc, setImageSrc] = useState<string>(src);
   const [error, setError] = useState<boolean>(false);
@@ -106,7 +108,7 @@ export default function DirectImage({
         style={{
           maxWidth: '100%',
           height: 'auto',
-          objectFit: 'cover'
+          objectFit
         }}
       />
     );
@@ -125,7 +127,7 @@ export default function DirectImage({
       style={{
         maxWidth: '100%',
         height: 'auto',
-        objectFit: 'cover'
+        objectFit
       }}
     />
   );

@@ -130,7 +130,7 @@ export default function DirectHtmlContent({ html }: DirectHtmlContentProps) {
   
   return (
     <div 
-      className="prose max-w-none" 
+      className="prose max-w-none prose-headings:leading-tight prose-p:leading-relaxed prose-li:leading-relaxed" 
       dangerouslySetInnerHTML={{ __html: html }} 
       ref={contentRef}
     />

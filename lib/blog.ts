@@ -452,52 +452,59 @@ export function renderNotionContent(blocks: any[]) {
     try {
       switch (block.type) {
         case 'heading_1':
-          if (!block.heading_1 || !block.heading_1.text) {
+          if (!getBlockRichText(block.heading_1).length) {
             html += `<h1 class="text-3xl font-bold my-4"></h1>`;
           } else {
-            html += `<h1 class="text-3xl font-bold my-4">${renderRichText(block.heading_1.text)}</h1>`;
+            html += `<h1 class="text-3xl font-bold my-4">${renderRichText(getBlockRichText(block.heading_1))}</h1>`;
           }
           break;
         case 'heading_2':
-          if (!block.heading_2 || !block.heading_2.text) {
+          if (!getBlockRichText(block.heading_2).length) {
             html += `<h2 class="text-2xl font-bold my-4"></h2>`;
           } else {
-            html += `<h2 class="text-2xl font-bold my-4">${renderRichText(block.heading_2.text)}</h2>`;
+            html += `<h2 class="text-2xl font-bold my-4">${renderRichText(getBlockRichText(block.heading_2))}</h2>`;
           }
           break;
         case 'heading_3':
-          if (!block.heading_3 || !block.heading_3.text) {
+          if (!getBlockRichText(block.heading_3).length) {
             html += `<h3 class="text-xl font-bold my-3"></h3>`;
           } else {
-            html += `<h3 class="text-xl font-bold my-3">${renderRichText(block.heading_3.text)}</h3>`;
+            html += `<h3 class="text-xl font-bold my-3">${renderRichText(getBlockRichText(block.heading_3))}</h3>`;
           }
           break;
         case 'paragraph':
-          if (!block.paragraph || !block.paragraph.text) {
+          if (!getBlockRichText(block.paragraph).length) {
             html += `<p class="my-4"></p>`;
           } else {
-            html += `<p class="my-4">${renderRichText(block.paragraph.text)}</p>`;
+            html += `<p class="my-4">${renderRichText(getBlockRichText(block.paragraph))}</p>`;
           }
           break;
         case 'quote':
-          if (!block.quote || !block.quote.text) {
+          if (!getBlockRichText(block.quote).length) {
             html += `<blockquote class="border-l-4 border-gray-300 pl-4 italic my-4"></blockquote>`;
           } else {
-            html += `<blockquote class="border-l-4 border-gray-300 pl-4 italic my-4">${renderRichText(block.quote.text)}</blockquote>`;
+            html += `<blockquote class="border-l-4 border-gray-300 pl-4 italic my-4">${renderRichText(getBlockRichText(block.quote))}</blockquote>`;
           }
           break;
         case 'bulleted_list_item':
-          if (!block.bulleted_list_item || !block.bulleted_list_item.text) {
+          if (!getBlockRichText(block.bulleted_list_item).length) {
             html += `<li class="ml-6 list-disc"></li>`;
           } else {
-            html += `<li class="ml-6 list-disc">${renderRichText(block.bulleted_list_item.text)}</li>`;
+            html += `<li class="ml-6 list-disc">${renderRichText(getBlockRichText(block.bulleted_list_item))}</li>`;
           }
           break;
         case 'numbered_list_item':
-          if (!block.numbered_list_item || !block.numbered_list_item.text) {
+          if (!getBlockRichText(block.numbered_list_item).length) {
             html += `<li class="ml-6 list-decimal"></li>`;
           } else {
-            html += `<li class="ml-6 list-decimal">${renderRichText(block.numbered_list_item.text)}</li>`;
+            html += `<li class="ml-6 list-decimal">${renderRichText(getBlockRichText(block.numbered_list_item))}</li>`;
+          }
+          break;
+        case 'callout':
+          if (!getBlockRichText(block.callout).length) {
+            html += `<blockquote class="border-l-4 border-amber pl-4 my-4"></blockquote>`;
+          } else {
+            html += `<blockquote class="border-l-4 border-amber pl-4 my-4">${renderRichText(getBlockRichText(block.callout))}</blockquote>`;
           }
           break;
         case 'image':
@@ -737,6 +744,11 @@ export function renderNotionContent(blocks: any[]) {
           
         default:
           console.log(`renderNotionContent: неизвестный тип блока: ${block.type}`);
+          // Fallback: если в неизвестном блоке есть текст, не теряем его
+          const fallbackText = getBlockRichText(block[block.type]);
+          if (fallbackText.length) {
+            html += `<p class="my-4">${renderRichText(fallbackText)}</p>`;
+          }
           break;
       }
     } catch (error) {
@@ -746,6 +758,13 @@ export function renderNotionContent(blocks: any[]) {
   }
   
   return html;
+}
+
+function getBlockRichText(blockData: any): any[] {
+  if (!blockData) return [];
+  if (Array.isArray(blockData.rich_text)) return blockData.rich_text;
+  if (Array.isArray(blockData.text)) return blockData.text;
+  return [];
 }
 
 /**

@@ -436,6 +436,7 @@ export function renderNotionContent(blocks: any[]) {
   
   // Используем строковую конкатенацию вместо массива и join для экономии памяти
   let html = '';
+  let openListType: 'ul' | 'ol' | null = null;
   
   for (let i = 0; i < results.length; i++) {
     const block = results[i];
@@ -450,6 +451,16 @@ export function renderNotionContent(blocks: any[]) {
     }
     
     try {
+      // Закрываем список при переходе на блоки вне list_item
+      if (
+        openListType &&
+        block.type !== 'bulleted_list_item' &&
+        block.type !== 'numbered_list_item'
+      ) {
+        html += openListType === 'ul' ? '</ul>' : '</ol>';
+        openListType = null;
+      }
+
       switch (block.type) {
         case 'heading_1':
           if (!getBlockRichText(block.heading_1).length) {
@@ -487,18 +498,20 @@ export function renderNotionContent(blocks: any[]) {
           }
           break;
         case 'bulleted_list_item':
-          if (!getBlockRichText(block.bulleted_list_item).length) {
-            html += `<li class="ml-6 list-disc"></li>`;
-          } else {
-            html += `<li class="ml-6 list-disc">${renderRichText(getBlockRichText(block.bulleted_list_item))}</li>`;
+          if (openListType !== 'ul') {
+            if (openListType === 'ol') html += '</ol>';
+            html += '<ul class="my-4 ml-6 list-disc space-y-2">';
+            openListType = 'ul';
           }
+          html += `<li>${renderRichText(getBlockRichText(block.bulleted_list_item))}</li>`;
           break;
         case 'numbered_list_item':
-          if (!getBlockRichText(block.numbered_list_item).length) {
-            html += `<li class="ml-6 list-decimal"></li>`;
-          } else {
-            html += `<li class="ml-6 list-decimal">${renderRichText(getBlockRichText(block.numbered_list_item))}</li>`;
+          if (openListType !== 'ol') {
+            if (openListType === 'ul') html += '</ul>';
+            html += '<ol class="my-4 ml-6 list-decimal space-y-2">';
+            openListType = 'ol';
           }
+          html += `<li>${renderRichText(getBlockRichText(block.numbered_list_item))}</li>`;
           break;
         case 'callout':
           if (!getBlockRichText(block.callout).length) {
@@ -755,6 +768,10 @@ export function renderNotionContent(blocks: any[]) {
       console.error(`Ошибка обработки блока типа ${block.type}:`, error);
       // Продолжаем выполнение, пропуская проблемный блок
     }
+  }
+
+  if (openListType) {
+    html += openListType === 'ul' ? '</ul>' : '</ol>';
   }
   
   return html;

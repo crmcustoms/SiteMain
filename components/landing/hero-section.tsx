@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { Play, ChevronLeft, ChevronRight, Send, X } from "lucide-react"
+import { Play, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
 import Link from "next/link"
 import { BookingButton } from "@/components/booking-button"
@@ -134,54 +134,6 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
         />
       </div>
 
-      {/* Top navigation */}
-      <nav className="relative z-50 flex items-center justify-between px-8 py-6 border-b border-black/5">
-        <div className="font-bold text-xl tracking-tight"><span className="text-[#FFD700]">CRM</span><span className="text-black">CUSTOMS</span></div>
-        <div className="hidden md:flex items-center gap-12 text-base text-black/70 font-medium absolute left-1/2 transform -translate-x-1/2">
-          <a href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors">
-            Кейси
-          </a>
-          <a href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors">
-            Блог
-          </a>
-          <a href="#about" className="hover:text-[#FFD700] transition-colors">
-            Про нас
-          </a>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex flex-col items-end leading-tight">
-            <a href="tel:+380671706703" className="text-sm font-semibold hover:text-[#FFD700] transition-colors">
-              +380 67 170 67 03
-            </a>
-            <span className="text-xs text-black/60">Телефон для швидкого зв’язку</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="https://t.me/crmcustomsua"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 border border-black/20 rounded flex items-center justify-center hover:border-black/40 hover:bg-black/5 transition-all"
-              title="Telegram"
-            >
-              <Send className="w-4 h-4 text-black" />
-            </a>
-            <div className="text-xs text-black/60 leading-tight max-w-[220px]">
-              Напишіть нам у Telegram — відповімо одразу, без підключень і перемикань.
-            </div>
-          </div>
-          <div className="mx-2 h-4 w-[1px] bg-black/10" />
-          <CallbackFormDialog
-            title="Зателефонуйте мені"
-            description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
-            buttonText="Зателефонуйте мені"
-            trigger={
-              <button className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
-                Зателефонуйте мені
-              </button>
-            }
-          />
-        </div>
-      </nav>
 
       <div className="relative px-8 py-12 max-w-[1800px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -289,7 +241,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                   trigger={
                     <button className="relative group w-[300px] h-12 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-flex items-center justify-center border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
                       <span className="relative z-10">ЗАМОВИТИ ДЗВІНОК</span>
-                    </button>
+              </button>
                   }
                 />
                 <div className="flex flex-col items-start gap-2">
@@ -304,9 +256,9 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                     Ця кнопка відкриває мій календар: оберіть вільний час і забронюйте зустріч.
                   </p>
                 </div>
-                <div className="border-l-2 border-black/20 pl-4">
-                  <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
-                  <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
+              <div className="border-l-2 border-black/20 pl-4">
+                <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
+                <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>
                 </div>
               </div>
             </div>

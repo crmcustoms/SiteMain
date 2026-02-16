@@ -397,10 +397,14 @@ export function renderNotionContent(blocks: any[]) {
     return '';
   }
   
-  // Поддержка пагинации/чанков: объединяем все results из ответа
-  // API может вернуть массив объектов, каждый со своим results.
+  // Поддержка пагинации/чанков: объединяем все results/blocks из ответа.
+  // API может вернуть массив объектов, каждый со своим results или blocks.
   const mergedResults = blocks.flatMap((chunk: any) =>
-    Array.isArray(chunk?.results) ? chunk.results : []
+    Array.isArray(chunk?.results)
+      ? chunk.results
+      : Array.isArray(chunk?.blocks)
+        ? chunk.blocks
+        : []
   );
 
   let results = mergedResults.length > 0 ? mergedResults : blocks;

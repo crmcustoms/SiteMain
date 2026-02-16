@@ -276,13 +276,20 @@ export async function getBlogArticleContent(id: string, forceRefresh = false) {
   }
 
   try {
+    if (forceRefresh && articleContentCache[id]) {
+      delete articleContentCache[id];
+    }
+
     // Проверяем актуальность кеша
     const cachedContent = articleContentCache[id];
     if (cachedContent && isCacheValid(cachedContent, forceRefresh)) {
       return cachedContent.data;
     }
 
-    const response = await fetchWithTimeout(`${ARTICLE_CONTENT_API}?id=${id}`);
+    const response = await fetchWithTimeout(`${ARTICLE_CONTENT_API}?id=${id}`, {
+      cache: forceRefresh ? 'no-store' : 'default',
+      next: { revalidate: forceRefresh ? 0 : 300 },
+    } as RequestInit & { next: { revalidate: number } });
     const content = await response.json();
     
     // Проверяем формат данных
@@ -291,7 +298,11 @@ export async function getBlogArticleContent(id: string, forceRefresh = false) {
     }
     
     // Если данные в новом формате (массив объектов с контентом и метаданными)
-    if (Array.isArray(content) && content[0] && content[0].results) {
+    if (
+      Array.isArray(content) &&
+      content[0] &&
+      (Array.isArray(content[0].results) || Array.isArray(content[0].blocks))
+    ) {
       // Обновляем кеш для статьи, если пришли метаданные
       if (content[0].property_slug && articlesCache[content[0].property_slug]) {
         articlesCache[content[0].property_slug] = {

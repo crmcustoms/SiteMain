@@ -153,6 +153,10 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
     // #region agent log
     fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:138',message:'content_fetch_start',data:{url:new URL(url).origin + new URL(url).pathname,method,hasWebhookSecret:!!webhookSecret},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
+    const nextOptions =
+      (options as RequestInit & { next?: { revalidate?: number } }).next ??
+      { revalidate: 3600 };
+
     const response = await fetch(url, {
       ...options,
       ...(controller ? { signal: controller.signal } : {}),
@@ -160,7 +164,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
         ...(options.headers || {}),
         ...(webhookSecret ? { "x-webhook-secret": webhookSecret, "WEBHOOK_SECRET": webhookSecret } : {}),
       },
-      next: { revalidate: 3600 }
+      next: nextOptions
     });
     
     if (id) clearTimeout(id);
@@ -393,34 +397,13 @@ export function renderNotionContent(blocks: any[]) {
     return '';
   }
   
-  // Проверяем структуру данных
-  // Если в новом формате - один объект с полем results
-  const firstBlock = blocks[0];
-  if (!firstBlock) {
-    console.log("renderNotionContent: первый элемент blocks равен null или undefined");
-    return '';
-  }
-  
-  let results;
-  
-  // Проверяем наличие поля results в первом блоке
-  if (firstBlock.results) {
-    results = firstBlock.results;
-    
-    // Проверяем что results массив
-    if (!Array.isArray(results)) {
-      console.log("renderNotionContent: firstBlock.results не является массивом:", typeof results);
-      return '';
-    }
-  } 
-  // Если это массив блоков Notion напрямую
-  else if (Array.isArray(blocks)) {
-    results = blocks;
-  } 
-  else {
-    console.log("renderNotionContent: не удалось найти результаты блоков");
-    return '';
-  }
+  // Поддержка пагинации/чанков: объединяем все results из ответа
+  // API может вернуть массив объектов, каждый со своим results.
+  const mergedResults = blocks.flatMap((chunk: any) =>
+    Array.isArray(chunk?.results) ? chunk.results : []
+  );
+
+  let results = mergedResults.length > 0 ? mergedResults : blocks;
   
   // Финальная проверка на массив результатов
   if (!results || !Array.isArray(results)) {
@@ -1052,6 +1035,10 @@ export async function getBlogPostContent(id: string, forceRefresh = false) {
   console.log(`getBlogPostContent: запрос контента для статьи блога с ID: ${id}`);
 
   try {
+    if (forceRefresh && blogContentCache[id]) {
+      delete blogContentCache[id];
+    }
+
     // Проверяем актуальность кеша для контента блога
     const cachedContent = blogContentCache[id];
     if (cachedContent && isCacheValid(cachedContent, forceRefresh)) {
@@ -1063,7 +1050,10 @@ export async function getBlogPostContent(id: string, forceRefresh = false) {
     const url = `${BLOG_CONTENT_API}?id=${id}`;
     console.log(`getBlogPostContent: делаем запрос к API: ${url}`);
     
-    const response = await fetchWithTimeout(url);
+    const response = await fetchWithTimeout(url, {
+      cache: forceRefresh ? 'no-store' : 'default',
+      next: { revalidate: forceRefresh ? 0 : 300 },
+    } as RequestInit & { next: { revalidate: number } });
     const content = await response.json();
     
     console.log(`getBlogPostContent: получен ответ от API для ID: ${id}`, { 

@@ -117,7 +117,7 @@ export default async function BlogArticlePage({
     }
     
     // Получаем контент статьи блога с передачей id
-    let content = await getBlogPostContent(article.id).catch(() => null);
+    let content = await getBlogPostContent(article.id, true).catch(() => null);
     
     if (!content) {
       console.log(`Контент статьи не найден: ${slug}`);

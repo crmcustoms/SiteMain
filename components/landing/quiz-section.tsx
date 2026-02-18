@@ -992,16 +992,16 @@ export default function QuizSection() {
       <div className="relative max-w-[1400px] mx-auto px-8">
         {/* Section Header */}
         <div className="mb-12">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-12 h-12 border-2 border-[#FFD700] flex items-center justify-center flex-shrink-0">
               <div className="text-xs font-mono font-bold text-black">06</div>
             </div>
             <div>
-              <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
+              <h2 className="text-5xl font-black text-black uppercase tracking-tighter leading-tight">
                 Діагностика - квіз
               </h2>
               <p className="text-lg text-black/70 max-w-3xl mt-4">
-                (якщо ви цінуєте свій час і хочете щоб ми знали про вас трішки більше)
+                якщо ви цінуєте свій час і хочете щоб ми знали про вас трішки більше
               </p>
             </div>
           </div>

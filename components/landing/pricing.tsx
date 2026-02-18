@@ -154,13 +154,13 @@ export default function Pricing() {
                 buttonText="Зателефонуйте мені"
                 trigger={
                   <button
-                    className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
-                      plan.popular
-                        ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
-                        : "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
-                    }`}
-                  >
-                    {plan.buttonText}
+                className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${
+                  plan.popular
+                    ? "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                    : "bg-[#FFD700] text-black hover:bg-black hover:text-[#FFD700] border-2 border-[#FFD700]"
+                }`}
+              >
+                {plan.buttonText}
                   </button>
                 }
               />

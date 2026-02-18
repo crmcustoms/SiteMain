@@ -42,8 +42,8 @@ export async function GET(request: NextRequest) {
 
     // Логируем только в development режиме или при ошибке конфигурации
     if (process.env.NODE_ENV === 'development') {
-      console.log('[API] Environment check:', {
-        n8nUrl: n8nUrl ? 'SET' : 'NOT SET',
+    console.log('[API] Environment check:', {
+      n8nUrl: n8nUrl ? 'SET' : 'NOT SET',
         calendarId: calendarId ? 'SET' : 'NOT SET'
       });
     }

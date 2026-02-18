@@ -111,14 +111,8 @@ export default function WhyChooseUs() {
                     : "border-black/20 bg-white text-black/70 hover:border-black/40"
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center border-2 border-current flex-shrink-0">
-                    <span className="text-lg font-black font-mono">{service.number}</span>
-                  </div>
-                  <div className="text-left">
-                    <div className="text-base font-bold mb-1">{service.buttonTitle}</div>
-                    <div className="text-xs opacity-60">{service.buttonSubtitle}</div>
-                  </div>
+                <div className="text-left">
+                  <div className="text-base font-bold">{service.buttonSubtitle}</div>
                 </div>
               </button>
             )

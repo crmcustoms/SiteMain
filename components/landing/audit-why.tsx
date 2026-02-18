@@ -40,7 +40,7 @@ export default function AuditWhy() {
             </div>
             <div>
               <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
-                Чому ми не працюємо без аудиту?
+                Чому аудит або дослідження процесів важливе
               </h2>
             </div>
           </div>

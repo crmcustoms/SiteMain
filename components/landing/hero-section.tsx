@@ -5,7 +5,6 @@ import Image from "next/image"
 import { Play, ChevronLeft, ChevronRight, X } from "lucide-react"
 import { submitForm } from "@/lib/actions"
 import Link from "next/link"
-import { BookingButton } from "@/components/booking-button"
 import { CallbackFormDialog } from "@/components/callback-form-dialog"
 
 const services = [
@@ -199,15 +198,31 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
               <div className="absolute -left-4 -top-4 w-16 h-16 border-l-2 border-t-2 border-[#FFD700]" />
 
               <h1 className="text-6xl xl:text-7xl font-black leading-[0.9] text-black uppercase tracking-tighter">
-                АВТОМАТИЗАЦІЯ
+                CRM ДЛЯ ВАШОГО
                 <br />
                 <span className="relative inline-block">
                   БІЗНЕСУ
                   <div className="absolute -right-8 top-1/2 -translate-y-1/2 w-20 h-[2px] bg-[#FFD700]" />
                 </span>
                 <br />
-                <span className="text-[#FFD700]">ЗА 30 ДНІВ</span>
+                <span className="text-[#FFD700]">ВІД 25,000₴ ЗА 2-4 ТИЖНІ</span>
               </h1>
+
+              {/* Benefits list */}
+              <div className="mt-6 space-y-2">
+                <div className="flex items-center gap-2 text-lg text-black">
+                  <span className="text-[#FFD700] font-bold">✓</span>
+                  <span>Підберемо під ваш бізнес</span>
+                </div>
+                <div className="flex items-center gap-2 text-lg text-black">
+                  <span className="text-[#FFD700] font-bold">✓</span>
+                  <span>Навчимо команду</span>
+                </div>
+                <div className="flex items-center gap-2 text-lg text-black">
+                  <span className="text-[#FFD700] font-bold">✓</span>
+                  <span>Технічна підтримка включена</span>
+                </div>
+              </div>
 
               {/* Tech label */}
               <div className="absolute -right-4 top-0 rotate-90 origin-left">
@@ -235,27 +250,15 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             <div className="flex flex-col gap-3 pt-4">
               <div className="flex items-start gap-4 flex-wrap">
                 <CallbackFormDialog
-                  title="Зателефонуйте мені"
+                  title="Безкоштовна консультація"
                   description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
-                  buttonText="Зателефонуйте мені"
+                  buttonText="Безкоштовна консультація"
                   trigger={
                     <button className="relative group w-[300px] h-12 bg-[#FFD700] text-black font-bold overflow-hidden hover:cursor-pointer inline-flex items-center justify-center border-2 border-[#FFD700] transition-all hover:bg-black hover:text-[#FFD700]">
-                      <span className="relative z-10">ЗАМОВИТИ ДЗВІНОК</span>
+                      <span className="relative z-10">БЕЗКОШТОВНА КОНСУЛЬТАЦІЯ</span>
               </button>
                   }
                 />
-                <div className="flex flex-col items-start gap-2">
-                  <BookingButton
-                    variant="outline"
-                    size="lg"
-                    className="w-[300px] h-12 border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-black font-bold transition-all text-[12px] leading-tight text-center whitespace-normal"
-                  >
-                    ЗАБРОНЮВАТИ КОНСУЛЬТАЦІЮ
-                  </BookingButton>
-                  <p className="text-xs text-black/60 max-w-[300px]">
-                    Ця кнопка відкриває мій календар: оберіть вільний час і забронюйте зустріч.
-                  </p>
-                </div>
               <div className="border-l-2 border-black/20 pl-4">
                 <div className="text-xs text-black/40 font-mono">SYSTEM_ID</div>
                 <div className="text-sm font-bold text-black font-mono">#CRM_2024</div>

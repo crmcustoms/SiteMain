@@ -149,9 +149,9 @@ export default function Pricing() {
               </div>
 
               <CallbackFormDialog
-                title="Зателефонуйте мені"
+                title="Безкоштовна консультація"
                 description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
-                buttonText="Зателефонуйте мені"
+                buttonText="Безкоштовна консультація"
                 trigger={
                   <button
                 className={`w-full mt-6 py-3 font-bold transition-all uppercase tracking-tight ${

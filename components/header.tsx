@@ -52,12 +52,12 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
           </div>
           <div className="mx-2 h-4 w-[1px] bg-black/10" />
           <CallbackFormDialog
-            title="Зателефонуйте мені"
+            title="Безкоштовна консультація"
             description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
-            buttonText="Зателефонуйте мені"
+            buttonText="Безкоштовна консультація"
             trigger={
               <button className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
-                Зателефонуйте мені
+                Безкоштовна консультація
               </button>
             }
           />

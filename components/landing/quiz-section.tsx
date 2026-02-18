@@ -998,8 +998,11 @@ export default function QuizSection() {
             </div>
             <div>
               <h2 className="text-5xl font-black text-black uppercase tracking-tighter">
-                Діагностика - квіз (якщо ви цінуєте свій час і хочете щоб ми знали про вас трішки більше)
+                Діагностика - квіз
               </h2>
+              <p className="text-lg text-black/70 max-w-3xl mt-4">
+                (якщо ви цінуєте свій час і хочете щоб ми знали про вас трішки більше)
+              </p>
             </div>
           </div>
         </div>

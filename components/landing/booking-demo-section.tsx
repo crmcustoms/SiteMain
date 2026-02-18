@@ -16,6 +16,9 @@ export default function BookingDemoSection() {
             <p className="text-xl text-muted-foreground">
               Оберіть зручний час для безкоштовної консультації
             </p>
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Це форма за типом сервісу Calendly: вона інтегрована з нашими календарями і показує справжні вільні слоти. Тому сміливо обирайте зручний для вас час — у нас у системі та в календарі одразу зʼявиться заброньована зустріч. А якщо залишите email, посилання на зустріч одразу надійде вам на пошту.
+            </p>
           </div>
 
           {/* Переваги */}

@@ -1016,10 +1016,6 @@ export default function QuizSection() {
                 <span className="text-xs font-mono text-black/60 tracking-wider uppercase">// ДІАГНОСТИКА</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">Не впевнені що вам підходить?</h1>
-              <p className="text-lg text-black/60 mb-6 max-w-2xl">
-                Відповісте на 5 питань — отримайте персональну рекомендацію <strong className="text-black">тут і зараз</strong>
-              </p>
               <p className="text-sm text-black/60 mb-6 max-w-2xl">
                 Це коротке опитування допоможе нам краще зрозуміти ваш бізнес, а вам — отримати безкоштовну миттєву
                 рекомендацію та орієнтовний бюджет. Результат попередній і не є основою для фінального плану впровадження.

@@ -89,8 +89,11 @@ The full CSS for these lives in `styles/article.css` (design: cream background, 
 ## Process
 
 1. Gather the actual content/topic from the user — if it's a case study, get real client details and results from them, don't guess.
-2. Pick `blog` or `cases`, derive the slug, write the `.md` file with the schema above.
+2. Pick `blog`, `cases`, or `news` (own-service announcements — Planfix product news is Notion-sourced, not written here), derive the slug, write the `.md` file with the schema above into `content/<type>/uk/<slug>.md`.
 3. Run `npm run build` in the project root to confirm it compiles (this is exactly where a previous automated attempt silently failed while claiming success — always verify for real, don't just report success).
-4. Optionally preview with `npm run dev` and open `/uk/blog/<slug>` or `/uk/cases/<slug>` to sanity-check rendering.
+4. Optionally preview with `npm run dev` and open `/uk/<type>/<slug>` to sanity-check rendering.
 5. Report what was written and where.
 6. **Do not `git commit`/`git push` without asking first** — this repo deploys to Netlify on push, so pushing puts the article live on crmcustoms.com immediately.
+7. **After it's live** (pushed and deployed), offer to announce it in the Telegram channel:
+   `node scripts/social/post-telegram.mjs --title "<title>" --excerpt "<excerpt>" --url "https://crmcustoms.com/uk/<type>/<slug>" --image "https://crmcustoms.com/api/og?title=<url-encoded title>&tag=<url-encoded tag>"`
+   Needs `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHANNEL_CHAT_ID` in `.env.local` (already set up). Ask before running — same "don't publish without asking" rule as the push itself. Only Telegram is wired up so far; Instagram/Facebook/LinkedIn are not yet connected (no tokens on file) — don't claim to post there.

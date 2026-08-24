@@ -22,7 +22,7 @@ export interface CasePost {
 interface StaticCasesProps {
   casesData: CasePost[];
   lang: string;
-  pageType?: 'cases' | 'blog'; // Новый параметр для определения типа страницы
+  pageType?: 'cases' | 'blog' | 'news'; // Новый параметр для определения типа страницы
 }
 
 export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType = 'cases' }: StaticCasesProps): ReactNode {
@@ -151,6 +151,14 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
         linkPrefix: "blog"
       };
     }
+    if (pageType === 'news') {
+      return {
+        title: "Новини",
+        description: "Оновлення Planfix та новини CRM Customs.",
+        searchPlaceholder: "Пошук новин...",
+        linkPrefix: "news"
+      };
+    }
     return {
       title: "Кейси про автоматизацію бізнесу",
       description: "Корисні кейси, поради та приклади автоматизації бізнес-процесів.",
@@ -160,6 +168,9 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
   };
 
   const pageTexts = getPageTexts();
+  const itemNoun = pageType === 'blog' ? 'статті' : pageType === 'news' ? 'новини' : 'кейси';
+  const itemNounCap = pageType === 'blog' ? 'Статті' : pageType === 'news' ? 'Новини' : 'Кейси';
+  const popularLabel = pageType === 'blog' ? 'Популярні статті' : pageType === 'news' ? 'Останні новини' : 'Популярні кейси';
 
   return (
     <section id={pageType} className="bg-gray-50 w-full py-12">
@@ -267,7 +278,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
             {filteredPosts.length === 0 ? (
               <div className="text-center py-12">
                 <h3 className="text-xl font-semibold mb-4">
-                  {pageType === 'blog' ? 'Статті не знайдені' : 'Кейси не знайдені'}
+                  {itemNounCap} не знайдені
                 </h3>
                 <p className="text-gray-600 mb-6">
                   Спробуйте змінити параметри пошуку або скинути фільтри.
@@ -401,7 +412,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                 <div className="bg-white rounded-lg p-6 shadow-md">
                   <h3 className="font-semibold mb-4 flex items-center gap-2">
                     <span className="text-amber">⚡</span>
-                    {pageType === 'blog' ? 'Популярні статті' : 'Популярні кейси'}
+                    {popularLabel}
                   </h3>
                   <ul className="space-y-3">
                     {popularPosts.map((post) => (
@@ -501,7 +512,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                   Підписатися на новини
                 </h3>
                 <p className="text-sm text-gray-500 mb-3">
-                  Отримуйте найкращі {pageType === 'blog' ? 'статті' : 'кейси'} та поради з автоматизації бізнесу.
+                  Отримуйте найкращі {itemNoun} та поради з автоматизації бізнесу.
                 </p>
                 <form className="flex flex-col gap-2">
                   <input 

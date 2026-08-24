@@ -23,6 +23,9 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
           <Link href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors">
             Блог
           </Link>
+          <Link href={`/${lang}/news`} className="hover:text-[#FFD700] transition-colors">
+            Новини
+          </Link>
           <Link href={`/${lang}#about`} className="hover:text-[#FFD700] transition-colors">
             Про нас
           </Link>

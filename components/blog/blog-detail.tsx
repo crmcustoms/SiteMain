@@ -9,6 +9,7 @@ interface BlogDetailProps {
   lang: string;
   htmlContent: string;
   backLinkText?: string;
+  backLinkHref?: string;
   relatedArticles?: any[];
 }
 
@@ -17,6 +18,7 @@ export default function BlogDetail({
   lang = 'ua',
   htmlContent = '',
   backLinkText = "Назад к блогу",
+  backLinkHref,
   relatedArticles = []
 }: BlogDetailProps) {
   // Получаем URL изображения
@@ -30,7 +32,7 @@ export default function BlogDetail({
     <div className="w-full bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div>
-          <Link href={`/${lang}/blog`} className="text-blue-600 hover:underline mb-6 inline-block">
+          <Link href={backLinkHref || `/${lang}/blog`} className="text-blue-600 hover:underline mb-6 inline-block">
             ← {backLinkText}
           </Link>
         </div>

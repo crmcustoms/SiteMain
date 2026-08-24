@@ -69,15 +69,22 @@ export function MobileMenu({ dict, lang }: MobileMenuProps) {
           >
             {dict.navigation.cases || 'Кейси'}
           </Link>
-          <Link 
-            href={`/${lang}/blog`} 
+          <Link
+            href={`/${lang}/blog`}
             className="text-base font-medium transition-colors hover:text-amber py-2 border-b"
             onClick={() => setOpen(false)}
           >
             {dict.navigation.blog}
           </Link>
-          <Link 
-            href={`/${lang}#features`} 
+          <Link
+            href={`/${lang}/news`}
+            className="text-base font-medium transition-colors hover:text-amber py-2 border-b"
+            onClick={() => setOpen(false)}
+          >
+            {dict.navigation.news || 'Новини'}
+          </Link>
+          <Link
+            href={`/${lang}#features`}
             className="text-base font-medium transition-colors hover:text-amber py-2 border-b"
             onClick={() => setOpen(false)}
           >

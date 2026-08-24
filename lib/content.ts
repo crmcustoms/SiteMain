@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 
-export type ContentType = "blog" | "cases"
+export type ContentType = "blog" | "cases" | "news"
 
 export interface ContentMeta {
   slug: string

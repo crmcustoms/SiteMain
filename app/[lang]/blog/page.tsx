@@ -116,9 +116,14 @@ export default async function BlogPage({
     // Сортируем блог по дате (новые сверху)
     const sortedArticles = sortBlogPostsByDate(articles);
 
+    // "Новини" переехали в отдельный раздел /news — не дублируем их в общем блоге
+    const nonNewsArticles = Array.isArray(sortedArticles)
+      ? sortedArticles.filter((article: any) => article?.property_categorytext !== "Новини")
+      : [];
+
     // Безопасная адаптация статей блога в формат кейсов
-    const adaptedPosts: CasePost[] = Array.isArray(sortedArticles)
-      ? sortedArticles.map((article: any): CasePost | null => {
+    const adaptedPosts: CasePost[] = Array.isArray(nonNewsArticles)
+      ? nonNewsArticles.map((article: any): CasePost | null => {
           if (!article) return null;
           
           // Извлекаем категории из blog API данных

@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { url: `${baseUrl}/${locale}`, lastModified: now, changeFrequency: "weekly", priority: 1 },
       { url: `${baseUrl}/${locale}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
       { url: `${baseUrl}/${locale}/cases`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+      { url: `${baseUrl}/${locale}/news`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
     )
 
     for (const slug of LANDING_SLUGS) {
@@ -48,6 +49,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: caseItem.date ? new Date(caseItem.date) : now,
         changeFrequency: "monthly",
         priority: 0.6,
+      })
+    }
+
+    // Notion-sourced news aren't enumerable at build time (the n8n webhook needs a
+    // secret only available at Netlify runtime, not build) — only locally-authored
+    // news get a sitemap entry; the rest stay discoverable via crawling /news.
+    for (const newsItem of getAllContent("news", locale)) {
+      entries.push({
+        url: `${baseUrl}/${locale}/news/${newsItem.slug}`,
+        lastModified: newsItem.date ? new Date(newsItem.date) : now,
+        changeFrequency: "monthly",
+        priority: 0.5,
       })
     }
   }

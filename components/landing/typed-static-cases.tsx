@@ -308,7 +308,11 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                         loading="lazy"
-                          unoptimized={post.image?.startsWith("/api/") ? false : true}
+                          // Netlify's image CDN cache-collides on the nested ?title=&tag= query
+                          // string in /api/og URLs (serves one article's cover under a different
+                          // article's request), and post.image can come from arbitrary Notion
+                          // domains not in next.config's remotePatterns — always bypass the optimizer.
+                          unoptimized
                           onError={(e) => {
                             // Если изображение не загрузилось, заменяем на заглушку
                             console.error("Ошибка загрузки изображения:", post.image);

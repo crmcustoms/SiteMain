@@ -27,12 +27,16 @@ export function ContentList({ items, basePath, emptyTitle, emptyText }: ContentL
           className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row"
         >
           <div className="md:w-1/3 relative aspect-video md:aspect-auto">
+            {/* Netlify's image CDN cache-collides on the nested ?title=&tag= query string in
+                /api/og URLs, serving one article's cover under a different article's request.
+                Bypassing the optimizer for these sources avoids it. */}
             <Image
               src={item.image!}
               alt={item.title}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+              unoptimized={item.image!.startsWith("/api/og")}
             />
           </div>
           <div className="md:w-2/3 p-6 flex flex-col justify-between">

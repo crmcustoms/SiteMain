@@ -24,9 +24,13 @@ export function ContentList({ items, basePath, emptyTitle, emptyText }: ContentL
       {items.map((item) => (
         <article
           key={item.slug}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row"
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row md:items-start"
         >
-          <div className="md:w-1/3 relative aspect-video md:aspect-auto">
+          {/* Fixed 16:9 at every breakpoint (not md:aspect-auto, which let each card's image
+              height track its variable text-column height on desktop) — a real photo tolerates
+              that variable crop fine, but the generated /api/og covers have text positioned with
+              fixed margins and get cut into unpredictably when the crop ratio isn't stable. */}
+          <div className="md:w-1/3 relative aspect-video">
             {/* Netlify's image CDN cache-collides on the nested ?title=&tag= query string in
                 /api/og URLs, serving one article's cover under a different article's request.
                 Bypassing the optimizer for these sources avoids it. */}

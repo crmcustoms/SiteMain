@@ -293,8 +293,13 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
             ) : (
               <div className="flex flex-col gap-6">
                 {filteredPosts.map((post) => (
-                  <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row">
-                    <div className="md:w-1/3 relative aspect-video md:aspect-auto">
+                  <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row md:items-start">
+                    {/* Fixed 16:9 at every breakpoint (not md:aspect-auto, which let each card's
+                        image height track its variable text-column height on desktop) — a real
+                        photo tolerates that variable crop fine, but the generated /api/og covers
+                        have text positioned with fixed margins and get cut into unpredictably when
+                        the crop ratio isn't stable. */}
+                    <div className="md:w-1/3 relative aspect-video">
                       {imageErrors[post.id] ? (
                         // Показываем заглушку, если изображение не загрузилось
                         <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">

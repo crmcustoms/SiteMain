@@ -6,7 +6,6 @@ tag: "Про впровадження CRM"
 tags: ["CRM", "впровадження", "ціноутворення"]
 readTime: "5 хвилин читання"
 author: "CRMCUSTOMS"
-image: "/placeholder.svg?height=630&width=1200&query=crm pricing"
 ctaTitle: "Є питання по бюджету або процесам?"
 ctaText: "30 хвилин — і зрозумієте, що реально зробити у вашому випадку."
 ctaLabel: "Записатись на консультацію"

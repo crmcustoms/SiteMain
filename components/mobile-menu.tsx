@@ -29,7 +29,7 @@ export function MobileMenu({ dict, lang }: MobileMenuProps) {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="md:hidden"
+          className="lg:hidden"
           aria-label={dict.common.mobileMenu || "Меню"}
         >
           <Menu className="h-6 w-6" />

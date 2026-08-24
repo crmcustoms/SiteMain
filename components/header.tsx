@@ -12,40 +12,48 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="flex items-center justify-between px-8 py-4">
-        <Link href={`/${lang}`} className="font-bold text-xl tracking-tight">
+        <Link href={`/${lang}`} className="font-bold text-xl tracking-tight flex-shrink-0">
           <span className="text-[#FFD700]">CRM</span>
           <span className="text-black">CUSTOMS</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-12 text-base text-black/70 font-medium absolute left-1/2 transform -translate-x-1/2">
-          <Link href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors">
+        {/* flex-1 + justify-center reserves real space for the nav instead of the old
+            absolute-centered version, which didn't reserve any width and started
+            overlapping the phone/Telegram/CTA block once a 4th link (Новини) was added. */}
+        <nav className="hidden lg:flex flex-1 items-center justify-center gap-6 xl:gap-10 text-base text-black/70 font-medium px-4">
+          <Link href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Кейси
           </Link>
-          <Link href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors">
+          <Link href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Блог
           </Link>
-          <Link href={`/${lang}/news`} className="hover:text-[#FFD700] transition-colors">
+          <Link href={`/${lang}/news`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Новини
           </Link>
-          <Link href={`/${lang}#about`} className="hover:text-[#FFD700] transition-colors">
+          <Link href={`/${lang}#about`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Про нас
           </Link>
         </nav>
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex flex-col items-end leading-tight">
-            <a href="tel:+380671706703" className="text-lg font-semibold hover:text-[#FFD700] transition-colors">
+        <div className="hidden lg:flex items-center gap-3 xl:gap-4 flex-shrink-0">
+          <div className="hidden xl:flex flex-col items-end leading-tight">
+            <a href="tel:+380671706703" className="text-lg font-semibold hover:text-[#FFD700] transition-colors whitespace-nowrap">
               +380 67 170 67 03
             </a>
             <span className="text-xs text-black/60">Телефон для швидкого зв'язку</span>
           </div>
+          <a href="tel:+380671706703" className="xl:hidden text-base font-semibold hover:text-[#FFD700] transition-colors whitespace-nowrap">
+            +380 67 170 67 03
+          </a>
           <div className="flex items-center gap-3">
-            <div className="text-xs text-black/60 leading-tight max-w-[220px]">
+            {/* Long descriptive sentence only fits comfortably on very wide screens; on
+                narrower desktop widths it's the icon alone, avoiding the previous crowding. */}
+            <div className="hidden xl:block text-xs text-black/60 leading-tight max-w-[220px]">
               Напишіть нам у Telegram — відповімо одразу, без підключень і перемикань.
             </div>
             <a
               href="https://t.me/crmcustomsua"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded flex items-center justify-center transition-all"
+              className="w-8 h-8 bg-blue-500 hover:bg-blue-600 rounded flex items-center justify-center transition-all flex-shrink-0"
               title="Telegram"
             >
               <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -53,13 +61,13 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
               </svg>
             </a>
           </div>
-          <div className="mx-2 h-4 w-[1px] bg-black/10" />
+          <div className="mx-1 lg:mx-2 h-4 w-[1px] bg-black/10 flex-shrink-0" />
           <CallbackFormDialog
             title="Безкоштовна консультація"
             description="Залиште ім'я та телефон — ми передзвонимо найближчим часом."
             buttonText="Безкоштовна консультація"
             trigger={
-              <button className="px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors">
+              <button className="px-4 lg:px-6 py-2 bg-black text-white text-sm font-medium hover:bg-[#FFD700] hover:text-black transition-colors whitespace-nowrap flex-shrink-0">
                 Безкоштовна консультація
               </button>
             }

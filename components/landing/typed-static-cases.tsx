@@ -297,7 +297,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                         loading="lazy"
-                          unoptimized={true}
+                          unoptimized={post.image?.startsWith("/api/") ? false : true}
                           onError={(e) => {
                             // Если изображение не загрузилось, заменяем на заглушку
                             console.error("Ошибка загрузки изображения:", post.image);
@@ -323,9 +323,8 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                             </span>
                           )}
                         </div>
-                        <h2 className="text-xl font-semibold mb-3 line-clamp-2">
-                          {post.title}
-                        </h2>
+                        {/* Title is baked into the generated cover image above; kept here for SEO/screen readers only */}
+                        <h2 className="sr-only">{post.title}</h2>
                         <p className="text-gray-600 mb-4 line-clamp-2">
                           {post.excerpt}
                         </p>

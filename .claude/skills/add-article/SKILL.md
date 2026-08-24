@@ -25,7 +25,7 @@ tag: "Single badge label shown top of article, e.g. 'Про впроваджен
 tags: ["keyword1", "keyword2"]     # small tags shown on the list card
 readTime: "N хвилин(и) читання"    # see pluralization rule below
 author: "CRMCUSTOMS"
-image: "https://..."   # OPTIONAL — used for OG/Twitter card + list card thumbnail. Omit entirely if there's no real photo (both the list card and the article gracefully skip rendering when absent). Do NOT use `/placeholder.svg` — despite the name it's actually a corrupted JPEG in this repo, and next/image blocks SVG sources by default anyway (`dangerouslyAllowSVG` isn't set), so anything ending in `.svg` or served as `image/svg+xml` (including `/api/placeholder`) will render as a broken image through next/image.
+image: "https://..."   # OPTIONAL — used for OG/Twitter card + list card thumbnail. Leave it out unless there's a real photo: when omitted, lib/content.ts auto-generates an on-brand cover via /api/og?title=...&tag=... (cream background, gold accent, Unbounded/Golos Text — matches the site design). This is the normal case; don't invent a placeholder image URL. Do NOT use `/placeholder.svg` — despite the name it's actually a corrupted JPEG in this repo, and next/image blocks SVG sources by default anyway (`dangerouslyAllowSVG` isn't set), so anything ending in `.svg` or served as `image/svg+xml` will render as a broken image through next/image.
 # Optional — override the default bottom CTA block. Omit any/all to use site defaults.
 ctaTitle: "..."
 ctaText: "..."

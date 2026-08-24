@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { getBlogPostsFromAPI, sortBlogPostsByDate } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
-import { getAllContent } from "@/lib/content"
+import { getAllContent, ogImageUrl } from "@/lib/content"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
@@ -123,14 +123,15 @@ export default async function BlogPage({
           
           // Извлекаем категории из blog API данных
           const categories: string[] = article.property_categorytext ? [article.property_categorytext] : [];
-          
+          const title = article.name || article.property_title || 'Без назви';
+
           return {
             id: article.id || Math.random().toString(36).substring(7),
-            title: article.name || article.property_title || 'Без назви',
+            title,
             slug: article.property_link_name || 'untitled',
             excerpt: article.property_description || '',
             date: article.property_ || '',
-            image: article.property_2 || article.property_photo1 || '/placeholder.svg',
+            image: article.property_2 || article.property_photo1 || ogImageUrl(title, categories[0]),
             tags: [], // В блоге не используем теги
             services: [] as string[], // В блоге нет сервисов - явно типизированный пустой массив
             categories: categories,

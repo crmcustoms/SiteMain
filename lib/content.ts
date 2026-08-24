@@ -28,6 +28,12 @@ function contentDir(type: ContentType, locale: string) {
   return path.join(process.cwd(), "content", type, locale)
 }
 
+export function ogImageUrl(title: string, tag?: string) {
+  const params = new URLSearchParams({ title })
+  if (tag) params.set("tag", tag)
+  return `/api/og?${params.toString()}`
+}
+
 export function getAllContent(type: ContentType, locale: string): ContentEntry[] {
   const dir = contentDir(type, locale)
   if (!fs.existsSync(dir)) return []
@@ -39,17 +45,18 @@ export function getAllContent(type: ContentType, locale: string): ContentEntry[]
       const raw = fs.readFileSync(path.join(dir, file), "utf-8")
       const { data, content } = matter(raw)
       const slug = data.slug || file.replace(/\.md$/, "")
+      const title = data.title || ""
 
       return {
         slug,
-        title: data.title || "",
+        title,
         date: data.date || "",
         excerpt: data.excerpt || "",
         tag: data.tag,
         tags: data.tags || [],
         readTime: data.readTime,
         author: data.author || "CRMCUSTOMS",
-        image: data.image,
+        image: data.image || ogImageUrl(title, data.tag),
         body: content,
         ctaTitle: data.ctaTitle,
         ctaText: data.ctaText,

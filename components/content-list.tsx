@@ -26,17 +26,15 @@ export function ContentList({ items, basePath, emptyTitle, emptyText }: ContentL
           key={item.slug}
           className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col md:flex-row"
         >
-          {item.image && (
-            <div className="md:w-1/3 relative aspect-video md:aspect-auto">
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-              />
-            </div>
-          )}
+          <div className="md:w-1/3 relative aspect-video md:aspect-auto">
+            <Image
+              src={item.image!}
+              alt={item.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+            />
+          </div>
           <div className="md:w-2/3 p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-center gap-2 mb-3">
@@ -45,7 +43,8 @@ export function ContentList({ items, basePath, emptyTitle, emptyText }: ContentL
                 )}
                 {item.date && <span className="text-xs text-gray-500">{item.date}</span>}
               </div>
-              <h2 className="text-xl font-semibold mb-3 line-clamp-2">{item.title}</h2>
+              {/* Title is baked into the generated cover image above; kept here for SEO/screen readers only */}
+              <h2 className="sr-only">{item.title}</h2>
               {item.excerpt && <p className="text-gray-600 mb-4 line-clamp-2">{item.excerpt}</p>}
               {item.tags && item.tags.length > 0 && (
                 <div className="mb-3 flex flex-wrap gap-2">

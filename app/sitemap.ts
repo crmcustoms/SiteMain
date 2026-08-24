@@ -1,62 +1,56 @@
-import type { MetadataRoute } from 'next'
-import { getBlogArticles } from '@/lib/blog'
+import type { MetadataRoute } from "next"
+import { getAllContent } from "@/lib/content"
+import { i18n } from "@/lib/i18n-config"
 
-export const dynamic = 'force-dynamic'
+const baseUrl = "https://crmcustoms.com"
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://crmcustoms.com'
+const LANDING_SLUGS = [
+  "audit-crm",
+  "custom-development",
+  "implementation-crm",
+  "industry-solutions",
+  "project-management",
+  "support-crm",
+]
 
-  // Статические страницы
-  const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/cases`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/landing/audit-crm`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-  ]
+export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date()
+  const entries: MetadataRoute.Sitemap = []
 
-  // Получаем динамические страницы кейсов
-  let dynamicPages: MetadataRoute.Sitemap = []
-  
-  try {
-    const isBuild =
-      process.env.NEXT_PHASE === 'phase-production-build' ||
-      process.env.NETLIFY === 'true'
-    if (isBuild) {
-      return staticPages
+  for (const locale of i18n.locales) {
+    entries.push(
+      { url: `${baseUrl}/${locale}`, lastModified: now, changeFrequency: "weekly", priority: 1 },
+      { url: `${baseUrl}/${locale}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+      { url: `${baseUrl}/${locale}/cases`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    )
+
+    for (const slug of LANDING_SLUGS) {
+      entries.push({
+        url: `${baseUrl}/${locale}/landing/${slug}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      })
     }
-    const articles = await getBlogArticles(true)
-    
-    if (Array.isArray(articles)) {
-      dynamicPages = articles
-        .filter((article: any) => article?.property_slug)
-        .map((article: any) => ({
-          url: `${baseUrl}/cases/${article.property_slug}`,
-          lastModified: article.property_last_edited_time 
-            ? new Date(article.property_last_edited_time)
-            : new Date(),
-          changeFrequency: 'monthly' as const,
-          priority: 0.6,
-        }))
+
+    for (const article of getAllContent("blog", locale)) {
+      entries.push({
+        url: `${baseUrl}/${locale}/blog/${article.slug}`,
+        lastModified: article.date ? new Date(article.date) : now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })
     }
-  } catch (error) {
-    console.error('Error generating sitemap:', error)
+
+    for (const caseItem of getAllContent("cases", locale)) {
+      entries.push({
+        url: `${baseUrl}/${locale}/cases/${caseItem.slug}`,
+        lastModified: caseItem.date ? new Date(caseItem.date) : now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })
+    }
   }
 
-  return [...staticPages, ...dynamicPages]
+  return entries
 }
-
-export const revalidate = 0 // Обновлять на runtime

@@ -23,10 +23,6 @@ const nextConfig = {
             key: 'Service-Worker-Allowed',
             value: 'none',
           },
-          {
-            key: 'Cache-Control',
-            value: 'no-store, must-revalidate',
-          },
         ],
       },
       {
@@ -105,7 +101,6 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
-    unoptimized: true,
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 дней
   },
   experimental: {

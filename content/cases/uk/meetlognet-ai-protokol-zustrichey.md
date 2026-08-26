@@ -28,9 +28,13 @@ ctaHref: "https://crmcustoms.com/uk/landing/custom-development"
 
 Головна фіча — двосторонній зв'язок з CRM. З картки угоди в PlanFix менеджер тисне кнопку і отримує посилання на зустріч із зашитим ID картки. Клієнт клікає — і одразу в кімнаті, без реєстрації. Після дзвінка транскрипт, AI-підсумок і задачі самі повертаються коментарем у ту саму картку. Ніхто нічого не зіставляє руками.
 
+![Реальний коментар MeetLogNet у картці PlanFix: мета зустрічі, ключові теми, прийняті рішення й задачі — з'явився сам, без участі менеджера](/images/case-studies/meetlognet-roundtrip.png)
+
+*Так виглядає результат round-trip у самій картці PlanFix — приклад з нашого власного акаунта.*
+
 ![Кабінет MeetLogNet: плеєр запису і вкладки Summary, Transcript, Tasks для однієї зустрічі](/images/case-studies/meetlognet-cabinet.png)
 
-*Кабінет MeetLogNet — той самий підсумок, транскрипт і задачі, які за хвилину до цього вже пішли коментарем у картку PlanFix.*
+*Той самий підсумок, транскрипт і задачі — тепер у кабінеті MeetLogNet, звідки й пішов коментар вище.*
 
 <div class="scale-grid">
   <div class="scale-card">
@@ -55,6 +59,10 @@ ctaHref: "https://crmcustoms.com/uk/landing/custom-development"
     </div>
   </div>
 </div>
+
+![Налаштування конекторів MeetLogNet: Notion, Trello, Email, Slack і універсальний Webhook](/images/case-studies/meetlognet-integrations.png)
+
+*Той самий round-trip, підключений до будь-якої системи через вебхук — не лише PlanFix.*
 
 <div class="warning">
   <span class="warning-icon">⚠️</span>

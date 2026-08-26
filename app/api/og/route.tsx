@@ -110,6 +110,17 @@ export async function GET(request: NextRequest) {
         { name: "Unbounded", data: unboundedBold, weight: 700, style: "normal" },
         { name: "Golos Text", data: golosText, weight: 600, style: "normal" },
       ],
+      headers: {
+        // Netlify's CDN ignores query strings for cache-key purposes by default
+        // (to protect hit rate against tracking params), so without this every
+        // ?title=/?tag= variant collapses onto whichever one was cached first.
+        "Netlify-Vary": "query=title|tag",
+        // Netlify defaults this route to immutable+1yr with no explicit Cache-Control set.
+        // Given the above bug already proved this route can serve wrong content under a
+        // given cache key, a shorter, non-immutable window limits how long any future
+        // mistake stays stuck rather than locking it in for a year.
+        "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      },
     },
   )
 }

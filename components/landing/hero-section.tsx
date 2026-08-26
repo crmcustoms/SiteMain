@@ -364,7 +364,12 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             </div>
 
             {/* Video preview */}
-            <div className="relative group cursor-pointer overflow-hidden border border-black/10">
+            <a
+              href="https://youtu.be/qY1S7pJBw4k"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative group cursor-pointer overflow-hidden border border-black/10 block"
+            >
               <div className="relative aspect-video bg-gray-100">
                 <Image
                   src="/images/herosektion.png"
@@ -384,7 +389,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                   </div>
                 </div>
               </div>
-            </div>
+            </a>
 
             {/* Navigation dots */}
             <div className="flex items-center justify-between pt-2">

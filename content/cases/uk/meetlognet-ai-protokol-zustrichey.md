@@ -6,6 +6,7 @@ tag: "AI"
 tags: ["Власний продукт", "PlanFix", "Інтеграція"]
 readTime: "6 хвилин читання"
 author: "CRMCUSTOMS"
+image: "/images/case-studies/meetlognet-cover.png"
 slug: "meetlognet-ai-protokol-zustrichey"
 ctaTitle: "Потрібен схожий інструмент для вашого процесу?"
 ctaText: "Ми будуємо не тільки для себе — можемо зробити подібне рішення під ваш бізнес-процес."

@@ -28,6 +28,10 @@ ctaHref: "https://crmcustoms.com/uk/landing/custom-development"
 
 Головна фіча — двосторонній зв'язок з CRM. З картки угоди в PlanFix менеджер тисне кнопку і отримує посилання на зустріч із зашитим ID картки. Клієнт клікає — і одразу в кімнаті, без реєстрації. Після дзвінка транскрипт, AI-підсумок і задачі самі повертаються коментарем у ту саму картку. Ніхто нічого не зіставляє руками.
 
+![Кабінет MeetLogNet: плеєр запису і вкладки Summary, Transcript, Tasks для однієї зустрічі](/images/case-studies/meetlognet-cabinet.png)
+
+*Кабінет MeetLogNet — той самий підсумок, транскрипт і задачі, які за хвилину до цього вже пішли коментарем у картку PlanFix.*
+
 <div class="scale-grid">
   <div class="scale-card">
     <span class="scale-label">Вхід</span>

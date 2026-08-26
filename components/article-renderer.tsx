@@ -45,8 +45,8 @@ export function ArticleRenderer({
     datePublished: date || undefined,
     dateModified: date || undefined,
     image: image ? [image] : undefined,
-    author: { "@type": "Organization", name: "CRM Customs", url: "https://crmcustoms.com" },
-    publisher: { "@type": "Organization", name: "CRM Customs", url: "https://crmcustoms.com" },
+    author: { "@type": "Organization", name: "CRMCUSTOMS", url: "https://crmcustoms.com" },
+    publisher: { "@type": "Organization", name: "CRMCUSTOMS", url: "https://crmcustoms.com" },
     mainEntityOfPage: url ? { "@type": "WebPage", "@id": url } : undefined,
   }
 

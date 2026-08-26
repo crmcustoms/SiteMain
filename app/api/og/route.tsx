@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
             color: "#1a1a1a",
           }}
         >
-          CRM<span style={{ color: "#e8b84b" }}>CUSTOMS</span>
+          <span style={{ color: "#e8b84b" }}>CRM</span>CUSTOMS
         </div>
       </div>
     ),

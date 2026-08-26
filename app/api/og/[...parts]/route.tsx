@@ -19,10 +19,20 @@ const golosText = fs.readFileSync(
   path.join(process.cwd(), "assets/fonts/GolosText-600-full.ttf"),
 )
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const title = (searchParams.get("title") || "CRM Customs").slice(0, 140)
-  const tag = searchParams.get("tag")
+// Title/tag live in the PATH (/api/og/<title>/<tag>), not the query string
+// (?title=&tag=). Netlify's edge CDN ignores query strings for cache-key
+// purposes unless told otherwise via a Netlify-Vary header — and their own
+// Next.js runtime overwrites any custom Netlify-Vary value with its own
+// framework-computed one, so that header can't be relied on here. Every CDN
+// varies its cache by path by default, so encoding the params into the path
+// sidesteps the whole problem instead of fighting platform-specific headers.
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ parts: string[] }> },
+) {
+  const { parts } = await params
+  const title = (parts[0] ? decodeURIComponent(parts[0]) : "CRM Customs").slice(0, 140)
+  const tag = parts[1] ? decodeURIComponent(parts[1]) : null
 
   return new ImageResponse(
     (
@@ -111,14 +121,9 @@ export async function GET(request: NextRequest) {
         { name: "Golos Text", data: golosText, weight: 600, style: "normal" },
       ],
       headers: {
-        // Netlify's CDN ignores query strings for cache-key purposes by default
-        // (to protect hit rate against tracking params), so without this every
-        // ?title=/?tag= variant collapses onto whichever one was cached first.
-        "Netlify-Vary": "query=title|tag",
-        // Netlify defaults this route to immutable+1yr with no explicit Cache-Control set.
-        // Given the above bug already proved this route can serve wrong content under a
-        // given cache key, a shorter, non-immutable window limits how long any future
-        // mistake stays stuck rather than locking it in for a year.
+        // Non-immutable, moderate window — content is fully determined by the
+        // path (which never changes for a given article), but this keeps any
+        // future mistake from getting stuck for a long time regardless.
         "Cache-Control": "public, max-age=3600, s-maxage=86400",
       },
     },

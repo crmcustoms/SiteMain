@@ -29,9 +29,11 @@ function contentDir(type: ContentType, locale: string) {
 }
 
 export function ogImageUrl(title: string, tag?: string) {
-  const params = new URLSearchParams({ title })
-  if (tag) params.set("tag", tag)
-  return `/api/og?${params.toString()}`
+  // Title/tag in the path, not the query string — see app/api/og/[...parts]/route.tsx
+  // for why (query-string cache-key handling on Netlify proved unreliable).
+  const parts = [encodeURIComponent(title)]
+  if (tag) parts.push(encodeURIComponent(tag))
+  return `/api/og/${parts.join("/")}`
 }
 
 export function getAllContent(type: ContentType, locale: string): ContentEntry[] {

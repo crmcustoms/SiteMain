@@ -2,6 +2,7 @@ import { getDictionary } from "@/lib/dictionaries"
 import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
 import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
+import { getContentBySlug } from "@/lib/content"
 import { headers } from "next/headers"
 
 import StaticFinalCta from "@/components/landing/static-final-cta"
@@ -55,6 +56,17 @@ export default async function Home({
       tags: article.property_tags || [],
       date: article.property_format_date || article.property_date || '',
     }));
+
+    // Заміняємо другий кейс на MeetLogNet (за проханням власника)
+    const meetlognet = getContentBySlug("cases", safeLocale, "meetlognet-ai-protokol-zustrichey");
+    if (meetlognet && recentCases.length >= 2) {
+      recentCases[1] = {
+        title: meetlognet.title,
+        slug: meetlognet.slug,
+        tags: meetlognet.tags || [],
+        date: meetlognet.date,
+      };
+    }
   } catch (error) {
     console.error("Ошибка при получении кейсов для hero-section:", error);
   }

@@ -34,6 +34,17 @@ const services = [
   },
 ]
 
+const heroVideos = [
+  {
+    title: "Швидкий запуск продажів з мінімальним бюджетом за три дні",
+    youtubeUrl: "https://youtu.be/qY1S7pJBw4k",
+  },
+  {
+    title: "Зустріч сама пишеться в картку CRM — інтеграція MeetLogNet і PlanFix",
+    youtubeUrl: "https://youtu.be/q2yXqcSAyt8",
+  },
+]
+
 interface RecentCase {
   title: string
   slug: string
@@ -46,6 +57,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
   const characterRef = useRef<HTMLDivElement>(null)
   const circleRef = useRef<HTMLDivElement>(null)
   const [currentService, setCurrentService] = useState(0)
+  const [currentVideo, setCurrentVideo] = useState(0)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showAuditForm, setShowAuditForm] = useState(false)
   const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '' })
@@ -365,7 +377,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
 
             {/* Video preview */}
             <a
-              href="https://youtu.be/qY1S7pJBw4k"
+              href={heroVideos[currentVideo].youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="relative group cursor-pointer overflow-hidden border border-black/10 block"
@@ -385,7 +397,7 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="text-white text-sm font-bold drop-shadow-lg">
-                    Швидкий запуск продажів з мінімальним бюджетом за три дні
+                    {heroVideos[currentVideo].title}
                   </div>
                 </div>
               </div>
@@ -394,15 +406,28 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             {/* Navigation dots */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex gap-2">
-                <div className="w-8 h-1 bg-[#FFD700]" />
-                <div className="w-8 h-1 bg-black/10" />
-                <div className="w-8 h-1 bg-black/10" />
+                {heroVideos.map((video, idx) => (
+                  <button
+                    key={video.youtubeUrl}
+                    onClick={() => setCurrentVideo(idx)}
+                    aria-label={`Відео ${idx + 1}: ${video.title}`}
+                    className={`w-8 h-1 transition-colors ${idx === currentVideo ? "bg-[#FFD700]" : "bg-black/10 hover:bg-black/30"}`}
+                  />
+                ))}
               </div>
               <div className="flex gap-2">
-                <button className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                <button
+                  onClick={() => setCurrentVideo((prev) => (prev - 1 + heroVideos.length) % heroVideos.length)}
+                  aria-label="Попереднє відео"
+                  className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors"
+                >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <button className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                <button
+                  onClick={() => setCurrentVideo((prev) => (prev + 1) % heroVideos.length)}
+                  aria-label="Наступне відео"
+                  className="w-8 h-8 border border-black/20 flex items-center justify-center hover:bg-black hover:text-white transition-colors"
+                >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

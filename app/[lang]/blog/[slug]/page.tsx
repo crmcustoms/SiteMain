@@ -5,7 +5,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { i18n } from "@/lib/i18n-config";
-import { getContentBySlug, getAllContent } from "@/lib/content";
+import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../components/ErrorBoundary';
 
@@ -81,7 +81,7 @@ export async function generateMetadata({
       openGraph: {
         title: article.name || article.title || 'Блог',
         description: article.property_description || article.description || '',
-        images: article.property_2 ? [article.property_2] : [],
+        images: [ogImageUrl(article.name || article.title || 'Блог', article.property_categorytext)],
       },
     };
   } catch (error) {
@@ -188,14 +188,24 @@ export default async function BlogArticlePage({
     const relatedArticles = await getBlogPostsFromAPI().catch(() => [] as any[]);
     console.log(`Получено ${relatedArticles.length} связанных статей`);
 
+    // Приводимо обкладинку до єдиного редакційного шаблону замість старих
+    // зображень із Notion (property_2/property_photo1) — так само, як у кейсах.
+    const articleWithCover = {
+      ...article,
+      property_2: ogImageUrl(article.name || article.title || 'Блог', article.property_categorytext),
+    };
+
     return (
       <ErrorBoundary fallback={<div>Произошла ошибка при загрузке статьи</div>}>
-        <BlogDetail 
-          articleData={article}
-          lang={lang} 
+        <BlogDetail
+          articleData={articleWithCover}
+          lang={lang}
           htmlContent={processedHtml}
           backLinkText={dict.blog?.back_to_blog || "Назад к блогу"}
-          relatedArticles={relatedArticles.filter(a => a.id !== article.id).slice(0, 5)}
+          relatedArticles={relatedArticles
+            .filter(a => a.id !== article.id)
+            .slice(0, 5)
+            .map(a => ({ ...a, property_2: ogImageUrl(a.name || a.title || 'Блог', a.property_categorytext) }))}
         />
       </ErrorBoundary>
     );

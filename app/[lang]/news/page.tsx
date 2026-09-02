@@ -64,7 +64,7 @@ export default async function NewsPage({
         slug: article.property_link_name || 'untitled',
         excerpt: article.property_description || '',
         date: article.property_ || '',
-        image: article.property_2 || article.property_photo1 || ogImageUrl(title, NEWS_CATEGORY),
+        image: ogImageUrl(title, NEWS_CATEGORY),
         tags: [],
         services: [] as string[],
         categories: [NEWS_CATEGORY],

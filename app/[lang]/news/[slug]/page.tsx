@@ -5,7 +5,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { i18n } from "@/lib/i18n-config";
-import { getContentBySlug, getAllContent } from "@/lib/content";
+import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../../blog/components/ErrorBoundary';
 
@@ -76,7 +76,7 @@ export async function generateMetadata({
       openGraph: {
         title: article.name || article.title || 'Новини',
         description: article.property_description || article.description || '',
-        images: article.property_2 ? [article.property_2] : [],
+        images: [ogImageUrl(article.name || article.title || 'Новини', article.property_categorytext || 'Новини')],
       },
     };
   } catch (error) {
@@ -151,15 +151,25 @@ export default async function NewsArticlePage({
     const relatedArticles = (await getBlogPostsFromAPI().catch(() => [] as any[]))
       .filter((a: any) => a.property_categorytext === "Новини");
 
+    // Приводимо обкладинку до єдиного редакційного шаблону замість старих
+    // зображень із Notion (property_2/property_photo1) — так само, як у блозі.
+    const articleWithCover = {
+      ...article,
+      property_2: ogImageUrl(article.name || article.title || 'Новини', article.property_categorytext || 'Новини'),
+    };
+
     return (
       <ErrorBoundary fallback={<div>Произошла ошибка при загрузке статьи</div>}>
         <BlogDetail
-          articleData={article}
+          articleData={articleWithCover}
           lang={lang}
           htmlContent={processedHtml}
           backLinkText={dict.news?.back_to_news || "Назад до новин"}
           backLinkHref={`/${lang}/news`}
-          relatedArticles={relatedArticles.filter((a: any) => a.id !== article.id).slice(0, 5)}
+          relatedArticles={relatedArticles
+            .filter((a: any) => a.id !== article.id)
+            .slice(0, 5)
+            .map((a: any) => ({ ...a, property_2: ogImageUrl(a.name || a.title || 'Новини', a.property_categorytext || 'Новини') }))}
         />
       </ErrorBoundary>
     );

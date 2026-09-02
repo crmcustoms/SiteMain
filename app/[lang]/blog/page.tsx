@@ -116,9 +116,15 @@ export default async function BlogPage({
     // Сортируем блог по дате (новые сверху)
     const sortedArticles = sortBlogPostsByDate(articles);
 
+    // Слаги статей, які треба приховати зі списку блогу (биті/порожні картки з Notion)
+    const HIDDEN_BLOG_SLUGS = ["crm-dlya-klininhу-avtorozrakhunok-tsiny-prybyrannya"];
+
     // "Новини" переехали в отдельный раздел /news — не дублируем их в общем блоге
     const nonNewsArticles = Array.isArray(sortedArticles)
-      ? sortedArticles.filter((article: any) => article?.property_categorytext !== "Новини")
+      ? sortedArticles.filter((article: any) =>
+          article?.property_categorytext !== "Новини" &&
+          !HIDDEN_BLOG_SLUGS.includes(article?.property_link_name)
+        )
       : [];
 
     // Безопасная адаптация статей блога в формат кейсов

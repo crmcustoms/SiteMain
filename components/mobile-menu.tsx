@@ -84,6 +84,13 @@ export function MobileMenu({ dict, lang }: MobileMenuProps) {
             {dict.navigation.news || 'Новини'}
           </Link>
           <Link
+            href={`/${lang}/about`}
+            className="text-base font-medium transition-colors hover:text-amber py-2 border-b"
+            onClick={() => setOpen(false)}
+          >
+            {dict.navigation.about || 'Про нас'}
+          </Link>
+          <Link
             href={`/${lang}#features`}
             className="text-base font-medium transition-colors hover:text-amber py-2 border-b"
             onClick={() => setOpen(false)}

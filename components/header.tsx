@@ -29,7 +29,7 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
           <Link href={`/${lang}/news`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Новини
           </Link>
-          <Link href={`/${lang}#about`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
+          <Link href={`/${lang}/about`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Про нас
           </Link>
         </nav>

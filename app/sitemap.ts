@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { url: `${baseUrl}/${locale}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
       { url: `${baseUrl}/${locale}/cases`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
       { url: `${baseUrl}/${locale}/news`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
+      { url: `${baseUrl}/${locale}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     )
 
     for (const slug of LANDING_SLUGS) {

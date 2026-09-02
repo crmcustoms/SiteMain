@@ -6,7 +6,7 @@ import { getContentBySlug } from "@/lib/content"
 import { headers } from "next/headers"
 
 import StaticFinalCta from "@/components/landing/static-final-cta"
-import TeamSection from "@/components/landing/team-section"
+import FounderMessage from "@/components/landing/founder-message"
 import LogosCarousel from "@/components/landing/logos-carousel"
 import AuditWhy from "@/components/landing/audit-why"
 import BookingDemoSection from "@/components/landing/booking-demo-section"
@@ -76,7 +76,7 @@ export default async function Home({
       <HeroSection dict={dict.landing.hero} commonDict={dict.common} lang={safeLocale} recentCases={recentCases} />
       <LogosCarousel />
       <WhyChooseUs />
-      <TeamSection />
+      <FounderMessage lang={safeLocale} />
       <Pricing />
       <AuditWhy />
       <QuizSection />

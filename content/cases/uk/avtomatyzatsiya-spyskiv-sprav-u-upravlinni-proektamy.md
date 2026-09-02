@@ -6,7 +6,7 @@ tag: "Бізнес-процеси"
 tags: ["Налаштування процесів"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/5f276zwmssrm80cq1kfvaz97jg"
+image: "/images/case-studies/avtomatyzatsiya-spyskiv-sprav-u-upravlinni-proektamy-cover.png"
 slug: "avtomatyzatsiya-spyskiv-sprav-u-upravlinni-proektamy"
 ---
 ### 1. Вступ: Коли кожна послуга — це справа

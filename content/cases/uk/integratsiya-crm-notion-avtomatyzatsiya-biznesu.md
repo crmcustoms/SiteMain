@@ -6,7 +6,7 @@ tag: "Кейс"
 tags: ["Інтеграція"]
 readTime: "3 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/6w3fkfn29drme0cq1kh83zzbk8"
+image: "/images/case-studies/integratsiya-crm-notion-avtomatyzatsiya-biznesu-cover.png"
 slug: "integratsiya-crm-notion-avtomatyzatsiya-biznesu"
 ---
 ### 1. Вступ: Рішення є — а кейса нема

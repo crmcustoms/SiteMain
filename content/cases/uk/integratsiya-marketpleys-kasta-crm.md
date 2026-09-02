@@ -6,7 +6,7 @@ tag: "Маркетплейси"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/8hfcy958dnrme0cq216thmtbtc"
+image: "/images/case-studies/integratsiya-marketpleys-kasta-crm-cover.png"
 slug: "integratsiya-marketpleys-kasta-crm"
 ---
 ## Навіщо потрібна інтеграція з CRM?

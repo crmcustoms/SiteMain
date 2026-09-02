@@ -6,7 +6,7 @@ tag: "HR"
 tags: ["Інтеграція", "Чат боти"]
 readTime: "3 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/e0cnk04j0drme0cq1kg8rycn54"
+image: "/images/case-studies/avtomatyzatsiya-zboru-danykh-chat-bot-hr-support-cover.png"
 slug: "avtomatyzatsiya-zboru-danykh-chat-bot-hr-support"
 ---
 ### 1. Вступ: Анкета є, але відповідей нема

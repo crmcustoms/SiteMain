@@ -6,7 +6,7 @@ tag: "Контроль за витратами по проекту"
 tags: ["Інтеграція", "Налаштування процесів"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/bd4md3hmjdrm80cq1kj9avjtwg"
+image: "/images/case-studies/avtomatyzatsiya-kontrolyu-vytrat-u-proekti-cover.png"
 slug: "avtomatyzatsiya-kontrolyu-vytrat-u-proekti"
 ---
 ### 1. Вступ: Коли бюджет розпорошений, а відповідальність — ні

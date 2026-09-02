@@ -6,7 +6,7 @@ tag: "Бізнес-процеси"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/6b4c0agrfnrm80cq1kg8f7twt4"
+image: "/images/case-studies/avtomatyzatsiya-zavantazhennya-ugod-crm-google-sheets-cover.png"
 slug: "avtomatyzatsiya-zavantazhennya-ugod-crm-google-sheets"
 ---
 ### 1. Вступ: Імпорт, який лякає

@@ -6,7 +6,7 @@ tag: "Тендери"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/z0b4zbdq7nrme0cq4qb95xz1ac"
+image: "/images/case-studies/avtomatyzatsiya-tenderiv-prozorro-v-crm-cover.png"
 slug: "avtomatyzatsiya-tenderiv-prozorro-v-crm"
 ---
 ### 1. Вступ: Тендер є — а в CRM його нема

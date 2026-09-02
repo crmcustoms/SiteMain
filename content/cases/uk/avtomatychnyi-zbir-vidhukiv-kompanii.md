@@ -6,7 +6,7 @@ tag: "Маркетинг"
 tags: ["Мікросервіс", "Додаток"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/hyh79pzz5nrmc0cq1kh8crtpec"
+image: "/images/case-studies/avtomatychnyi-zbir-vidhukiv-kompanii-cover.png"
 slug: "avtomatychnyi-zbir-vidhukiv-kompanii"
 ---
 ### 1. Вступ: “Все добре?” — і тиша...

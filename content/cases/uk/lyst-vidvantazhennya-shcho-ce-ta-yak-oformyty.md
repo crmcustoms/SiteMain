@@ -6,7 +6,7 @@ tag: "Робота складу"
 tags: ["Інтеграція"]
 readTime: "4 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/8r72af9d39rma0cq1kjt3nxqar"
+image: "/images/case-studies/lyst-vidvantazhennya-shcho-ce-ta-yak-oformyty-cover.png"
 slug: "lyst-vidvantazhennya-shcho-ce-ta-yak-oformyty"
 ---
 ### Проблема

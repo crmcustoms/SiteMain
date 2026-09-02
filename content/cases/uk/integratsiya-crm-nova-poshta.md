@@ -6,7 +6,7 @@ tag: "Електронна комерція"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/xmdetcr999rm80cq1kgt63hwmm"
+image: "/images/case-studies/integratsiya-crm-nova-poshta-cover.png"
 slug: "integratsiya-crm-nova-poshta"
 ---
 ### 1. Вступ: Товар відправили — і знову вручну

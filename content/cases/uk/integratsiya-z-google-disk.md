@@ -6,7 +6,7 @@ tag: "Документообіг"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/vpesr36fadrma0cq1khv628590"
+image: "/images/case-studies/integratsiya-z-google-disk-cover.png"
 slug: "integratsiya-z-google-disk"
 ---
 ### 1. Вступ: Де той файл?

@@ -76,8 +76,8 @@ export async function generateMetadata({
         description: description,
         type: "website",
         locale: safeLocale,
-        images: Array.isArray(articles) && articles.length > 0 && (articles[0]?.property_2 || articles[0]?.property_photo1)
-          ? [{ url: articles[0].property_2 || articles[0].property_photo1 }]
+        images: Array.isArray(articles) && articles.length > 0
+          ? [{ url: ogImageUrl(articles[0].name || articles[0].property_title || "Блог", articles[0].property_categorytext) }]
           : undefined
       },
       twitter: {
@@ -136,7 +136,7 @@ export default async function BlogPage({
             slug: article.property_link_name || 'untitled',
             excerpt: article.property_description || '',
             date: article.property_ || '',
-            image: article.property_2 || article.property_photo1 || ogImageUrl(title, categories[0]),
+            image: ogImageUrl(title, categories[0]),
             tags: [], // В блоге не используем теги
             services: [] as string[], // В блоге нет сервисов - явно типизированный пустой массив
             categories: categories,

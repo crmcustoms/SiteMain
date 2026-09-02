@@ -38,9 +38,6 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
   // Состояние для отслеживания ошибок загрузки изображений
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   
-  // Безопасное извлечение первых 3-х элементов
-  const popularPosts = validCasesData.slice(0, 3);
-  
   // Безопасное извлечение тегов, сервисов и категорий
   const tags = Array.from(
     new Set(
@@ -168,9 +165,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
   };
 
   const pageTexts = getPageTexts();
-  const itemNoun = pageType === 'blog' ? 'статті' : pageType === 'news' ? 'новини' : 'кейси';
   const itemNounCap = pageType === 'blog' ? 'Статті' : pageType === 'news' ? 'Новини' : 'Кейси';
-  const popularLabel = pageType === 'blog' ? 'Популярні статті' : pageType === 'news' ? 'Останні новини' : 'Популярні кейси';
 
   return (
     <section id={pageType} className="bg-gray-50 w-full py-12">
@@ -271,10 +266,12 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
           )}
         </div>
 
-        {/* Макет с сайдбаром */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Основной контент (2/3 ширины) */}
-          <div className="w-full lg:w-2/3">
+        {/* Без сайдбара — картки на всю ширину, той самий розмір/пропорції, що й у кейсів
+            (components/content-list.tsx). З сайдбаром (lg:w-2/3) та сама верстка картки
+            ставала вужчою, і згенерована /api/og обкладинка (текст із фіксованими відступами
+            під 1200×630) виглядала стисненою й нечитабельною порівняно з кейсами. */}
+        <div className="flex flex-col gap-8">
+          <div className="w-full">
             {filteredPosts.length === 0 ? (
               <div className="text-center py-12">
                 <h3 className="text-xl font-semibold mb-4">
@@ -411,133 +408,6 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
                 ))}
               </div>
             )}
-          </div>
-          
-          {/* Сайдбар (1/3 ширины) */}
-          <div className="w-full lg:w-1/3">
-            <div className="space-y-6">
-              {/* Популярные посты */}
-              {popularPosts.length > 0 && (
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-amber">⚡</span>
-                    {popularLabel}
-                  </h3>
-                  <ul className="space-y-3">
-                    {popularPosts.map((post) => (
-                      <li key={post.id} className="border-b border-gray-100 pb-3 last:border-b-0">
-                        <Link 
-                          href={`/${lang}/${pageTexts.linkPrefix}/${post.slug}`} 
-                          className="hover:text-amber font-medium block line-clamp-2 text-sm"
-                        >
-                          {post.title}
-                        </Link>
-                        <div className="text-xs text-gray-400 mt-1">{post.date}</div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              
-              {/* Категории */}
-              {categories.length > 0 && (
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-amber">🏷️</span>
-                    Категорії
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <button 
-                        key={category}
-                        className={`px-3 py-1 rounded text-xs transition-colors ${
-                          selectedCategory === category 
-                            ? 'bg-amber text-white' 
-                            : 'bg-gray-100 hover:bg-gray-200'
-                        }`}
-                        onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                      >
-                        {category}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Теги */}
-              {tags.length > 0 && (
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-amber">🏷️</span>
-                    Теги
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <button 
-                        key={tag}
-                        className={`px-3 py-1 rounded text-xs transition-colors ${
-                          selectedTag === tag 
-                            ? 'bg-amber text-white' 
-                            : 'bg-gray-100 hover:bg-gray-200'
-                        }`}
-                        onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Сервисы (только для кейсов) */}
-              {pageType === 'cases' && services.length > 0 && (
-                <div className="bg-white rounded-lg p-6 shadow-md">
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <span className="text-amber">🔧</span>
-                    Сервіси
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {services.map((service) => (
-                      <button 
-                        key={service}
-                        className={`px-3 py-1 rounded text-xs transition-colors ${
-                          selectedService === service 
-                            ? 'bg-amber text-white' 
-                            : 'bg-gray-100 hover:bg-gray-200'
-                        }`}
-                        onClick={() => setSelectedService(selectedService === service ? null : service)}
-                      >
-                        {service}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Подписка на новости */}
-              <div className="bg-white rounded-lg p-6 shadow-md">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                  <span className="text-amber">📩</span>
-                  Підписатися на новини
-                </h3>
-                <p className="text-sm text-gray-500 mb-3">
-                  Отримуйте найкращі {itemNoun} та поради з автоматизації бізнесу.
-                </p>
-                <form className="flex flex-col gap-2">
-                  <input 
-                    type="email" 
-                    placeholder="Ваш email" 
-                    className="border rounded px-3 py-2 focus:outline-none focus:ring text-sm" 
-                  />
-                  <button 
-                    type="submit" 
-                    className="bg-amber text-white py-2 rounded hover:bg-amber-dark text-sm"
-                  >
-                    Підписатися
-                  </button>
-                </form>
-              </div>
-            </div>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ tag: "Документообіг"
 tags: ["Інтеграція"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/dkvahyk4zdrme0cq1khv26dn74"
+image: "/images/case-studies/avtomatyzatsiya-komertsiynykh-propozytsiy-google-slides-cover.png"
 slug: "avtomatyzatsiya-komertsiynykh-propozytsiy-google-slides"
 ---
 ### 1. Вступ: КП — перше, що бачить клієнт

@@ -6,7 +6,7 @@ tag: "Лідогенерація"
 tags: ["Інтеграція", "Посадкова сторінка (Lending page)"]
 readTime: "4 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/wqfpr3yjxdrmr0cvfvbrsb7n40"
+image: "/images/case-studies/prodazh-knyhy-bez-crm-cover.png"
 slug: "prodazh-knyhy-bez-crm"
 ---
 ![hero.png](https://s3.us-east-1.amazonaws.com/crmcustoms.site/%D0%9A%D0%B5%D0%B9%D1%81.+%D0%9B%D0%B5%D0%BD%D0%B4%D1%96%D0%BD%D0%B3+%D0%B4%D0%BB%D1%8F+%D0%9B%D0%B5%D0%BB%D0%B5%D0%BA%D0%B8/hero.png)

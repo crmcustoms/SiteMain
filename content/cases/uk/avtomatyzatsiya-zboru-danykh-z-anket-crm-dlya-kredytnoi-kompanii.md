@@ -6,7 +6,7 @@ tag: "Документообіг"
 tags: ["Інтеграція"]
 readTime: "3 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/v4egmbs0cdrma0cq1khb7bvvdg"
+image: "/images/case-studies/avtomatyzatsiya-zboru-danykh-z-anket-crm-dlya-kredytnoi-kompanii-cover.png"
 slug: "avtomatyzatsiya-zboru-danykh-z-anket-crm-dlya-kredytnoi-kompanii"
 ---
 ### 1. Вступ: “Заповніть форму” — а далі що?

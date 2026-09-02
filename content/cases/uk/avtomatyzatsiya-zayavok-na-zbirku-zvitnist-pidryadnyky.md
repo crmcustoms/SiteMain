@@ -6,7 +6,7 @@ tag: "Робота з підрядниками"
 tags: ["Додаток", "Інтеграція"]
 readTime: "3 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/gfyp1p4vg9rma0cq1kj9hxvc4m"
+image: "/images/case-studies/avtomatyzatsiya-zayavok-na-zbirku-zvitnist-pidryadnyky-cover.png"
 slug: "avtomatyzatsiya-zayavok-na-zbirku-zvitnist-pidryadnyky"
 ---
 ### Проблема

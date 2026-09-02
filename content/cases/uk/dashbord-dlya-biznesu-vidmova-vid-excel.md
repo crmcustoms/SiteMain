@@ -6,7 +6,7 @@ tag: "Аналітика"
 tags: ["Додаток"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/ty0m3hkjp5rme0cq6rdb76qz34"
+image: "/images/case-studies/dashbord-dlya-biznesu-vidmova-vid-excel-cover.png"
 slug: "dashbord-dlya-biznesu-vidmova-vid-excel"
 ---
 ### 1. Що було: дані є, а картини немає

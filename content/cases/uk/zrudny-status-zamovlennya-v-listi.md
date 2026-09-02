@@ -6,7 +6,7 @@ tag: "Інтернет магазин"
 tags: ["Мікросервіс", "Налаштування процесів"]
 readTime: "2 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/0re16bsrnnrm80cq4qbsp5pe80"
+image: "/images/case-studies/zrudny-status-zamovlennya-v-listi-cover.png"
 slug: "zrudny-status-zamovlennya-v-listi"
 ---
 ### 1. Контекст: клієнт хоче знати, що з його замовленням

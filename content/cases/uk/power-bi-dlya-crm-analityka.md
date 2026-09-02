@@ -6,7 +6,7 @@ tag: "Аналітика"
 tags: ["Інтеграція"]
 readTime: "3 хвилини читання"
 author: "CRMCUSTOMS"
-image: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/dbyv1mdjr9rmc0cq1kgvbnb30g"
+image: "/images/case-studies/power-bi-dlya-crm-analityka-cover.png"
 slug: "power-bi-dlya-crm-analityka"
 ---
 ### несу (графіки, показники ефективності)

@@ -66,6 +66,16 @@ jobs:
             --excerpt "${{ inputs.excerpt }}" \
             --url "${{ inputs.article_url }}" \
             --video "${{ inputs.video_url }}"
+      - name: Post video to Facebook Page
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+        run: |
+          node scripts/social/post-facebook.mjs \
+            --title "${{ inputs.title }}" \
+            --excerpt "${{ inputs.excerpt }}" \
+            --url "${{ inputs.article_url }}" \
+            --video "${{ inputs.video_url }}"
 
 
   detect:

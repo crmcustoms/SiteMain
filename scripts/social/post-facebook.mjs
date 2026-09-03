@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-// Posts a link to the CRM Customs Facebook Page feed ("CRM на прокачку",
-// page_id 614226188972824).
+// Posts to the CRM Customs Facebook Page ("CRM на прокачку", page_id
+// 614226188972824) — either a link post to the feed, or a video post.
 //
 // Usage:
 //   node scripts/social/post-facebook.mjs \
 //     --title "..." --excerpt "..." --url "https://crmcustoms.com/uk/blog/slug"
+//   node scripts/social/post-facebook.mjs \
+//     --title "..." --excerpt "..." --url "https://crmcustoms.com/uk/blog/slug" \
+//     --video "https://crmcustoms.com/videos/blog/slug.mp4"
 //
 // Reads FACEBOOK_PAGE_TOKEN and FACEBOOK_PAGE_ID from .env.local or env.
 // If either is missing, exits 0 (soft-skip) rather than failing — Facebook
@@ -57,9 +60,9 @@ async function main() {
     process.exit(0)
   }
 
-  const { title, excerpt, url } = parseArgs(process.argv.slice(2))
+  const { title, excerpt, url, video } = parseArgs(process.argv.slice(2))
   if (!title || !url) {
-    console.error('Usage: post-facebook.mjs --title "..." --url "https://..." [--excerpt "..."]')
+    console.error('Usage: post-facebook.mjs --title "..." --url "https://..." [--excerpt "..."] [--video "https://..."]')
     process.exit(1)
   }
 
@@ -72,11 +75,21 @@ async function main() {
   const resolved = await resolve.json()
   if (resolved.access_token) pageToken = resolved.access_token
 
-  const res = await fetch(`https://graph.facebook.com/v21.0/${pageId}/feed`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, link: url, access_token: pageToken }),
-  })
+  const res = video
+    ? await fetch(`https://graph.facebook.com/v21.0/${pageId}/videos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          file_url: video,
+          description: [message, `Стаття на сайті: ${url}`].filter(Boolean).join("\n\n"),
+          access_token: pageToken,
+        }),
+      })
+    : await fetch(`https://graph.facebook.com/v21.0/${pageId}/feed`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message, link: url, access_token: pageToken }),
+      })
 
   const data = await res.json()
   if (data.error) {
@@ -84,7 +97,7 @@ async function main() {
     process.exit(1)
   }
 
-  console.log(`Posted to Facebook: post_id=${data.id}`)
+  console.log(`Posted to Facebook: ${video ? "video_id" : "post_id"}=${data.id}`)
 }
 
 main()

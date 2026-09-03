@@ -30,7 +30,7 @@ env:
   # pr = open a PR for review (default, recommended while building trust in
   #      the pipeline). push = commit straight to main. See the plan doc
   #      for the reasoning; flip this only after a real review streak.
-  AUTOPOST_MODE: pr
+  AUTOPOST_MODE: push
 
 jobs:
   generate:

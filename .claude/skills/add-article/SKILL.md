@@ -80,6 +80,12 @@ Supporting sentence in regular weight.</p>
 
 The full CSS for these lives in `styles/article.css` (design: cream background, Unbounded/Golos Text fonts, `#e8b84b` gold accent) — don't invent new classes, reuse these five.
 
+**In-body images** — plain markdown, no special class needed:
+```markdown
+![Descriptive Ukrainian alt text](/images/blog/<slug>-illustration-1.jpg)
+```
+`styles/article.css` styles any `.article-page .body img` automatically (rounded corners, border, 40px vertical margin — same treatment as the box components above, added 2026-09 for the autopost illustration pipeline). Real screenshots (like the MeetLogNet case) use the same syntax, pointing at `public/images/case-studies/`. If an article calls for an AI-generated illustration rather than a real screenshot, the fixed style prompt lives in `scripts/autopost/illustration-style.md` — reuse it rather than inventing new prompt language, so illustrations don't drift in look from one article to the next.
+
 ## Voice and content rules
 
 - Match the existing tone: direct, second person, concrete numbers, short paragraphs, no filler. Read `content/blog/uk/chy-vystachyt-groshey-na-crm.md` or any file in `content/cases/uk/` as a reference before writing.
@@ -94,6 +100,6 @@ The full CSS for these lives in `styles/article.css` (design: cream background, 
 4. Optionally preview with `npm run dev` and open `/uk/<type>/<slug>` to sanity-check rendering.
 5. Report what was written and where.
 6. **Do not `git commit`/`git push` without asking first** — this repo deploys to Netlify on push, so pushing puts the article live on crmcustoms.com immediately.
-7. **After it's live** (pushed and deployed), offer to announce it in the Telegram channel:
+7. **Check first whether `.github/workflows/social-crosspost.yml` will already handle this** (added 2026-09, part of the autopost pipeline): it fires automatically on any push to `main` that adds a new `content/blog/uk/*.md` file, and cross-posts to Telegram (`@prodayslonakume`) and Facebook (Page "CRM на прокачку") once the corresponding repo secrets exist. If those secrets are set, pushing the article *is* the announcement — running `post-telegram.mjs` by hand afterward would double-post. Only run it manually if that workflow is disabled/not yet configured, or for a channel it doesn't cover:
    `node scripts/social/post-telegram.mjs --title "<title>" --excerpt "<excerpt>" --url "https://crmcustoms.com/uk/<type>/<slug>" --image "https://crmcustoms.com/api/og?title=<url-encoded title>&tag=<url-encoded tag>"`
-   Needs `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHANNEL_CHAT_ID` in `.env.local` (already set up). Ask before running — same "don't publish without asking" rule as the push itself. Only Telegram is wired up so far; Instagram/Facebook/LinkedIn are not yet connected (no tokens on file) — don't claim to post there.
+   Needs `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHANNEL_CHAT_ID` in `.env.local` (already set up). Ask before running — same "don't publish without asking" rule as the push itself. Facebook has code (`scripts/social/post-facebook.mjs`) but no token on file yet as of 2026-09; Instagram/LinkedIn are not connected at all — don't claim to post there.

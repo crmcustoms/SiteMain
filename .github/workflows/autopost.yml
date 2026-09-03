@@ -1,0 +1,118 @@
+name: Autopost article
+
+on:
+  schedule:
+    # Пн / Ср / Пт, 07:00 UTC (09:00 Kyiv winter / 10:00 summer — GH cron has no DST awareness)
+    - cron: '0 7 * * 1,3,5'
+    # 4th post/week — uncomment to move from 3 to 4 posts/week:
+    # - cron: '0 7 * * 6'
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Force a slot: angle | howto | myth | question'
+        required: false
+      topic:
+        description: 'Force a topicKey from scripts/autopost/topics.uk.json'
+        required: false
+      seed_angle:
+        description: 'Force a specific seed angle id (1-7) from seed-angles.json'
+        required: false
+      dry_run:
+        description: 'Generate + validate only, do not write a file or open a PR'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: autopost
+  cancel-in-progress: false
+
+env:
+  # pr = open a PR for review (default, recommended while building trust in
+  #      the pipeline). push = commit straight to main. See the plan doc
+  #      for the reasoning; flip this only after a real review streak.
+  AUTOPOST_MODE: pr
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Generate + validate article
+        id: gen
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.slot }}" ]; then ARGS="$ARGS --slot ${{ inputs.slot }}"; fi
+          if [ -n "${{ inputs.topic }}" ]; then ARGS="$ARGS --topic ${{ inputs.topic }}"; fi
+          if [ -n "${{ inputs.seed_angle }}" ]; then ARGS="$ARGS --seed-angle ${{ inputs.seed_angle }}"; fi
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          node scripts/autopost/generate.mjs $ARGS
+
+      - name: Build site with the new article
+        if: ${{ inputs.dry_run != 'true' }}
+        run: npm run build
+
+      - name: Open pull request
+        if: ${{ env.AUTOPOST_MODE == 'pr' && inputs.dry_run != 'true' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: autopost/${{ steps.gen.outputs.slug }}
+          base: main
+          commit-message: "Autopost: ${{ steps.gen.outputs.title }}"
+          title: "[autopost] ${{ steps.gen.outputs.slot_type }} — ${{ steps.gen.outputs.title }}"
+          labels: autopost
+          body: |
+            Згенеровано автоматично. Перевір і змерджи — деплой піде сам (той самий `deploy.yml`, що й для будь-якого іншого пуша в `main`).
+
+            | | |
+            |---|---|
+            | Слот | `${{ steps.gen.outputs.slot_type }}` |
+            | Slug | `${{ steps.gen.outputs.slug }}` |
+            | Слів | ${{ steps.gen.outputs.word_count }} |
+            | Кирилиця/латиниця | ${{ steps.gen.outputs.cyr_ratio }} |
+            | Модель | ${{ steps.gen.outputs.model }} |
+
+            > ${{ steps.gen.outputs.excerpt }}
+
+            Усі автоматичні перевірки (мова, вигадані цифри, дозволений HTML, дублі теми) пройдено. Що варто перевірити вручну: фактичну точність по суті, тон, чи не суперечить іншим сторінкам сайту.
+
+      - name: Commit directly to main
+        if: ${{ env.AUTOPOST_MODE == 'push' && inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "crmcustoms-autopost"
+          git config user.email "crmcustoms.bot@users.noreply.github.com"
+          git add content/blog/uk
+          git commit -m "Autopost: ${{ steps.gen.outputs.title }}"
+          git push
+
+  backlog-guard:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Fail loudly if autopost PRs are piling up unreviewed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          n=$(gh pr list --repo "$GITHUB_REPOSITORY" --label autopost --state open --json number -q 'length')
+          echo "Open autopost PRs: $n"
+          if [ "$n" -gt 4 ]; then
+            echo "::error::$n unreviewed autopost PRs open — review queue has stalled, cadence should pause until it's cleared"
+            exit 1
+          fi

@@ -50,6 +50,12 @@ jobs:
       matrix:
         post: ${{ fromJson(needs.detect.outputs.posts) }}
       fail-fast: false
+    # GitHub's step-`if:` parser rejects the `secrets` context directly
+    # ("Unrecognized named-value: 'secrets'") — route through job-level env
+    # instead, which IS a valid context in `if:`.
+    env:
+      HAS_FB_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' }}
+      HAS_IG_ACCOUNT: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -76,7 +82,7 @@ jobs:
             --image "$POST_IMAGE"
 
       - name: Post to Facebook Page ("CRM на прокачку")
-        if: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' }}
+        if: ${{ env.HAS_FB_TOKEN == 'true' }}
         env:
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
           FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
@@ -95,7 +101,7 @@ jobs:
         # defeat the point of the brighter illustration style. Skipped
         # (not failed) when this post has none, or when the secrets aren't
         # set yet.
-        if: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' && secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID != '' && matrix.post.illustrationUrl != '' }}
+        if: ${{ env.HAS_FB_TOKEN == 'true' && env.HAS_IG_ACCOUNT == 'true' && matrix.post.illustrationUrl != '' }}
         env:
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
           INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}

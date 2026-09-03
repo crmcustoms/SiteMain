@@ -26,6 +26,26 @@ on:
         required: false
 
 jobs:
+  post-facebook:
+    if: ${{ inputs.article_url != '' && inputs.video_url == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Post link to Facebook Page
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+        run: |
+          node scripts/social/post-facebook.mjs \
+            --title "${{ inputs.title }}" \
+            --excerpt "${{ inputs.excerpt }}" \
+            --url "${{ inputs.article_url }}"
+
   post-video:
     if: ${{ inputs.video_url != '' }}
     runs-on: ubuntu-latest

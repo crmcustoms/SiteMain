@@ -10,6 +10,7 @@ on:
     branches: [main, master]
     paths:
       - 'content/blog/uk/**.md'
+  workflow_dispatch:
 
 jobs:
   detect:

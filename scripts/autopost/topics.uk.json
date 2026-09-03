@@ -1,0 +1,73 @@
+[
+  { "key": "yak-zibraty-pershu-voronku-planfix", "slots": ["howto"],
+    "hint": "Як зібрати першу воронку продажів у Planfix з нуля — етапи, поля, права доступу",
+    "keywords": ["воронка продажів", "Planfix", "етапи угоди"] },
+
+  { "key": "perenesty-klientiv-z-excel-v-crm", "slots": ["howto"],
+    "hint": "Як перенести базу клієнтів з Excel-таблиці в CRM без втрати даних і дублів",
+    "keywords": ["перенесення даних", "Excel", "імпорт клієнтів"] },
+
+  { "key": "yak-obraty-crm-dlya-malogo-biznesu", "slots": ["howto", "question"],
+    "hint": "Як обрати CRM для команди 5-15 людей — на що дивитись, а що не має значення на старті",
+    "keywords": ["вибір CRM", "малий бізнес", "порівняння"] },
+
+  { "key": "telegram-bot-dlya-zayavok-z-saytu", "slots": ["howto"],
+    "hint": "Як зробити так, щоб заявки з сайту одразу падали в Telegram і в CRM без ручного перенесення",
+    "keywords": ["Telegram-бот", "заявки з сайту", "автоматизація лідів"] },
+
+  { "key": "skilky-koshtuye-vprovadzhennya-crm", "slots": ["question", "howto"],
+    "hint": "Скільки реально коштує впровадження CRM і від чого залежить ціна",
+    "keywords": ["вартість впровадження CRM", "ціна", "бюджет"] },
+
+  { "key": "n8n-chy-zapatentovanyy-servis-integraciy", "slots": ["myth", "howto"],
+    "hint": "n8n проти платних no-code інтеграторів — коли самостійний хостинг виправданий, а коли ні",
+    "keywords": ["n8n", "інтеграції", "автоматизація процесів"] },
+
+  { "key": "mif-crm-tse-tilky-dlya-prodazhiv", "slots": ["myth"],
+    "hint": "Міф: CRM потрібна тільки відділу продажів. Реальність: облік, склад, підрядники, звітність",
+    "keywords": ["CRM для бізнесу", "не тільки продажі"] },
+
+  { "key": "mif-vprovadzhennya-crm-zaimaye-mesyatsi", "slots": ["myth"],
+    "hint": "Міф: впровадження CRM — це довгий і болючий проєкт на пів року. Коли це правда, а коли ні",
+    "keywords": ["строки впровадження CRM", "швидкий запуск"] },
+
+  { "key": "yak-avtomatyzuvaty-zvitnist-dlya-vlasnyka", "slots": ["howto"],
+    "hint": "Як побудувати автоматичний тижневий звіт власнику без ручного зведення таблиць",
+    "keywords": ["автоматична звітність", "дашборд для власника"] },
+
+  { "key": "chomu-menedzhery-ne-korystuyutsya-crm", "slots": ["question", "myth"],
+    "hint": "Чому команда саботує CRM навіть після впровадження — і що з цим реально робити",
+    "keywords": ["опір команди CRM", "впровадження в компанії"] },
+
+  { "key": "integraciya-crm-z-1c-navischo", "slots": ["howto", "question"],
+    "hint": "Навіщо й коли інтегрувати CRM з 1С — реальні сценарії, а не «бо так прийнято»",
+    "keywords": ["інтеграція 1С", "CRM і бухгалтерія"] },
+
+  { "key": "yak-nastroity-avtomatychni-nagaduvannya-klientam", "slots": ["howto"],
+    "hint": "Як налаштувати автоматичні нагадування клієнтам без спаму і без ручного контролю менеджера",
+    "keywords": ["автоматичні нагадування", "робота з клієнтами"] },
+
+  { "key": "mif-chym-bilshe-poliv-v-crm-tym-krashche", "slots": ["myth"],
+    "hint": "Міф: чим детальніша CRM-картка, тим краще керування. Реальність: поля, якими ніхто не користується",
+    "keywords": ["налаштування CRM", "зайві поля"] },
+
+  { "key": "yak-pidgotuvaty-komandu-do-vprovadzhennya-crm", "slots": ["howto"],
+    "hint": "Як підготувати команду до впровадження CRM, щоб не отримати спротив у перший тиждень",
+    "keywords": ["підготовка команди", "впровадження CRM"] },
+
+  { "key": "chy-potribna-crm-yakscho-vse-v-messendzherakh", "slots": ["question"],
+    "hint": "Чи потрібна CRM, якщо вся комунікація з клієнтами вже йде в месенджерах",
+    "keywords": ["CRM і месенджери", "заявки в Telegram/Viber"] },
+
+  { "key": "yak-pratsyuye-integraciya-crm-z-marketpleisamy", "slots": ["howto"],
+    "hint": "Як синхронізувати замовлення з маркетплейсів (Prom, Rozetka, Kasta) з CRM без ручного перенесення",
+    "keywords": ["маркетплейси", "синхронізація замовлень"] },
+
+  { "key": "mif-avtomatyzatsiya-skorochuye-shtat", "slots": ["myth"],
+    "hint": "Міф: автоматизація процесів означає скорочення людей. Реальність: де вивільнений час реально йде",
+    "keywords": ["автоматизація і персонал", "робочий час"] },
+
+  { "key": "yak-zrozumity-shcho-proces-gotovyy-do-avtomatyzatsiyi", "slots": ["howto", "question"],
+    "hint": "Як зрозуміти, що процес вже достатньо описаний і стабільний, щоб його автоматизувати",
+    "keywords": ["готовність до автоматизації", "опис процесів"] }
+]

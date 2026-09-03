@@ -1,0 +1,110 @@
+name: Social cross-post
+
+# Fires on every push to main that touches content/blog/uk — whether the
+# post came from the autopost pipeline (after a human merges its PR) or was
+# added by hand. Detects which .md files were newly added in that push and
+# announces each one in the connected channels.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'content/blog/uk/**.md'
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      posts: ${{ steps.diff.outputs.posts }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Find newly added blog posts
+        id: diff
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            ADDED=$(git diff --name-status --diff-filter=A HEAD~1 HEAD -- 'content/blog/uk/*.md' | cut -f2)
+          else
+            ADDED=$(git diff --name-status --diff-filter=A "$BEFORE" "${{ github.sha }}" -- 'content/blog/uk/*.md' | cut -f2)
+          fi
+          POSTS=$(node scripts/social/get-new-posts.mjs $ADDED)
+          echo "posts=$POSTS" >> "$GITHUB_OUTPUT"
+          echo "Detected posts: $POSTS"
+
+  crosspost:
+    needs: detect
+    if: needs.detect.outputs.posts != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        post: ${{ fromJson(needs.detect.outputs.posts) }}
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Post to Telegram (@prodayslonakume)
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_CHAT_ID: ${{ secrets.TELEGRAM_CHANNEL_CHAT_ID }}
+          POST_TITLE: ${{ matrix.post.title }}
+          POST_EXCERPT: ${{ matrix.post.excerpt }}
+          POST_URL: ${{ matrix.post.url }}
+          POST_IMAGE: ${{ matrix.post.image }}
+        run: |
+          node scripts/social/post-telegram.mjs \
+            --title "$POST_TITLE" \
+            --excerpt "$POST_EXCERPT" \
+            --url "$POST_URL" \
+            --image "$POST_IMAGE"
+
+      - name: Post to Facebook Page ("CRM на прокачку")
+        if: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' }}
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          POST_TITLE: ${{ matrix.post.title }}
+          POST_EXCERPT: ${{ matrix.post.excerpt }}
+          POST_URL: ${{ matrix.post.url }}
+        run: |
+          node scripts/social/post-facebook.mjs \
+            --title "$POST_TITLE" \
+            --excerpt "$POST_EXCERPT" \
+            --url "$POST_URL"
+
+      - name: Post to Instagram (@crmcustomsua)
+        # Needs an actual illustration — IG doesn't accept link/text-only
+        # posts, and posting the generic OG text-card cover there would
+        # defeat the point of the brighter illustration style. Skipped
+        # (not failed) when this post has none, or when the secrets aren't
+        # set yet.
+        if: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' && secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID != '' && matrix.post.illustrationUrl != '' }}
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          POST_TITLE: ${{ matrix.post.title }}
+          POST_EXCERPT: ${{ matrix.post.excerpt }}
+          POST_URL: ${{ matrix.post.url }}
+          POST_ILLUSTRATION: ${{ matrix.post.illustrationUrl }}
+        run: |
+          node scripts/social/post-instagram.mjs \
+            --title "$POST_TITLE" \
+            --excerpt "$POST_EXCERPT" \
+            --url "$POST_URL" \
+            --image "$POST_ILLUSTRATION"

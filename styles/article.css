@@ -109,6 +109,19 @@
   text-decoration: underline;
 }
 
+/* In-body images — plain markdown ![]() (case screenshots, autopost
+   illustrations). Same corner radius and border as scale-card, same
+   vertical rhythm (40px) as pullquote/highlight-box, so an image reads as
+   part of this design rather than a bare dropped-in <img>. */
+.article-page .body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 40px 0;
+  border-radius: 4px;
+  border: 1.5px solid var(--article-border);
+}
+
 /* Pull quote — either a raw <div class="pullquote"> or a plain markdown > blockquote */
 .article-page .pullquote,
 .article-page .body blockquote {
@@ -260,3 +273,4 @@
     font-size: 18px;
   }
 }
+

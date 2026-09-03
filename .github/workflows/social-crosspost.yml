@@ -11,8 +11,43 @@ on:
     paths:
       - 'content/blog/uk/**.md'
   workflow_dispatch:
+    inputs:
+      video_url:
+        description: 'Post a Reels video for an already-published article (URL of the .mp4)'
+        required: false
+      article_url:
+        description: 'Live article URL (required with video_url)'
+        required: false
+      title:
+        description: 'Article title (required with video_url)'
+        required: false
+      excerpt:
+        description: 'Article excerpt (optional)'
+        required: false
 
 jobs:
+  post-video:
+    if: ${{ inputs.video_url != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Post Reels video to Instagram
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+        run: |
+          node scripts/social/post-instagram.mjs \
+            --title "${{ inputs.title }}" \
+            --excerpt "${{ inputs.excerpt }}" \
+            --url "${{ inputs.article_url }}" \
+            --video "${{ inputs.video_url }}"
+
+
   detect:
     runs-on: ubuntu-latest
     outputs:

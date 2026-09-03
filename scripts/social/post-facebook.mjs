@@ -9,6 +9,14 @@
 // Reads FACEBOOK_PAGE_TOKEN and FACEBOOK_PAGE_ID from .env.local or env.
 // If either is missing, exits 0 (soft-skip) rather than failing — Facebook
 // posting is optional until the token is generated (see setup notes).
+//
+// FACEBOOK_PAGE_TOKEN may hold either a genuine Page access token or a
+// long-lived User access token (with pages_show_list + pages_manage_posts
+// scopes) — the Graph API rejects a User token on {pageId}/feed directly,
+// so this resolves a real Page token from it first via
+// GET /{pageId}?fields=access_token. A token that's already a Page token
+// simply won't have that field on itself, and the original value is used
+// unchanged.
 
 import fs from "fs"
 
@@ -57,10 +65,17 @@ async function main() {
 
   const message = [title, excerpt].filter(Boolean).join("\n\n")
 
+  let pageToken = token
+  const resolve = await fetch(
+    `https://graph.facebook.com/v21.0/${pageId}?fields=access_token&access_token=${encodeURIComponent(token)}`,
+  )
+  const resolved = await resolve.json()
+  if (resolved.access_token) pageToken = resolved.access_token
+
   const res = await fetch(`https://graph.facebook.com/v21.0/${pageId}/feed`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, link: url, access_token: token }),
+    body: JSON.stringify({ message, link: url, access_token: pageToken }),
   })
 
   const data = await res.json()

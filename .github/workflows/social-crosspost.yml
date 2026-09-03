@@ -26,6 +26,23 @@ on:
         required: false
 
 jobs:
+  debug-facebook:
+    if: ${{ inputs.article_url == '' && inputs.video_url == '' && inputs.title == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: List recent Page posts and check known post ids
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+        run: |
+          PAGE_TOKEN=$(curl -s "https://graph.facebook.com/v21.0/${FACEBOOK_PAGE_ID}?fields=access_token&access_token=${FACEBOOK_PAGE_TOKEN}" | jq -r '.access_token')
+          echo "=== recent feed posts ==="
+          curl -s "https://graph.facebook.com/v21.0/${FACEBOOK_PAGE_ID}/posts?fields=id,message,created_time,permalink_url,is_published,status_type&access_token=${PAGE_TOKEN}" | jq .
+          echo "=== recent page videos ==="
+          curl -s "https://graph.facebook.com/v21.0/${FACEBOOK_PAGE_ID}/videos?fields=id,description,created_time,permalink_url,status&access_token=${PAGE_TOKEN}" | jq .
+          echo "=== known text post id ==="
+          curl -s "https://graph.facebook.com/v21.0/1588039712873068?fields=id,message,permalink_url,is_published,status_type&access_token=${PAGE_TOKEN}" | jq .
+
   post-facebook:
     if: ${{ inputs.article_url != '' && inputs.video_url == '' }}
     runs-on: ubuntu-latest

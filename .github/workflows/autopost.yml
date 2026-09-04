@@ -89,7 +89,7 @@ jobs:
             cp -n "$RUNNER_TEMP"/generated_images/*.jpg public/images/blog/ 2>/dev/null || true
 
             if [ "$DRY_RUN" = "true" ]; then
-              node scripts/autopost/generate.mjs --dry-run
+              node scripts/autopost/generate.mjs --dry-run || true
               echo "::endgroup::"
               continue
             fi
@@ -97,9 +97,28 @@ jobs:
             # generate.mjs writes its slug/title/etc as step outputs (via
             # $GITHUB_OUTPUT), not stdout — find the new file by diffing
             # the directory instead of parsing output.
-            BEFORE=$(ls content/blog/uk/ 2>/dev/null)
-            node scripts/autopost/generate.mjs
-            FILE="content/blog/uk/$(comm -13 <(echo "$BEFORE" | sort) <(ls content/blog/uk/ | sort))"
+            #
+            # A real validation failure (content-quality, not a bug) is
+            # expected occasionally — generate.mjs only self-retries on
+            # slug/topic collisions, not on quality misses. Give it 2 tries
+            # here; if both fail, skip this date rather than aborting the
+            # whole week's batch over one flaky generation.
+            FILE=""
+            for ATTEMPT in 1 2; do
+              BEFORE=$(ls content/blog/uk/ 2>/dev/null)
+              if node scripts/autopost/generate.mjs; then
+                FILE="content/blog/uk/$(comm -13 <(echo "$BEFORE" | sort) <(ls content/blog/uk/ | sort))"
+                break
+              fi
+              echo "::warning::generate.mjs failed for $DATE (attempt $ATTEMPT/2)"
+            done
+            if [ -z "$FILE" ]; then
+              echo "::warning::skipping $DATE — generation failed twice, needs a manual workflow_dispatch run"
+              echo "⚠️ $DATE — генерація не пройшла двічі, запусти вручну (workflow_dispatch)" >> "$SUMMARY_FILE"
+              git checkout main
+              echo "::endgroup::"
+              continue
+            fi
 
             npm run build
 

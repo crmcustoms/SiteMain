@@ -15,14 +15,17 @@ on:
       video_url:
         description: 'Post a Reels video for an already-published article (URL of the .mp4)'
         required: false
+      image_url:
+        description: 'Post a single image to Facebook + Instagram (URL of the .jpg/.png)'
+        required: false
       article_url:
-        description: 'Live article URL (required with video_url)'
+        description: 'Live article/link URL (required with video_url/image_url)'
         required: false
       title:
-        description: 'Article title (required with video_url)'
+        description: 'Post title (required with video_url/image_url)'
         required: false
       excerpt:
-        description: 'Article excerpt (optional)'
+        description: 'Post excerpt (optional)'
         required: false
 
 jobs:
@@ -44,7 +47,7 @@ jobs:
           curl -s "https://graph.facebook.com/v21.0/1588039712873068?fields=id,message,permalink_url,is_published,status_type&access_token=${PAGE_TOKEN}" | jq .
 
   post-facebook:
-    if: ${{ inputs.article_url != '' && inputs.video_url == '' }}
+    if: ${{ inputs.article_url != '' && inputs.video_url == '' && inputs.image_url == '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,6 +65,37 @@ jobs:
             --title "${{ inputs.title }}" \
             --excerpt "${{ inputs.excerpt }}" \
             --url "${{ inputs.article_url }}"
+
+  post-image:
+    if: ${{ inputs.image_url != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Post image to Instagram
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+        run: |
+          node scripts/social/post-instagram.mjs \
+            --title "${{ inputs.title }}" \
+            --excerpt "${{ inputs.excerpt }}" \
+            --url "${{ inputs.article_url }}" \
+            --image "${{ inputs.image_url }}"
+      - name: Post image to Facebook Page
+        env:
+          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+        run: |
+          node scripts/social/post-facebook.mjs \
+            --title "${{ inputs.title }}" \
+            --excerpt "${{ inputs.excerpt }}" \
+            --url "${{ inputs.article_url }}" \
+            --images "${{ inputs.image_url }}"
 
   post-video:
     if: ${{ inputs.video_url != '' }}

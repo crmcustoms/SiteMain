@@ -1,0 +1,33 @@
+name: Autopost — scheduled publish
+
+# Merges today's pre-generated autopost PR (opened a few days earlier by
+# autopost.yml, labeled publish:<today>), if it's still open. This is the
+# actual "go live" moment — merging triggers deploy.yml and
+# social-crosspost.yml exactly like any other push to main. If the owner
+# edited or closed the PR during the review window, that's respected: an
+# edited-but-still-open PR merges with the edits, a closed one is skipped.
+
+on:
+  schedule:
+    - cron: '0 7 * * 1,3,5' # same Mon/Wed/Fri, 07:00 UTC — the actual publish moment
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Merge today's scheduled autopost PR, if any
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date -u +%F)
+          PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --label "publish:$TODAY" --state open --json number -q '.[0].number')
+          if [ -z "$PR" ]; then
+            echo "No open PR labeled publish:$TODAY — nothing scheduled for today, or it was already handled."
+            exit 0
+          fi
+          echo "Merging PR #$PR (label publish:$TODAY)"
+          gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --delete-branch

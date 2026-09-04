@@ -12,7 +12,7 @@ const ARTICLE_TOOL = {
     description: "Публікує згенеровану статтю для блогу crmcustoms.com",
     parameters: {
       type: "object",
-      required: ["title", "excerpt", "tag", "tags", "slug", "topicKey", "body_markdown", "illustration_scene", "illustration_alt"],
+      required: ["title", "excerpt", "tag", "tags", "slug", "topicKey", "body_markdown", "illustrations"],
       properties: {
         title: { type: "string", description: `${VALIDATION.titleMin}-${VALIDATION.titleMax} символів` },
         excerpt: { type: "string", description: `${VALIDATION.excerptMin}-${VALIDATION.excerptMax} символів` },
@@ -23,13 +23,25 @@ const ARTICLE_TOOL = {
         ctaTitle: { type: "string" },
         ctaText: { type: "string" },
         body_markdown: { type: "string", description: "тіло статті, markdown + дозволений HTML" },
-        illustration_scene: {
-          type: "string",
-          description: "1-2 речення англійською: сцена/метафора для ілюстрації статті. Тільки сцена — БЕЗ опису стилю/кольорів/техніки, стиль фіксований окремо. Ніяких текстів/цифр/UI на зображенні.",
-        },
-        illustration_alt: {
-          type: "string",
-          description: "Той самий опис українською, 1 речення — піде в alt-текст зображення на сайті (доступність і SEO).",
+        illustrations: {
+          type: "array",
+          minItems: 2,
+          maxItems: 3,
+          description: "2-3 ілюстрації, розподілені по статті (напр. після 1-го і після 3-го розділу) — не всі поспіль на початку.",
+          items: {
+            type: "object",
+            required: ["scene", "alt"],
+            properties: {
+              scene: {
+                type: "string",
+                description: "1-2 речення англійською: сцена/метафора для ЦІЄЇ конкретної ілюстрації, різна для кожної (не повторювати композицію). Тільки сцена — БЕЗ опису стилю/кольорів/техніки, стиль фіксований окремо. Ніяких текстів/цифр/UI на зображенні.",
+              },
+              alt: {
+                type: "string",
+                description: "Той самий опис українською, 1 речення — піде в alt-текст зображення на сайті (доступність і SEO).",
+              },
+            },
+          },
         },
       },
     },

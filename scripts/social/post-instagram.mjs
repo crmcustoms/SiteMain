@@ -1,9 +1,11 @@
 #!/usr/bin/env node
-// Publishes a single-image or Reels (video) post to Instagram
-// (@crmcustomsua) via the Content Publishing API — a two-step flow: create
-// a media container from a public image/video URL, then publish that
-// container. Video containers process asynchronously, so this polls the
-// container's status_code until FINISHED before publishing.
+// Publishes a single-image, carousel (2-10 images), or Reels (video) post to
+// Instagram (@crmcustomsua) via the Content Publishing API. Single-image and
+// video are a two-step flow (create container, publish); a carousel is
+// three-step (create one child container per image with is_carousel_item,
+// create a CAROUSEL container from those children's ids, then publish).
+// Video/carousel containers process asynchronously, so this polls each
+// container's status_code until FINISHED before publishing/collecting it.
 //
 // Usage:
 //   node scripts/social/post-instagram.mjs \
@@ -12,6 +14,9 @@
 //   node scripts/social/post-instagram.mjs \
 //     --title "..." --url "https://crmcustoms.com/uk/blog/slug" \
 //     --video "https://crmcustoms.com/videos/blog/slug.mp4"
+//   node scripts/social/post-instagram.mjs \
+//     --title "..." --url "https://crmcustoms.com/uk/blog/slug" \
+//     --images "https://.../1.jpg,https://.../2.jpg,https://.../3.jpg"
 //
 // Reads FACEBOOK_PAGE_TOKEN and INSTAGRAM_BUSINESS_ACCOUNT_ID from
 // .env.local or env. If either is missing, exits 0 (soft-skip) — same
@@ -98,31 +103,58 @@ async function main() {
     process.exit(0)
   }
 
-  const { title, excerpt, url, image, video } = parseArgs(process.argv.slice(2))
-  if (!title || !url || (!image && !video)) {
-    console.error('Usage: post-instagram.mjs --title "..." --url "https://..." (--image "https://..." | --video "https://...") [--excerpt "..."]')
+  const { title, excerpt, url, image, video, images } = parseArgs(process.argv.slice(2))
+  const carousel = images ? images.split(",").map((s) => s.trim()).filter(Boolean) : null
+  if (!title || !url || (!image && !video && !carousel)) {
+    console.error('Usage: post-instagram.mjs --title "..." --url "https://..." (--image "https://..." | --video "https://..." | --images "url1,url2,...") [--excerpt "..."]')
+    process.exit(1)
+  }
+  if (carousel && (carousel.length < 2 || carousel.length > 10)) {
+    console.error(`--images needs 2-10 URLs for a carousel, got ${carousel.length}`)
     process.exit(1)
   }
 
   const caption = [title, excerpt, `Стаття на сайті: ${url}`].filter(Boolean).join("\n\n")
 
-  const container = video
-    ? await graphPost(`${igUserId}/media`, {
-        media_type: "REELS",
-        video_url: video,
-        caption,
+  let creationId
+  if (carousel) {
+    const children = []
+    for (const imageUrl of carousel) {
+      const child = await graphPost(`${igUserId}/media`, {
+        image_url: imageUrl,
+        is_carousel_item: true,
         access_token: token,
       })
-    : await graphPost(`${igUserId}/media`, {
-        image_url: image,
-        caption,
-        access_token: token,
-      })
-
-  if (video) await waitUntilFinished(container.id, token)
+      children.push(child.id)
+    }
+    const container = await graphPost(`${igUserId}/media`, {
+      media_type: "CAROUSEL",
+      children: children.join(","),
+      caption,
+      access_token: token,
+    })
+    await waitUntilFinished(container.id, token)
+    creationId = container.id
+  } else if (video) {
+    const container = await graphPost(`${igUserId}/media`, {
+      media_type: "REELS",
+      video_url: video,
+      caption,
+      access_token: token,
+    })
+    await waitUntilFinished(container.id, token)
+    creationId = container.id
+  } else {
+    const container = await graphPost(`${igUserId}/media`, {
+      image_url: image,
+      caption,
+      access_token: token,
+    })
+    creationId = container.id
+  }
 
   const published = await graphPost(`${igUserId}/media_publish`, {
-    creation_id: container.id,
+    creation_id: creationId,
     access_token: token,
   })
 

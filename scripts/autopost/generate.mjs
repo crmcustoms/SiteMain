@@ -110,47 +110,72 @@ function composeUserPrompt({ slot, seed, topic, covered, retryNote }) {
   return parts.join("\n")
 }
 
-// Inserts the illustration markdown before the second `## ` section heading
-// — roughly after the first section, which reads as "in the middle" for the
-// 3-5 section articles this pipeline produces. Falls back to right after
-// the first paragraph if the body has fewer than two headings.
-function insertIllustrationMarkdown(body, imagePath, alt) {
-  const imageLine = `\n![${alt}](${imagePath})\n`
+// Inserts N illustrations at roughly evenly-spaced `## ` section headings
+// (never the very first — that reads as "in the middle" for the 3-5 section
+// articles this pipeline produces). Falls back to a single insertion after
+// the first paragraph if the body has fewer than 2 headings. Insertions run
+// from the LAST heading backward so earlier offsets stay valid as the body
+// grows.
+function insertIllustrationsMarkdown(body, images) {
   const headings = [...body.matchAll(/^## .+$/gm)]
-  if (headings.length >= 2) {
-    const at = headings[1].index
-    return body.slice(0, at) + imageLine + "\n" + body.slice(at)
+  if (headings.length < 2) {
+    const imageLine = images.map((img) => `\n![${img.alt}](${img.path})\n`).join("\n")
+    const firstBreak = body.indexOf("\n\n")
+    if (firstBreak === -1) return body + imageLine
+    return body.slice(0, firstBreak) + imageLine + body.slice(firstBreak)
   }
-  const firstBreak = body.indexOf("\n\n")
-  if (firstBreak === -1) return body + imageLine
-  return body.slice(0, firstBreak) + imageLine + body.slice(firstBreak)
+
+  // Evenly spaced heading indices in [1, headings.length - 1] — skip heading
+  // 0 (the intro) the same way the single-image version always did.
+  const n = images.length
+  const slots = images.map((_, i) => {
+    const idx = Math.round(((i + 1) * headings.length) / (n + 1))
+    return Math.min(Math.max(idx, 1), headings.length - 1)
+  })
+
+  let result = body
+  for (let i = n - 1; i >= 0; i--) {
+    const at = headings[slots[i]].index
+    const imageLine = `\n![${images[i].alt}](${images[i].path})\n\n`
+    result = result.slice(0, at) + imageLine + result.slice(at)
+  }
+  return result
 }
 
 // Best-effort: a failed illustration should never block publishing a
-// validated, safe article. Returns the (possibly unchanged) body and
-// whether an image was actually added.
+// validated, safe article. Returns the (possibly unchanged) body and how
+// many images actually got added (fewer than requested is fine — a partial
+// set beats none).
 async function tryAddIllustration(article, cwd) {
-  if (!article.illustration_scene) {
-    console.error("[autopost] no illustration_scene from the model — publishing without an illustration")
-    return { body: article.body_markdown, added: false }
+  const scenes = article.illustrations
+  if (!Array.isArray(scenes) || scenes.length === 0) {
+    console.error("[autopost] no illustrations from the model — publishing without images")
+    return { body: article.body_markdown, added: 0 }
   }
-  try {
-    const bytes = await generateIllustration(article.illustration_scene, { cwd })
-    const relPath = `/images/blog/${article.slug}-illustration-1.jpg`
-    const absPath = path.join(cwd, "public", relPath)
-    fs.mkdirSync(path.dirname(absPath), { recursive: true })
-    fs.writeFileSync(absPath, bytes)
-    const alt = article.illustration_alt || article.title
-    console.error(`[autopost] illustration written to public${relPath}`)
-    return { body: insertIllustrationMarkdown(article.body_markdown, relPath, alt), added: true }
-  } catch (err) {
-    if (err instanceof IllustrationError) {
-      console.error(`[autopost] illustration generation failed (${err.message}) — publishing without an illustration`)
-    } else {
-      console.error("[autopost] unexpected illustration error — publishing without an illustration:", err)
+
+  const placed = []
+  for (let i = 0; i < scenes.length; i++) {
+    const { scene, alt } = scenes[i]
+    if (!scene) continue
+    try {
+      const bytes = await generateIllustration(scene, { cwd })
+      const relPath = `/images/blog/${article.slug}-illustration-${i + 1}.jpg`
+      const absPath = path.join(cwd, "public", relPath)
+      fs.mkdirSync(path.dirname(absPath), { recursive: true })
+      fs.writeFileSync(absPath, bytes)
+      console.error(`[autopost] illustration ${i + 1}/${scenes.length} written to public${relPath}`)
+      placed.push({ path: relPath, alt: alt || article.title })
+    } catch (err) {
+      if (err instanceof IllustrationError) {
+        console.error(`[autopost] illustration ${i + 1} failed (${err.message}) — skipping just this one`)
+      } else {
+        console.error(`[autopost] unexpected error on illustration ${i + 1} — skipping just this one:`, err)
+      }
     }
-    return { body: article.body_markdown, added: false }
   }
+
+  if (placed.length === 0) return { body: article.body_markdown, added: 0 }
+  return { body: insertIllustrationsMarkdown(article.body_markdown, placed), added: placed.length }
 }
 
 function setOutput(name, value) {

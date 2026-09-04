@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Posts to the CRM Customs Facebook Page ("CRM на прокачку", page_id
-// 614226188972824) — either a link post to the feed, or a video post.
+// 614226188972824) — a link post to the feed, a video post, or a multi-photo
+// (carousel-style) post.
 //
 // Usage:
 //   node scripts/social/post-facebook.mjs \
@@ -8,6 +9,9 @@
 //   node scripts/social/post-facebook.mjs \
 //     --title "..." --excerpt "..." --url "https://crmcustoms.com/uk/blog/slug" \
 //     --video "https://crmcustoms.com/videos/blog/slug.mp4"
+//   node scripts/social/post-facebook.mjs \
+//     --title "..." --excerpt "..." --url "https://crmcustoms.com/uk/blog/slug" \
+//     --images "https://.../1.jpg,https://.../2.jpg,https://.../3.jpg"
 //
 // Reads FACEBOOK_PAGE_TOKEN and FACEBOOK_PAGE_ID from .env.local or env.
 // If either is missing, exits 0 (soft-skip) rather than failing — Facebook
@@ -60,9 +64,10 @@ async function main() {
     process.exit(0)
   }
 
-  const { title, excerpt, url, video } = parseArgs(process.argv.slice(2))
+  const { title, excerpt, url, video, images } = parseArgs(process.argv.slice(2))
+  const photos = images ? images.split(",").map((s) => s.trim()).filter(Boolean) : null
   if (!title || !url) {
-    console.error('Usage: post-facebook.mjs --title "..." --url "https://..." [--excerpt "..."] [--video "https://..."]')
+    console.error('Usage: post-facebook.mjs --title "..." --url "https://..." [--excerpt "..."] [--video "https://..." | --images "url1,url2,..."]')
     process.exit(1)
   }
 
@@ -75,23 +80,43 @@ async function main() {
   const resolved = await resolve.json()
   if (resolved.access_token) pageToken = resolved.access_token
 
-  const res = video
-    ? await fetch(`https://graph.facebook.com/v21.0/${pageId}/videos`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          file_url: video,
-          description: [message, `Стаття на сайті: ${url}`].filter(Boolean).join("\n\n"),
-          access_token: pageToken,
-        }),
-      })
-    : await fetch(`https://graph.facebook.com/v21.0/${pageId}/feed`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, link: url, access_token: pageToken }),
-      })
+  async function fbPost(path, body) {
+    const res = await fetch(`https://graph.facebook.com/v21.0/${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })
+    return res.json()
+  }
 
-  const data = await res.json()
+  let data
+  if (photos) {
+    // Multi-photo post: upload each photo unpublished to get its fbid, then
+    // attach all of them to one feed post via attached_media.
+    const mediaFbids = []
+    for (const imageUrl of photos) {
+      const uploaded = await fbPost(`${pageId}/photos`, { url: imageUrl, published: false, access_token: pageToken })
+      if (uploaded.error) {
+        console.error("Facebook API error (photo upload):", uploaded.error.message)
+        process.exit(1)
+      }
+      mediaFbids.push(uploaded.id)
+    }
+    data = await fbPost(`${pageId}/feed`, {
+      message,
+      attached_media: mediaFbids.map((id) => ({ media_fbid: id })),
+      access_token: pageToken,
+    })
+  } else if (video) {
+    data = await fbPost(`${pageId}/videos`, {
+      file_url: video,
+      description: [message, `Стаття на сайті: ${url}`].filter(Boolean).join("\n\n"),
+      access_token: pageToken,
+    })
+  } else {
+    data = await fbPost(`${pageId}/feed`, { message, link: url, access_token: pageToken })
+  }
+
   if (data.error) {
     console.error("Facebook API error:", data.error.message)
     process.exit(1)

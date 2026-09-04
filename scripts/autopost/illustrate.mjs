@@ -24,7 +24,7 @@ export class IllustrationError extends Error {}
 
 function loadStyleTemplate(cwd) {
   const md = fs.readFileSync(path.join(cwd, "scripts/autopost/illustration-style.md"), "utf-8")
-  const match = md.match(/```\n([\s\S]+?)\n```/)
+  const match = md.match(/```\r?\n([\s\S]+?)\r?\n```/)
   if (!match) throw new IllustrationError("Could not find the fenced prompt template in illustration-style.md")
   return match[1]
 }

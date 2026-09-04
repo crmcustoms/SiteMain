@@ -66,6 +66,8 @@ jobs:
           REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run }}
+          PLANFIX_ACCOUNT: ${{ secrets.PLANFIX_ACCOUNT }}
+          PLANFIX_TOKEN: ${{ secrets.PLANFIX_TOKEN }}
         run: |
           git config user.name "crmcustoms-autopost"
           git config user.email "crmcustoms.bot@users.noreply.github.com"
@@ -146,6 +148,28 @@ jobs:
             PREVIEW="https://deploy-preview-$PR_NUM--crmcustoms.netlify.app/uk/blog/$SLUG"
             echo "📅 $DATE — [$TITLE]($PREVIEW) (PR #$PR_NUM)" >> "$SUMMARY_FILE"
 
+            # Mirror into PlanFix as a real task in the content-plan process —
+            # see configuration/planfix.md for how these ids were found.
+            # Template "Публікація" (706), project "Маркетинг" (76). Soft-skip
+            # (bash-level, not a YAML `if:` — GitHub's step-if parser rejects
+            # `secrets.X` directly) until PLANFIX_ACCOUNT/PLANFIX_TOKEN exist.
+            if [ -n "$PLANFIX_ACCOUNT" ] && [ -n "$PLANFIX_TOKEN" ]; then
+              PF_DATE=$(date -u -d "$DATE" +%d-%m-%Y)
+              PF_BODY=$(node -e "console.log(JSON.stringify({
+                template: { id: 706 },
+                project: { id: 76 },
+                name: process.argv[1],
+                description: process.argv[2] + '\n\nPR: ' + process.argv[3],
+                endDateTime: { date: process.argv[4], time: '10:00' },
+                hasEndDate: true,
+                customFieldData: [{ field: { id: 137394 }, value: process.argv[4] }],
+              }))" "$TITLE" "$EXCERPT" "$PR_URL" "$PF_DATE")
+              curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task" \
+                -H "Authorization: Bearer $PLANFIX_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d "$PF_BODY" || echo "::warning::PlanFix task creation failed for $DATE (non-fatal)"
+            fi
+
             # Persist before checkout wipes it off main's working tree, so
             # the next iteration can restore it (see comment above).
             cp "$FILE" "$RUNNER_TEMP/generated_blog/"
@@ -161,16 +185,20 @@ jobs:
             echo "EOF_DIGEST"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Notify with preview links
-        if: ${{ inputs.dry_run != 'true' && steps.week.outputs.digest != '' }}
+      - name: Notify with preview links (private chat only — NEVER the public channel)
+        # Gated on a dedicated secret, not TELEGRAM_CHANNEL_CHAT_ID — that
+        # one is the public channel real subscribers read, and this digest
+        # is internal draft review, not an announcement. Soft-skips (no
+        # failure) until TELEGRAM_OWNER_CHAT_ID is set to a private chat.
+        if: ${{ inputs.dry_run != 'true' && steps.week.outputs.digest != '' && secrets.TELEGRAM_OWNER_CHAT_ID != '' }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHANNEL_CHAT_ID: ${{ secrets.TELEGRAM_CHANNEL_CHAT_ID }}
+          TELEGRAM_OWNER_CHAT_ID: ${{ secrets.TELEGRAM_OWNER_CHAT_ID }}
           DIGEST: ${{ steps.week.outputs.digest }}
         run: |
           TEXT=$(printf '⚠️ <b>Чернетки на тиждень (не публікація)</b>\nНічого не робиш → опублікується як є в свій день. Хочеш поправити — заходь у PR за посиланням.\n\n%s' "$DIGEST")
           curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-            -d "chat_id=$TELEGRAM_CHANNEL_CHAT_ID" \
+            -d "chat_id=$TELEGRAM_OWNER_CHAT_ID" \
             -d "parse_mode=HTML" \
             -d "disable_web_page_preview=true" \
             --data-urlencode "text=$TEXT"

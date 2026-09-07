@@ -52,16 +52,24 @@ async function extractContactFromMessage(message: string): Promise<ChatContactIn
         max_tokens: 80,
       }),
     })
-    if (!res.ok) return undefined
+    if (!res.ok) {
+      console.error("extractContactFromMessage: OpenRouter not ok", res.status, await res.text().catch(() => ""))
+      return undefined
+    }
     const data = await res.json()
     const raw = data?.choices?.[0]?.message?.content?.trim()
+    console.log("extractContactFromMessage raw:", JSON.stringify(raw))
     if (!raw) return undefined
     const jsonMatch = raw.match(/\{[\s\S]*\}/)
-    if (!jsonMatch) return undefined
+    if (!jsonMatch) {
+      console.error("extractContactFromMessage: no JSON found in", JSON.stringify(raw))
+      return undefined
+    }
     const parsed = JSON.parse(jsonMatch[0])
     const contact: ChatContactInfo = {}
-    if (parsed.name && typeof parsed.name === "string") contact.name = parsed.name.trim()
-    if (parsed.phone && typeof parsed.phone === "string") contact.phone = parsed.phone.trim()
+    if (parsed.name && typeof parsed.name === "string" && parsed.name.toLowerCase() !== "null") contact.name = parsed.name.trim()
+    if (parsed.phone && typeof parsed.phone === "string" && parsed.phone.toLowerCase() !== "null") contact.phone = parsed.phone.trim()
+    console.log("extractContactFromMessage parsed:", JSON.stringify(contact))
     return Object.keys(contact).length ? contact : undefined
   } catch (err) {
     console.error("extractContactFromMessage failed:", err)

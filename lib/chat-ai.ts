@@ -40,7 +40,7 @@ async function extractContactFromMessage(message: string): Promise<ChatContactIn
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
         "HTTP-Referer": "https://crmcustoms.com",
-        "X-Title": "CRMCUSTOMS site chat — contact extraction",
+        "X-Title": "CRMCUSTOMS site chat - contact extraction",
       },
       body: JSON.stringify({
         model: EXTRACT_MODEL,

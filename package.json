@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev:watch": "nodemon --watch app --watch components --watch lib --ext js,jsx,ts,tsx,json --exec \"next dev\"",
     "build": "next build",
+    "postbuild": "node scripts/submit-sitemap.mjs || true",
     "start": "next start",
     "clean": "rimraf .next && rimraf node_modules/.cache",
     "clean:build": "rimraf .next && npm run build",

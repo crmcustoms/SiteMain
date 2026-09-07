@@ -15,7 +15,8 @@
     "copy-express-linux": "if [ -d \".next/standalone\" ]; then cp express-server.js .next/standalone/; fi",
     "copy-files-linux": "npm run copy-public-linux && npm run copy-express-linux",
     "start:express": "node express-server.js",
-    "autopost": "node scripts/autopost/generate.mjs"
+    "autopost": "node scripts/autopost/generate.mjs",
+    "submit-sitemap": "node scripts/submit-sitemap.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

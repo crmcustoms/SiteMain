@@ -98,3 +98,11 @@ jobs:
           
           # Очищаем неиспользуемые образы
           docker system prune -f
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Ask Google to re-crawl sitemap.xml
+      env:
+        GSC_SERVICE_ACCOUNT_KEY_B64: ${{ secrets.GSC_SERVICE_ACCOUNT_KEY_B64 }}
+      run: node scripts/submit-sitemap.mjs

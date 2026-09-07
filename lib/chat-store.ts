@@ -1,5 +1,4 @@
 import "server-only"
-import { Redis } from "@upstash/redis"
 
 export type ChatRole = "user" | "assistant" | "agent"
 
@@ -17,65 +16,73 @@ export type ChatMeta = {
   planfixTaskNumber?: string
 }
 
-const TTL_SECONDS = 60 * 60 * 24 * 7 // 7 днів
+type ChatDoc = { messages: ChatMessage[]; meta: ChatMeta }
 
-let redis: Redis | null = null
-function getRedis(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
-  if (!url || !token) return null
-  if (!redis) redis = new Redis({ url, token })
-  return redis
+const BUCKET = "chat-transcripts"
+
+function supabaseUrl(): string {
+  return process.env.SUPABASE_URL || "http://supabasekong-uuqpzylk6tuwfgn9kav3b437.65.109.8.78.sslip.io"
+}
+function serviceKey(): string | undefined {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY
 }
 
-function messagesKey(chatId: string) {
-  return `chat:${chatId}:messages`
+async function readDoc(chatId: string): Promise<ChatDoc> {
+  const key = serviceKey()
+  if (!key) return { messages: [], meta: {} }
+  try {
+    const res = await fetch(`${supabaseUrl()}/storage/v1/object/${BUCKET}/${chatId}.json`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      cache: "no-store",
+    })
+    if (!res.ok) return { messages: [], meta: {} }
+    const data = (await res.json()) as Partial<ChatDoc>
+    return { messages: data.messages || [], meta: data.meta || {} }
+  } catch {
+    return { messages: [], meta: {} }
+  }
 }
-function metaKey(chatId: string) {
-  return `chat:${chatId}:meta`
+
+async function writeDoc(chatId: string, doc: ChatDoc): Promise<void> {
+  const key = serviceKey()
+  if (!key) return
+  try {
+    await fetch(`${supabaseUrl()}/storage/v1/object/${BUCKET}/${chatId}.json`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+        "x-upsert": "true",
+      },
+      body: JSON.stringify(doc),
+    })
+  } catch (err) {
+    console.error("chat-store writeDoc failed:", err)
+  }
 }
 
 export async function appendMessage(chatId: string, message: ChatMessage): Promise<void> {
-  const r = getRedis()
-  if (!r) return
-  const key = messagesKey(chatId)
-  await r.rpush(key, JSON.stringify(message))
-  await r.expire(key, TTL_SECONDS)
+  const doc = await readDoc(chatId)
+  doc.messages.push(message)
+  await writeDoc(chatId, doc)
 }
 
 export async function getMessages(chatId: string, fromIndex = 0): Promise<{ messages: ChatMessage[]; total: number }> {
-  const r = getRedis()
-  if (!r) return { messages: [], total: 0 }
-  const key = messagesKey(chatId)
-  const total = await r.llen(key)
-  if (total === 0 || fromIndex >= total) return { messages: [], total }
-  const raw = await r.lrange<string>(key, fromIndex, -1)
-  const messages = raw
-    .map((item) => {
-      try {
-        return typeof item === "string" ? (JSON.parse(item) as ChatMessage) : (item as unknown as ChatMessage)
-      } catch {
-        return null
-      }
-    })
-    .filter((m): m is ChatMessage => m !== null)
-  return { messages, total }
+  const doc = await readDoc(chatId)
+  const total = doc.messages.length
+  return { messages: doc.messages.slice(fromIndex), total }
 }
 
 export async function setMeta(chatId: string, meta: Partial<ChatMeta>): Promise<void> {
-  const r = getRedis()
-  if (!r) return
-  const key = metaKey(chatId)
   const clean = Object.fromEntries(Object.entries(meta).filter(([, v]) => v !== undefined && v !== null && v !== ""))
   if (Object.keys(clean).length === 0) return
-  await r.hset(key, clean)
-  await r.expire(key, TTL_SECONDS)
+  const doc = await readDoc(chatId)
+  doc.meta = { ...doc.meta, ...clean }
+  await writeDoc(chatId, doc)
 }
 
 export async function getMeta(chatId: string): Promise<ChatMeta> {
-  const r = getRedis()
-  if (!r) return {}
-  const key = metaKey(chatId)
-  const data = await r.hgetall<Record<string, string>>(key)
-  return (data || {}) as ChatMeta
+  const doc = await readDoc(chatId)
+  return doc.meta
 }

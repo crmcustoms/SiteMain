@@ -64,6 +64,7 @@ export function ChatWidget() {
   const [sending, setSending] = useState(false)
   const cursorRef = useRef(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const sendingRef = useRef(false)
 
   useEffect(() => {
     setChatId(getOrCreateChatId())
@@ -95,7 +96,8 @@ export function ChatWidget() {
 
   const send = async () => {
     const text = input.trim()
-    if (!text || sending || !chatId) return
+    if (!text || sendingRef.current || !chatId) return
+    sendingRef.current = true
     setSending(true)
     setInput("")
     setMessages((prev) => [...prev, { role: "user", text, ts: Date.now() }])
@@ -116,6 +118,7 @@ export function ChatWidget() {
         { role: "assistant", text: "Не вдалось надіслати. Спробуйте ще раз за хвилину.", ts: Date.now() },
       ])
     } finally {
+      sendingRef.current = false
       setSending(false)
     }
   }

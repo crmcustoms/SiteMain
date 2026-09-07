@@ -5,6 +5,7 @@ import { getAllContent, ogImageUrl } from "@/lib/content"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
+import { notFound } from "next/navigation"
 
 export const dynamic = "force-dynamic"
 
@@ -44,9 +45,12 @@ export default async function NewsPage({
 }) {
   const resolvedParams = await params;
   const paramsLang = resolvedParams.lang;
-  const safeLocale = (paramsLang && i18n.locales.includes(paramsLang))
-    ? paramsLang
-    : i18n.defaultLocale;
+  // force-dynamic обходит dynamicParams=false родительского layout — валидируем locale явно,
+  // иначе /<любой-текст>/news рендерит дубликат этой страницы
+  if (!paramsLang || !i18n.locales.includes(paramsLang)) {
+    notFound();
+  }
+  const safeLocale = paramsLang;
 
   try {
     const articles = await getBlogPostsFromAPI(true).catch(() => []) || [];

@@ -94,7 +94,12 @@ export default async function NewsArticlePage({
   params: { lang: string; slug: string };
 }) {
   const { lang, slug } = params;
-  const safeLocale = i18n.locales.includes(lang) ? lang : i18n.defaultLocale;
+  // force-dynamic обходит dynamicParams=false родительского layout — валидируем locale явно,
+  // иначе /<любой-текст>/news/<slug> рендерит дубликат этой новости
+  if (!i18n.locales.includes(lang)) {
+    return notFound();
+  }
+  const safeLocale = lang;
 
   if (!slug) {
     return notFound();

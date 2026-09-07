@@ -5,6 +5,7 @@ import { getAllContent, ogImageUrl } from "@/lib/content"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
+import { notFound } from "next/navigation"
 
 export const dynamic = "force-dynamic"
 
@@ -103,9 +104,12 @@ export default async function BlogPage({
   // Получаем параметры безопасно с await
   const resolvedParams = await params;
   const paramsLang = resolvedParams.lang;
-  const safeLocale = (paramsLang && i18n.locales.includes(paramsLang)) 
-    ? paramsLang 
-    : i18n.defaultLocale;
+  // force-dynamic обходит dynamicParams=false родительского layout — валидируем locale явно,
+  // иначе /<любой-текст>/blog рендерит дубликат этой страницы (см. wiki/sitemain.md SEO раздел)
+  if (!paramsLang || !i18n.locales.includes(paramsLang)) {
+    notFound();
+  }
+  const safeLocale = paramsLang;
 
   try {
     // Используем try/catch для безопасного получения данных

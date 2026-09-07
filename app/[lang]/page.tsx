@@ -4,6 +4,7 @@ import { i18n } from "@/lib/i18n-config"
 import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
 import { getContentBySlug } from "@/lib/content"
 import { headers } from "next/headers"
+import { notFound } from "next/navigation"
 
 import StaticFinalCta from "@/components/landing/static-final-cta"
 import FounderMessage from "@/components/landing/founder-message"
@@ -33,9 +34,13 @@ export default async function Home({
   // Получаем параметр языка безопасно с await
   const resolvedParams = await params;
   const lang = resolvedParams?.lang || '';
-  
-  // Проверяем, поддерживается ли язык
-  const safeLocale = i18n.locales.includes(lang) ? lang : i18n.defaultLocale;
+
+  // Проверяем, поддерживается ли язык — иначе /<любой-текст> рендерит дубликат главной
+  // страницы (см. wiki/sitemain.md SEO раздел, найдено через Google Search Console)
+  if (!i18n.locales.includes(lang)) {
+    notFound();
+  }
+  const safeLocale = lang;
   
   // Получаем словарь для выбранного языка
   const dict = await getDictionary(safeLocale);

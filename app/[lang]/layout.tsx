@@ -9,6 +9,11 @@ export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
 }
 
+// Only the locales in i18n.locales are real routes — any other value (e.g. /ua/*, /en/*)
+// was being rendered as a duplicate uk page since getDictionary silently falls back to uk.
+// This 404s those instead of duplicate-indexing them.
+export const dynamicParams = false
+
 export default async function LangLayout({
   children,
   params,

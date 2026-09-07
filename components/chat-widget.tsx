@@ -65,6 +65,19 @@ export function ChatWidget() {
   const cursorRef = useRef(0)
   const scrollRef = useRef<HTMLDivElement>(null)
   const sendingRef = useRef(false)
+  const seenKeysRef = useRef<Set<string>>(new Set())
+
+  const appendUnique = (incoming: Message[]) => {
+    setMessages((prev) => {
+      const fresh = incoming.filter((m) => {
+        const key = `${m.role}:${m.text}`
+        if (seenKeysRef.current.has(key)) return false
+        seenKeysRef.current.add(key)
+        return true
+      })
+      return fresh.length ? [...prev, ...fresh] : prev
+    })
+  }
 
   useEffect(() => {
     setChatId(getOrCreateChatId())
@@ -73,12 +86,13 @@ export function ChatWidget() {
   useEffect(() => {
     if (!open || !chatId) return
     const poll = async () => {
+      if (sendingRef.current) return // не опитувати, поки триває власна відправка — уникаємо гонки з дублюванням
       try {
         const res = await fetch(`/api/chat/poll?chatId=${chatId}&after=${cursorRef.current}`)
         if (!res.ok) return
         const data = await res.json()
         if (data.messages?.length) {
-          setMessages((prev) => [...prev, ...data.messages])
+          appendUnique(data.messages)
         }
         if (typeof data.cursor === "number") cursorRef.current = data.cursor
       } catch {
@@ -100,7 +114,7 @@ export function ChatWidget() {
     sendingRef.current = true
     setSending(true)
     setInput("")
-    setMessages((prev) => [...prev, { role: "user", text, ts: Date.now() }])
+    appendUnique([{ role: "user", text, ts: Date.now() }])
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -109,7 +123,7 @@ export function ChatWidget() {
       })
       const data = await res.json()
       if (data.reply) {
-        setMessages((prev) => [...prev, { role: "assistant", text: data.reply, ts: Date.now() }])
+        appendUnique([{ role: "assistant", text: data.reply, ts: Date.now() }])
       }
       if (typeof data.cursor === "number") cursorRef.current = data.cursor
     } catch {

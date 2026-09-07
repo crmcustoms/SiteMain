@@ -15,15 +15,43 @@ const SYSTEM_PROMPT = `Ти — AI-асистент CRMCUSTOMS на сайті c
 - Якщо відчуваєш, що людина готова рухатись далі (питає ціну, хоче почати, лишає контакти) — прямо запропонуй забронювати безкоштовну консультацію на сайті.
 - Тебе можуть підключити до реального менеджера в PlanFix — якщо в історії діалогу з'являються повідомлення з роллю "менеджер", це людина взяла розмову на себе; далі просто підтримуй контекст, не дублюй її відповіді.
 
+Знайомство з відвідувачем:
+- Якщо ще не знаєш імені співрозмовника — природно запитай, як до нього звертатися, десь у перших 1-2 репліках (не як анкету, по-людськи: "До речі, як до вас звертатися?"). Не питай повторно, якщо ім'я вже відоме з історії діалогу.
+- Коли розмова стає змістовною (питає ціну, хоче почати, цікавиться консультацією) — природно попроси залишити номер телефону, щоб менеджер зміг зв'язатися.
+- Якщо у повідомленні користувача щойно вперше з'явилось ім'я і/або телефон — ОБОВ'ЯЗКОВО додай в самому кінці своєї відповіді, окремим рядком, точно в такому форматі (нічого не пиши після нього):
+[CONTACT_INFO]{"name":"...","phone":"..."}[/CONTACT_INFO]
+Постав null для поля, якого не було в цьому повідомленні. Якщо нової інформації про ім'я чи телефон немає — НЕ додавай цей рядок взагалі.
+
 ${pricingTiersText}
 
 Матеріали FAQ сайту (питання/відповіді по категоріях):
 ${faqAsPlainText()}`
 
-export async function generateChatReply(history: ChatMessage[], userMessage: string): Promise<string> {
+export type ChatContactInfo = { name?: string; phone?: string }
+export type ChatReplyResult = { reply: string; contact?: ChatContactInfo }
+
+function extractContactInfo(rawReply: string): ChatReplyResult {
+  const match = rawReply.match(/\[CONTACT_INFO\]([\s\S]*?)\[\/CONTACT_INFO\]/)
+  const reply = rawReply.replace(/\[CONTACT_INFO\][\s\S]*?\[\/CONTACT_INFO\]/, "").trim()
+  if (!match) return { reply }
+  try {
+    const parsed = JSON.parse(match[1])
+    const contact: ChatContactInfo = {}
+    if (parsed.name && parsed.name !== "null") contact.name = String(parsed.name).trim()
+    if (parsed.phone && parsed.phone !== "null") contact.phone = String(parsed.phone).trim()
+    return { reply, contact: Object.keys(contact).length ? contact : undefined }
+  } catch {
+    return { reply }
+  }
+}
+
+export async function generateChatReply(history: ChatMessage[], userMessage: string): Promise<ChatReplyResult> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) {
-    return "Наразі не можу відповісти автоматично — напишіть, будь ласка, ваш номер чи email, і менеджер зв'яжеться з вами найближчим часом."
+    return {
+      reply:
+        "Наразі не можу відповісти автоматично — напишіть, будь ласка, ваш номер чи email, і менеджер зв'яжеться з вами найближчим часом.",
+    }
   }
 
   const messages = [
@@ -54,10 +82,13 @@ export async function generateChatReply(history: ChatMessage[], userMessage: str
   if (!res.ok) {
     const text = await res.text().catch(() => "")
     console.error("OpenRouter chat error:", res.status, text)
-    return "Вибачте, тимчасові технічні неполадки. Спробуйте ще раз або залиште контакт — менеджер відповість особисто."
+    return { reply: "Вибачте, тимчасові технічні неполадки. Спробуйте ще раз або залиште контакт — менеджер відповість особисто." }
   }
 
   const data = await res.json()
-  const reply = data?.choices?.[0]?.message?.content?.trim()
-  return reply || "Не зовсім зрозумів питання — можете переформулювати, або залишіть контакт і менеджер відповість особисто."
+  const rawReply = data?.choices?.[0]?.message?.content?.trim()
+  if (!rawReply) {
+    return { reply: "Не зовсім зрозумів питання — можете переформулювати, або залишіть контакт і менеджер відповість особисто." }
+  }
+  return extractContactInfo(rawReply)
 }

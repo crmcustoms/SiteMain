@@ -72,6 +72,27 @@ export async function sendMessageToPlanfix(args: {
   })
 }
 
+export async function updateContactInPlanfix(args: {
+  contactId: string
+  contactName?: string
+  contactLastName?: string
+  contactPhone?: string
+  contactEmail?: string
+}) {
+  try {
+    return await callPlanfixChatApi("updateContact", {
+      contactId: args.contactId,
+      contactName: args.contactName,
+      contactLastName: args.contactLastName,
+      contactPhone: args.contactPhone,
+      contactEmail: args.contactEmail,
+    })
+  } catch (err) {
+    console.error("PlanFix updateContact failed:", err)
+    return null
+  }
+}
+
 export async function getPlanfixTaskNumber(chatId: string): Promise<number | null> {
   try {
     const data = await callPlanfixChatApi("getTask", { chatId })

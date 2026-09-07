@@ -3,7 +3,7 @@ import { z } from "zod"
 import { checkRateLimit } from "@/lib/rate-limit"
 import { appendMessage, getMessages, setMeta, getMeta } from "@/lib/chat-store"
 import { generateChatReply } from "@/lib/chat-ai"
-import { sendMessageToPlanfix } from "@/lib/planfix-chat"
+import { sendMessageToPlanfix, updateContactInPlanfix } from "@/lib/planfix-chat"
 
 const bodySchema = z.object({
   chatId: z.string().regex(/^[a-zA-Z0-9_-]{8,64}$/),
@@ -33,13 +33,17 @@ export async function POST(request: NextRequest) {
     if (contactName || contactEmail || contactPhone) {
       await setMeta(chatId, { contactName, contactEmail, contactPhone })
     }
-    const meta = await getMeta(chatId)
 
     const { messages: history } = await getMessages(chatId)
     await appendMessage(chatId, { role: "user", text: message, ts: Date.now() })
 
-    const reply = await generateChatReply(history, message)
+    const { reply, contact } = await generateChatReply(history, message)
     await appendMessage(chatId, { role: "assistant", text: reply, ts: Date.now() })
+
+    if (contact?.name || contact?.phone) {
+      await setMeta(chatId, { contactName: contact.name, contactPhone: contact.phone })
+    }
+    const meta = await getMeta(chatId)
 
     // Реле в PlanFix — не блокуємо відповідь відвідувачу, якщо PlanFix недоступний
     sendMessageToPlanfix({
@@ -51,15 +55,22 @@ export async function POST(request: NextRequest) {
       contactEmail: meta.contactEmail,
       contactPhone: meta.contactPhone,
     })
-      .then(() =>
-        sendMessageToPlanfix({
+      .then(async () => {
+        if (contact?.name || contact?.phone) {
+          await updateContactInPlanfix({
+            contactId: chatId,
+            contactName: meta.contactName,
+            contactPhone: meta.contactPhone,
+          })
+        }
+        return sendMessageToPlanfix({
           chatId,
           message: `🤖 AI-бот: ${reply}`,
           contactId: chatId,
           isEcho: true,
           userEmail: process.env.PLANFIX_WEBCHAT_BOT_USER_EMAIL || "tm@crmcustoms.com",
         })
-      )
+      })
       .catch((err) => console.error("PlanFix relay error:", err))
 
     const { total } = await getMessages(chatId)

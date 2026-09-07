@@ -37,12 +37,12 @@ function Bubble({ message }: { message: Message }) {
       className={`flex ${isVisitor ? "justify-end" : "justify-start"} px-1`}
     >
       <div
-        className={`max-w-[82%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-lg backdrop-blur-xl ${
+        className={`max-w-[82%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-xl backdrop-blur-2xl ${
           isVisitor
-            ? "bg-[#FFD700]/90 text-black rounded-br-sm"
+            ? "bg-[#FFD700]/95 text-black rounded-br-sm"
             : message.role === "agent"
-              ? "bg-black/85 text-white rounded-bl-sm border border-[#FFD700]/40"
-              : "bg-white/80 text-black rounded-bl-sm border border-black/5"
+              ? "bg-black/95 text-white rounded-bl-sm border border-[#FFD700]/40"
+              : "bg-white/95 text-black rounded-bl-sm border border-black/10"
         }`}
       >
         {message.role === "agent" && message.userName && (

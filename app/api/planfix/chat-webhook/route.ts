@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server"
 import { appendMessage } from "@/lib/chat-store"
 import { verifyIncomingPlanfixToken } from "@/lib/planfix-chat"
 
+// PlanFix завжди шле текст менеджера обгорнутим у HTML (редактор задачі так робить),
+// незалежно від тумблера "Надсилати текст повідомлення в HTML" — прибираємо теги тут.
+function stripHtml(html: string): string {
+  return html
+    .replace(/<\/(p|div|li)>/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+}
+
 // Сюди PlanFix стукається сам, коли менеджер відповідає в задачі чату
 // (Інтеграції → Чати → API ПланФікса для чатів → "Адреса для прийому повідомлень").
 export async function POST(request: NextRequest) {
@@ -19,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     const chatId = String(form.get("chatId") || "")
-    const message = String(form.get("message") || "")
+    const message = stripHtml(String(form.get("message") || ""))
     const userName = String(form.get("userName") || "")
     const userLastName = String(form.get("userLastName") || "")
 

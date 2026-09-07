@@ -3,6 +3,7 @@ import { getDictionary } from "@/lib/dictionaries"
 import { i18n } from "@/lib/i18n-config"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { ChatWidget } from "@/components/chat-widget"
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
@@ -26,6 +27,7 @@ export default async function LangLayout({
       <Header dict={dict} lang={lang} hideOnHome={false} pathname={`/${lang}`} />
           <main className="flex-1">{children}</main>
       <Footer dict={dict} lang={lang} />
+      <ChatWidget />
     </>
   );
 }

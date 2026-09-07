@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/dictionaries"
 import LangHome from "./[lang]/page"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { ChatWidget } from "@/components/chat-widget"
 
 // Редирект с корневой страницы на локализованную версию
 export default async function Home() {
@@ -23,6 +24,7 @@ export default async function Home() {
       <Header dict={dict} lang={lang} />
       <main className="flex-1">{content}</main>
       <Footer dict={dict} lang={lang} />
+      <ChatWidget />
     </>
   )
 }

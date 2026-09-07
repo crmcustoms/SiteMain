@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
       .then(() =>
         sendMessageToPlanfix({
           chatId,
-          message: reply,
+          message: `🤖 AI-бот: ${reply}`,
           contactId: chatId,
           isEcho: true,
-          userEmail: undefined,
+          userEmail: process.env.PLANFIX_WEBCHAT_BOT_USER_EMAIL || "tm@crmcustoms.com",
         })
       )
       .catch((err) => console.error("PlanFix relay error:", err))

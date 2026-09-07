@@ -1,5 +1,5 @@
 import "server-only"
-import { faqAsPlainText } from "@/lib/faq-data"
+import { faqAsPlainText, pricingTiersText } from "@/lib/faq-data"
 import type { ChatMessage } from "@/lib/chat-store"
 
 const MODEL = "google/gemini-2.5-flash-lite"
@@ -14,6 +14,8 @@ const SYSTEM_PROMPT = `Ти — AI-асистент CRMCUSTOMS на сайті c
 - Якщо питання явно не про послуги CRMCUSTOMS (наприклад, стороння тема) — ввічливо поверни розмову до того, чим можеш допомогти по CRM/автоматизації.
 - Якщо відчуваєш, що людина готова рухатись далі (питає ціну, хоче почати, лишає контакти) — прямо запропонуй забронювати безкоштовну консультацію на сайті.
 - Тебе можуть підключити до реального менеджера в PlanFix — якщо в історії діалогу з'являються повідомлення з роллю "менеджер", це людина взяла розмову на себе; далі просто підтримуй контекст, не дублюй її відповіді.
+
+${pricingTiersText}
 
 Матеріали FAQ сайту (питання/відповіді по категоріях):
 ${faqAsPlainText()}`

@@ -125,5 +125,15 @@ export async function generateChatReply(history: ChatMessage[], userMessage: str
   if (!rawReply) {
     return { reply: "Не зовсім зрозумів питання — можете переформулювати, або залишіть контакт і менеджер відповість особисто." }
   }
-  return { reply: rawReply, contact }
+  return { reply: stripMarkdownForBubble(rawReply), contact }
+}
+
+// Страховка: модель час від часу все одно вставляє markdown попри інструкцію в промпті.
+// Бульбашка рендерить простий текст, тож зайві символи форматування показувались би буквально.
+function stripMarkdownForBubble(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/^[*-]\s+/gm, "— ")
+    .trim()
 }

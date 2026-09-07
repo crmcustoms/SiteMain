@@ -47,7 +47,7 @@ async function writeDoc(chatId: string, doc: ChatDoc): Promise<void> {
   const key = serviceKey()
   if (!key) return
   try {
-    await fetch(`${supabaseUrl()}/storage/v1/object/${BUCKET}/${chatId}.json`, {
+    const res = await fetch(`${supabaseUrl()}/storage/v1/object/${BUCKET}/${chatId}.json`, {
       method: "POST",
       headers: {
         apikey: key,
@@ -57,6 +57,10 @@ async function writeDoc(chatId: string, doc: ChatDoc): Promise<void> {
       },
       body: JSON.stringify(doc),
     })
+    if (!res.ok) {
+      const text = await res.text().catch(() => "")
+      console.error("chat-store writeDoc non-OK response:", res.status, text)
+    }
   } catch (err) {
     console.error("chat-store writeDoc failed:", err)
   }

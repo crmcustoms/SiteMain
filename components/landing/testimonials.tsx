@@ -14,6 +14,8 @@ interface Testimonial {
   fullText: string
   rating: number
   documentLink: string | null
+  companyUrl?: string
+  caseUrl?: string
 }
 
 export default function Testimonials({ dict }: { dict: any }) {
@@ -31,6 +33,19 @@ export default function Testimonials({ dict }: { dict: any }) {
       fullText: "Команда itcomms.io получила удобное решение для контроля расходов! Система на базе CRM и Google Таблиц сделала процесс прозрачным: каждый расход — это задача, а отчеты формируются автоматически. Результат — экономия времени менеджеров, уменьшение превышений бюджета на 70% за два месяца и полный контроль над финансами. Рекомендую CRMCUSTOMS для эффективной автоматизации!",
       rating: 5,
       documentLink: "https://s3.us-east-1.amazonaws.com/crmcustoms.site/1111.pdf",
+    },
+    {
+      id: 7,
+      name: "Борис Мітрофанов",
+      position: "Генеральний директор",
+      company: "KTRANS",
+      photo: "/images/testimonials/ktrans-mitrofanov.jpg",
+      shortText: "Тепер кожен дзвінок одразу видно — яка філія, яке джерело, яка кампанія. Договір оренди більше не пишеться вручну.",
+      fullText: "До Planfix ми не розуміли, звідки насправді дзвонять клієнти — реклама йшла з кількох джерел на різні номери, і менеджер піднімав слухавку наосліп. Зараз кожен дзвінок одразу видно: яка філія, яке джерело, яка кампанія. Договір оренди більше не пишеться вручну щоразу — дані по авто підтягуються самі. Окремо порахували облік у кількох валютах з курсом на день операції — раніше з цим постійно плуталися. CRMCUSTOMS розібралися в специфіці саме прокату авто, а не просто впровадили шаблонну CRM.",
+      rating: 5,
+      documentLink: null,
+      companyUrl: "https://ktransrental.com.ua/",
+      caseUrl: "/uk/cases/avtoprokat-telefoniya-orenda-valyuty-planfix",
     },
     {
       id: 2,
@@ -223,30 +238,52 @@ export default function Testimonials({ dict }: { dict: any }) {
                       )}
                     </div>
 
-                    {/* Document link */}
-                    {testimonial.documentLink && (
-                      <a
-                        href={testimonial.documentLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70 mt-auto"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="w-3 h-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                          />
-                        </svg>
-                        Лист подяки
-                      </a>
+                    {/* Proof links */}
+                    {(testimonial.documentLink || testimonial.companyUrl || testimonial.caseUrl) && (
+                      <div className="flex flex-wrap gap-2 mt-auto">
+                        {testimonial.documentLink && (
+                          <a
+                            href={testimonial.documentLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              />
+                            </svg>
+                            Лист подяки
+                          </a>
+                        )}
+                        {testimonial.companyUrl && (
+                          <a
+                            href={testimonial.companyUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70"
+                          >
+                            Сайт компанії
+                          </a>
+                        )}
+                        {testimonial.caseUrl && (
+                          <a
+                            href={testimonial.caseUrl}
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70"
+                          >
+                            Кейс
+                          </a>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>

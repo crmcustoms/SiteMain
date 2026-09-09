@@ -17,10 +17,16 @@ export function computeReadTime(body) {
 // Builds the frontmatter object. `seed` is the seed-angles.json entry when
 // this article expanded a seed angle (sets a different generator marker so
 // it doesn't shift the recurring rotation index).
-export function buildFrontmatter(article, { slotType, seed }) {
+export function buildFrontmatter(article, { slotType, seed, date }) {
   return {
     title: article.title,
-    date: new Date().toISOString().slice(0, 10),
+    // The intended PUBLISH date (the Mon/Wed/Fri this PR is labeled
+    // `publish:<date>` for), not the day generation happened to run —
+    // those differ by up to a week for anything but Sunday-run/Sunday-
+    // publish, and a stale-looking date on a just-published article was
+    // exactly the bug this caused. Falls back to today only for manual/
+    // dry-run invocations that don't pass one.
+    date: date || new Date().toISOString().slice(0, 10),
     // Written explicitly (not left to the file-name fallback in
     // lib/content.ts) so the post-write round-trip check in validate.mjs
     // has something real to compare against.

@@ -98,7 +98,7 @@ jobs:
             cp -n "$RUNNER_TEMP"/generated_images/*.jpg public/images/blog/ 2>/dev/null || true
 
             if [ "$DRY_RUN" = "true" ]; then
-              node scripts/autopost/generate.mjs --dry-run || true
+              node scripts/autopost/generate.mjs --dry-run --date "$DATE" || true
               echo "::endgroup::"
               continue
             fi
@@ -115,7 +115,7 @@ jobs:
             FILE=""
             for ATTEMPT in 1 2; do
               BEFORE=$(ls content/blog/uk/ 2>/dev/null)
-              if node scripts/autopost/generate.mjs; then
+              if node scripts/autopost/generate.mjs --date "$DATE"; then
                 FILE="content/blog/uk/$(comm -13 <(echo "$BEFORE" | sort) <(ls content/blog/uk/ | sort))"
                 break
               fi

@@ -1,6 +1,6 @@
 ---
 title: 'CRM не для великих. Вона для тих, хто хоче вирости'
-date: '2026-09-04'
+date: '2026-09-09'
 slug: crm-ne-dlya-velykyh-vona-dlya-tyh-hto-hoche-vyrosty
 excerpt: >-
   Чому «почнемо з 50 людей» — це пастка, і як малий бізнес втрачає більше за

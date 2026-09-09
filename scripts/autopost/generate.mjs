@@ -241,7 +241,7 @@ async function main() {
   }
 
   const { article, usage, model, result } = attempt
-  const frontmatter = buildFrontmatter(article, { slotType: slot, seed })
+  const frontmatter = buildFrontmatter(article, { slotType: slot, seed, date: args.date })
 
   console.error(`[autopost] OK — ${result.words} words, cyrillic ratio ${result.cyrRatio}`)
   console.error(`[autopost] tokens: input=${usage?.input_tokens} output=${usage?.output_tokens} model=${model}`)

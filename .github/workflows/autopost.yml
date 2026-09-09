@@ -31,6 +31,13 @@ jobs:
       contents: write
       pull-requests: write
       issues: write # label create/apply lives under the Issues API even for PR labels
+    env:
+      # GitHub's step-`if:` parser rejects the `secrets` context directly
+      # ("Unrecognized named-value: 'secrets'") — that error is a hard parse
+      # failure for the WHOLE workflow file (0 jobs created, not just this
+      # step). Route through job-level env instead, same pattern already
+      # used correctly in social-crosspost.yml.
+      HAS_TELEGRAM_OWNER_CHAT: ${{ secrets.TELEGRAM_OWNER_CHAT_ID != '' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -190,7 +197,7 @@ jobs:
         # one is the public channel real subscribers read, and this digest
         # is internal draft review, not an announcement. Soft-skips (no
         # failure) until TELEGRAM_OWNER_CHAT_ID is set to a private chat.
-        if: ${{ inputs.dry_run != 'true' && steps.week.outputs.digest != '' && secrets.TELEGRAM_OWNER_CHAT_ID != '' }}
+        if: ${{ inputs.dry_run != 'true' && steps.week.outputs.digest != '' && env.HAS_TELEGRAM_OWNER_CHAT == 'true' }}
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_OWNER_CHAT_ID: ${{ secrets.TELEGRAM_OWNER_CHAT_ID }}

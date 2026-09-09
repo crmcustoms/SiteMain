@@ -1,6 +1,6 @@
 ---
 title: Як зібрати першу воронку продажів у Planfix з нуля
-date: '2026-09-04'
+date: '2026-09-11'
 slug: yak-zibraty-pershu-voronku-planfix
 excerpt: >-
   Покроково: як створити воронку продажів у Planfix — етапи угоди, поля та права

@@ -274,3 +274,98 @@
   }
 }
 
+
+/* Code blocks with copy button (prompts, examples) */
+.article-page .body .codeblock {
+  position: relative;
+  background: #201d17;
+  border: 1px solid #e0dbd0;
+  border-radius: 8px;
+  margin: 28px 0;
+  overflow: hidden;
+}
+.article-page .body .codeblock pre {
+  margin: 0;
+  padding: 20px 20px 20px;
+  padding-top: 14px;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #f2ede1;
+}
+.article-page .body .codeblock code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+.article-page .body .codeblock-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e8b84b;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.article-page .body .codeblock-copy:hover {
+  background: #c49a2e;
+}
+.article-page .body p code,
+.article-page .body li code,
+.article-page .body td code {
+  background: #ece7db;
+  border: 1px solid #e0dbd0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+}
+
+/* Tables */
+.article-page .body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 15px;
+  line-height: 1.6;
+  display: block;
+  overflow-x: auto;
+}
+.article-page .body thead th {
+  background: #201d17;
+  color: #f2ede1;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.article-page .body thead th:first-child {
+  border-radius: 8px 0 0 0;
+}
+.article-page .body thead th:last-child {
+  border-radius: 0 8px 0 0;
+}
+.article-page .body tbody td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0dbd0;
+  vertical-align: top;
+}
+.article-page .body tbody tr:nth-child(even) td {
+  background: #ece7db;
+}
+.article-page .body tbody tr:last-child td {
+  border-bottom: none;
+}
+.article-page .body blockquote {
+  border-left: 4px solid #e8b84b;
+  margin: 28px 0;
+  padding: 4px 0 4px 20px;
+  color: #6b6456;
+  font-style: italic;
+}

@@ -1,8 +1,9 @@
 "use client"
 
 import { useRef, useState } from "react"
+import type { ReactNode } from "react"
 
-export function ArticleCodeBlock({ children }: { children?: React.ReactNode }) {
+export function ArticleCodeBlock({ children }: { children?: ReactNode }) {
   const ref = useRef<HTMLPreElement>(null)
   const [copied, setCopied] = useState(false)
 

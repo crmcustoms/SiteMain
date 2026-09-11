@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
 import { unbounded, golosText } from "@/lib/fonts"
+import { ArticleCodeBlock } from "@/components/article-code-block"
 import "@/styles/article.css"
 
 interface ArticleRendererProps {
@@ -63,7 +64,11 @@ export function ArticleRenderer({
         {excerpt && <p className="subtitle">{excerpt}</p>}
 
         <div className="body">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+            components={{ pre: ArticleCodeBlock }}
+          >
             {body}
           </ReactMarkdown>
         </div>

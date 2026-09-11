@@ -159,9 +159,6 @@ generator: manual
 Перед записом показуй мені diff і чекай підтвердження.
 ```
 
-![Структура vault в Obsidian](/images/blog/nejronka-03-obsidian-struktura.png)
-
-*Три шари бази знань: raw → wiki → схема. (Ілюстрація)*
 
 ![Карта знань](/images/blog/nejronka-04-graph.png)
 

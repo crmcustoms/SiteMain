@@ -7,8 +7,8 @@ import { Star, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 interface Testimonial {
   id: number
   name: string
-  position: string
-  company: string
+  position?: string
+  company?: string
   photo: string
   shortText: string
   fullText: string
@@ -16,6 +16,7 @@ interface Testimonial {
   documentLink: string | null
   companyUrl?: string
   caseUrl?: string
+  videoUrl?: string
 }
 
 export default function Testimonials({ dict }: { dict: any }) {
@@ -23,6 +24,17 @@ export default function Testimonials({ dict }: { dict: any }) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const testimonials: Testimonial[] = [
+    {
+      id: 8,
+      name: "Валерій Лелека",
+      position: "Автор книги",
+      photo: "/images/testimonials/leleka.jpg",
+      shortText: "Макс Ткаченко налаштував мені Планфікс і зняв мою головну управлінську біль — тепер я в курсі того, що відбувається в моїх продажах.",
+      fullText: "Керівнику дуже корисно знати, що в нього відбувається в продажах. Бажано — ще до того, як він почне нервувати.\n\nУ мене із цим була своя біль: хотілося мати зрозумілу картину. Бо відповідати за результат, коли не бачиш, що відбувається, — задоволення специфічне.\n\nМакс Ткаченко налаштував мені Планфікс і зняв цю головну управлінську біль. Тепер я в курсі того, що відбувається в моїх продажах. Є ясність, на яку можна спиратися в рішеннях.\n\nДля мене саме в цьому цінність такого налаштування. Керівнику й без того є над чим думати. І дуже добре, коли система допомагає розуміти власний бізнес.\n\nМаксе, дякую. Люблю, коли технології додають керівнику ясності. Бо приводів для творчої тривоги в нас і так вистачає.",
+      rating: 5,
+      documentLink: null,
+      videoUrl: "https://lnkd.in/p/dMjiZGjB",
+    },
     {
       id: 1,
       name: "Александр Лихтман",
@@ -195,10 +207,14 @@ export default function Testimonials({ dict }: { dict: any }) {
 
                       <div className="flex-1 min-w-0">
                         <h3 className="text-base font-bold text-black truncate">{testimonial.name}</h3>
-                        <p className="text-xs text-black/70 truncate">{testimonial.position}</p>
-                        <div className="inline-block px-2 py-0.5 bg-[#FFD700]/20 border border-[#FFD700]/30 mt-1">
-                          <span className="text-xs font-mono text-black/70">{testimonial.company}</span>
-                        </div>
+                        {testimonial.position && (
+                          <p className="text-xs text-black/70 truncate">{testimonial.position}</p>
+                        )}
+                        {testimonial.company && (
+                          <div className="inline-block px-2 py-0.5 bg-[#FFD700]/20 border border-[#FFD700]/30 mt-1">
+                            <span className="text-xs font-mono text-black/70">{testimonial.company}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -231,7 +247,7 @@ export default function Testimonials({ dict }: { dict: any }) {
 
                       {expandedId === testimonial.id && (
                         <div className="mt-3 p-3 bg-black/5 border-l-4 border-[#FFD700]">
-                          <p className="text-sm text-black/80 leading-relaxed">
+                          <p className="text-sm text-black/80 leading-relaxed whitespace-pre-line">
                             {testimonial.fullText}
                           </p>
                         </div>
@@ -239,7 +255,7 @@ export default function Testimonials({ dict }: { dict: any }) {
                     </div>
 
                     {/* Proof links */}
-                    {(testimonial.documentLink || testimonial.companyUrl || testimonial.caseUrl) && (
+                    {(testimonial.documentLink || testimonial.companyUrl || testimonial.caseUrl || testimonial.videoUrl) && (
                       <div className="flex flex-wrap gap-2 mt-auto">
                         {testimonial.documentLink && (
                           <a
@@ -281,6 +297,36 @@ export default function Testimonials({ dict }: { dict: any }) {
                             className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70"
                           >
                             Кейс
+                          </a>
+                        )}
+                        {testimonial.videoUrl && (
+                          <a
+                            href={testimonial.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-3 py-2 bg-[#FFD700]/10 border border-[#FFD700]/30 hover:bg-[#FFD700]/20 transition-colors text-xs font-mono text-black/70"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-3 h-3"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            Відео на LinkedIn
                           </a>
                         )}
                       </div>

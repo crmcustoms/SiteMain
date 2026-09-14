@@ -43,7 +43,7 @@ const heroVideos = [
   {
     title: "Зустріч сама пишеться в картку CRM — інтеграція MeetLogNet і PlanFix",
     youtubeUrl: "https://youtu.be/q2yXqcSAyt8",
-    cover: "/images/case-studies/meetlognet-cover.png",
+    cover: "/images/case-studies/meetlognet-cover-black.jpg",
   },
 ]
 

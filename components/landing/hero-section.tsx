@@ -38,10 +38,12 @@ const heroVideos = [
   {
     title: "Швидкий запуск продажів з мінімальним бюджетом за три дні",
     youtubeUrl: "https://youtu.be/qY1S7pJBw4k",
+    cover: "/images/case-studies/prodazh-knyhy-bez-crm-cover.png",
   },
   {
     title: "Зустріч сама пишеться в картку CRM — інтеграція MeetLogNet і PlanFix",
     youtubeUrl: "https://youtu.be/q2yXqcSAyt8",
+    cover: "/images/case-studies/meetlognet-cover.png",
   },
 ]
 
@@ -384,8 +386,8 @@ export default function HeroSection({ dict, commonDict, lang = 'uk', recentCases
             >
               <div className="relative aspect-video bg-gray-100">
                 <Image
-                  src="/images/herosektion.png"
-                  alt="Hero section preview"
+                  src={heroVideos[currentVideo].cover}
+                  alt={heroVideos[currentVideo].title}
                   width={400}
                   height={225}
                   className="w-full h-full object-cover"

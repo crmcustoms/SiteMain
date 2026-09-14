@@ -38,7 +38,7 @@ const heroVideos = [
   {
     title: "Швидкий запуск продажів з мінімальним бюджетом за три дні",
     youtubeUrl: "https://youtu.be/qY1S7pJBw4k",
-    cover: "/images/case-studies/prodazh-knyhy-bez-crm-cover.png",
+    cover: "/images/herosektion.png",
   },
   {
     title: "Зустріч сама пишеться в картку CRM — інтеграція MeetLogNet і PlanFix",

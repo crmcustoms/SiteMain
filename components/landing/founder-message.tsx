@@ -101,6 +101,12 @@ export default function FounderMessage({ lang }: { lang: string }) {
               <div>
                 <p className="text-base font-bold text-black">Максим Ткаченко</p>
                 <p className="text-sm text-black/60">Засновник CRMCUSTOMS · 10+ років у CRM та автоматизації</p>
+                <Link
+                  href={`/${lang}/news/stattya-v-ofitsiynomu-blozi-planfix`}
+                  className="inline-flex items-center gap-1 mt-2 text-xs font-mono text-black/70 border border-[#FFD700] bg-[#FFD700]/10 px-2 py-1 hover:bg-[#FFD700]/30 transition-colors"
+                >
+                  📰 Гостьова стаття в блозі Planfix
+                </Link>
               </div>
               <Link
                 href={`/${lang}/about`}

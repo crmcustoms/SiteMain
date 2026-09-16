@@ -12,7 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.industrySolutions?.metaTitle || "Галузеві рішення",
-    description: dict.industrySolutions?.metaDescription || "Спеціалізовані CRM рішення для різних галузей бізнесу: ритейл, виробництво, сфера послуг, логістика та будівництво."
+    description: dict.industrySolutions?.metaDescription || "Спеціалізовані CRM рішення для різних галузей бізнесу: ритейл, виробництво, сфера послуг, логістика та будівництво.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/industry-solutions" }
   }
 }
 

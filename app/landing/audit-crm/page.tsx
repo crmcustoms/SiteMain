@@ -10,7 +10,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.audit?.metaTitle || "Аудит і стратегія розвитку CRM",
-    description: dict.audit?.metaDescription || "Проаналізуємо вашу систему продажів і складемо карту впровадження або розвитку вашої CRM."
+    description: dict.audit?.metaDescription || "Проаналізуємо вашу систему продажів і складемо карту впровадження або розвитку вашої CRM.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/audit-crm" }
   }
 }
 

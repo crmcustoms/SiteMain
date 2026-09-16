@@ -78,6 +78,7 @@ export async function generateMetadata({
     return {
       title: article.name || article.title || 'Блог',
       description: article.property_description || article.description || '',
+      alternates: { canonical: `https://crmcustoms.com/${safeLocale}/blog/${slug}` },
       openGraph: {
         title: article.name || article.title || 'Блог',
         description: article.property_description || article.description || '',

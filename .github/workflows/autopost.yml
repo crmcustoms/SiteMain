@@ -132,7 +132,13 @@ jobs:
             npm run build
 
             SLUG=$(basename "$FILE" .md)
-            IMG="public/images/blog/$SLUG-illustration-1.jpg"
+            # generate.mjs writes 2-3 files (-illustration-1/2/3.jpg) — glob
+            # them all, not just the first, so every one the article's body
+            # links to actually gets committed instead of vanishing with the
+            # runner's workspace.
+            shopt -s nullglob
+            IMGS=(public/images/blog/"$SLUG"-illustration-*.jpg)
+            shopt -u nullglob
             TITLE=$(node -e "const m=require('gray-matter');console.log(m(require('fs').readFileSync('$FILE','utf8')).data.title)")
             EXCERPT=$(node -e "const m=require('gray-matter');console.log(m(require('fs').readFileSync('$FILE','utf8')).data.excerpt)")
             SLOT=$(node -e "const m=require('gray-matter');console.log(m(require('fs').readFileSync('$FILE','utf8')).data.slotType)")
@@ -140,7 +146,7 @@ jobs:
             BRANCH="autopost/$DATE-$SLUG"
             git checkout -b "$BRANCH" main
             git add "$FILE"
-            [ -f "$IMG" ] && git add "$IMG"
+            for IMG in "${IMGS[@]}"; do git add "$IMG"; done
             git commit -m "Autopost: $TITLE"
             git push -u origin "$BRANCH"
 
@@ -171,16 +177,26 @@ jobs:
                 hasEndDate: true,
                 customFieldData: [{ field: { id: 137394 }, value: process.argv[4] }],
               }))" "$TITLE" "$EXCERPT" "$PR_URL" "$PF_DATE")
-              curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task" \
+              PF_RESPONSE=$(curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task" \
                 -H "Authorization: Bearer $PLANFIX_TOKEN" \
                 -H "Content-Type: application/json" \
-                -d "$PF_BODY" || echo "::warning::PlanFix task creation failed for $DATE (non-fatal)"
+                -d "$PF_BODY")
+              PF_TASK_ID=$(echo "$PF_RESPONSE" | jq -r '.id // empty' 2>/dev/null)
+              if [ -n "$PF_TASK_ID" ]; then
+                # Label carries the task id forward to autopost-publish.yml,
+                # which flips this task to "Опубліковано" (id 126) once the
+                # PR actually merges — nothing else links a PR to its task.
+                gh label create "planfix:$PF_TASK_ID" --repo "$GITHUB_REPOSITORY" --color ededed --description "PlanFix task $PF_TASK_ID" 2>/dev/null || true
+                gh pr edit "$PR_URL" --repo "$GITHUB_REPOSITORY" --add-label "planfix:$PF_TASK_ID" || echo "::warning::could not label PR #$PR_NUM with planfix:$PF_TASK_ID"
+              else
+                echo "::warning::PlanFix task creation failed or returned no id for $DATE: $PF_RESPONSE"
+              fi
             fi
 
             # Persist before checkout wipes it off main's working tree, so
             # the next iteration can restore it (see comment above).
             cp "$FILE" "$RUNNER_TEMP/generated_blog/"
-            [ -f "$IMG" ] && cp "$IMG" "$RUNNER_TEMP/generated_images/"
+            for IMG in "${IMGS[@]}"; do cp "$IMG" "$RUNNER_TEMP/generated_images/"; done
 
             git checkout main
             echo "::endgroup::"

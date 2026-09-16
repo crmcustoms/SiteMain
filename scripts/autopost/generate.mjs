@@ -104,7 +104,7 @@ function composeUserPrompt({ slot, seed, topic, covered, retryNote }) {
   parts.push("", "ВЖЕ ОПУБЛІКОВАНО — не повторювати ні тему, ні кут, ні перефразування:", covered || "(поки що нічого не опубліковано)")
 
   if (retryNote) {
-    parts.push("", `УВАГА: попередня спроба відхилена — ${retryNote}. Візьми інший ракурс чи тему, той самий формат.`)
+    parts.push("", `УВАГА: попередня спроба відхилена — ${retryNote}`)
   }
 
   return parts.join("\n")
@@ -223,14 +223,23 @@ async function main() {
   let attempt = await runOnce({ slot, seed, topic, corpus, brandMdText })
 
   if (!attempt.result.ok) {
-    const collisionCodes = new Set(["TITLE_COLLISION", "SLUG_EXISTS", "TOPIC_KEY_USED"])
-    const collision = attempt.result.errors.find((e) => collisionCodes.has(e.code))
-    if (collision) {
-      console.error(`[autopost] collision on first attempt (${collision.code}: ${collision.detail}) — retrying once`)
-      attempt = await runOnce({
-        slot, seed, topic, corpus, brandMdText,
-        retryNote: `тема/заголовок дублює "${collision.detail}"`,
-      })
+    // Collisions (topic already covered) and illustration-schema drift
+    // (model returns fewer/malformed illustrations than emit_article asks
+    // for — schema minItems isn't strictly enforced by every provider) are
+    // both retryable with the same one-shot retry: give the model another
+    // pass with a note, since the fix is "try again", not "abort".
+    const retryableCodes = new Set([
+      "TITLE_COLLISION", "SLUG_EXISTS", "TOPIC_KEY_USED",
+      "ILLUSTRATIONS_COUNT", "ILLUSTRATIONS_NOT_ARRAY", "ILLUSTRATIONS_INVALID_ITEM",
+    ])
+    const retryable = attempt.result.errors.find((e) => retryableCodes.has(e.code))
+    if (retryable) {
+      console.error(`[autopost] retryable issue on first attempt (${retryable.code}: ${retryable.detail}) — retrying once`)
+      const isIllustrationIssue = retryable.code.startsWith("ILLUSTRATIONS_")
+      const retryNote = isIllustrationIssue
+        ? `поле illustrations було некоректне (${retryable.code}: ${retryable.detail}). Той самий текст/тема, але цього разу віддай РІВНО 2-3 illustrations, кожна — окрема сцена, з непорожніми "scene" і "alt".`
+        : `тема/заголовок дублює "${retryable.detail}". Візьми інший ракурс чи тему, той самий формат.`
+      attempt = await runOnce({ slot, seed, topic, corpus, brandMdText, retryNote })
     }
   }
 

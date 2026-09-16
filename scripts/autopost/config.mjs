@@ -91,6 +91,8 @@ export const VALIDATION = {
   russianCharPattern: /[ыъёэ]/gi,
   russianCharMaxHits: 2,
   titleJaccardMax: 0.55,
+  illustrationsMin: 2,
+  illustrationsMax: 3,
   coveredListSize: 40,
   wordsPerMinute: 220, // for computed readTime, not model-guessed
   allowedHtmlTags: new Set(["div", "p", "strong", "em", "br", "span", "ul", "ol", "li", "a", "h2", "h3"]),

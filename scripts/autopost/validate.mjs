@@ -53,6 +53,25 @@ export function checkTagsType(article) {
   return { ok: true }
 }
 
+// The emit_article tool schema asks for 2-3 illustrations (see llm.mjs),
+// but minItems/maxItems aren't enforced by every provider the way
+// required/type are (see checkTagsType above) — the model silently drifted
+// to returning just 1 illustration on two consecutive live runs, and
+// nothing caught it, so articles shipped with unfilled illustration slots.
+export function checkIllustrationsCount(article) {
+  if (!Array.isArray(article.illustrations)) {
+    return { ok: false, code: "ILLUSTRATIONS_NOT_ARRAY", detail: typeof article.illustrations }
+  }
+  const { illustrationsMin, illustrationsMax } = VALIDATION
+  if (article.illustrations.length < illustrationsMin || article.illustrations.length > illustrationsMax) {
+    return { ok: false, code: "ILLUSTRATIONS_COUNT", detail: `${article.illustrations.length} illustrations` }
+  }
+  if (article.illustrations.some((i) => !i || typeof i.scene !== "string" || !i.scene.trim() || typeof i.alt !== "string" || !i.alt.trim())) {
+    return { ok: false, code: "ILLUSTRATIONS_INVALID_ITEM", detail: JSON.stringify(article.illustrations) }
+  }
+  return { ok: true }
+}
+
 export function checkLengths(article) {
   const { title, excerpt } = article
   if (title.length < VALIDATION.titleMin || title.length > VALIDATION.titleMax) {
@@ -260,6 +279,7 @@ export function validateArticle(article, { corpus, brandMdText }) {
 
   push(checkLengths(article))
   push(checkTagVocabulary(article))
+  push(checkIllustrationsCount(article))
 
   const wc = push(checkBodyWordCount(article.body_markdown))
   const cyr = push(cyrillicCheck(article.body_markdown))

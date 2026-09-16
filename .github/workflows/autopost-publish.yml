@@ -22,6 +22,8 @@ jobs:
       - name: Merge today's scheduled autopost PR, if any
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLANFIX_ACCOUNT: ${{ secrets.PLANFIX_ACCOUNT }}
+          PLANFIX_TOKEN: ${{ secrets.PLANFIX_TOKEN }}
         run: |
           TODAY=$(date -u +%F)
           PR=$(gh pr list --repo "$GITHUB_REPOSITORY" --label "publish:$TODAY" --state open --json number -q '.[0].number')
@@ -29,5 +31,23 @@ jobs:
             echo "No open PR labeled publish:$TODAY — nothing scheduled for today, or it was already handled."
             exit 0
           fi
+
+          # The PlanFix task id (if any) rode along as a "planfix:<id>" label
+          # since autopost.yml created the task — read it before merging
+          # deletes the branch/PR labels along with it.
+          PF_TASK_ID=$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json labels -q '.labels[].name' | grep -o '^planfix:[0-9]\+$' | cut -d: -f2 || true)
+
           echo "Merging PR #$PR (label publish:$TODAY)"
           gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --delete-branch
+
+          # Best-effort: a failed status update should never fail this
+          # workflow — the article is already live at this point.
+          if [ -n "$PF_TASK_ID" ] && [ -n "$PLANFIX_ACCOUNT" ] && [ -n "$PLANFIX_TOKEN" ]; then
+            curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task/$PF_TASK_ID" \
+              -H "Authorization: Bearer $PLANFIX_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"status":{"id":126}}' || echo "::warning::could not set PlanFix task $PF_TASK_ID to Опубліковано (non-fatal)"
+            echo "Marked PlanFix task $PF_TASK_ID as Опубліковано"
+          elif [ -n "$PF_TASK_ID" ]; then
+            echo "::warning::PR #$PR had planfix:$PF_TASK_ID label but PLANFIX_ACCOUNT/PLANFIX_TOKEN aren't set — status not updated"
+          fi

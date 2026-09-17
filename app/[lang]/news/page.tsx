@@ -7,8 +7,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
 import { notFound } from "next/navigation"
 
-export const dynamic = "force-dynamic"
-
 const NEWS_CATEGORY = "Новини"
 
 export async function generateMetadata({
@@ -115,4 +113,6 @@ export default async function NewsPage({
   }
 }
 
-export const revalidate = 0;
+// Кешируем на час — раньше было revalidate=0 + force-dynamic, то есть
+// список новостей рендерился и дёргал n8n API заново на каждый визит
+export const revalidate = 3600;

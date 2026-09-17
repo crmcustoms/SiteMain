@@ -9,7 +9,10 @@ import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../../blog/components/ErrorBoundary';
 
-export const dynamic = "force-dynamic";
+// Кешируем на час вместо force-dynamic — раньше каждый визит новости
+// заново дёргал n8n/Notion API вместо отдачи из кеша (см. wiki/sitemain.md,
+// диагностика скорости сайта 2026-09-17)
+export const revalidate = 3600;
 
 // Статическая генерация путей для всех новостей
 export async function generateStaticParams() {

@@ -4,6 +4,11 @@ import LangBlogDetailPage, {
   generateStaticParams as generateLangParams,
 } from "../../[lang]/blog/[slug]/page"
 
+// force-dynamic: как и /[lang]/blog/[slug] — see его комментарий,
+// on-demand ISR fallback для slug вне generateStaticParams не работает
+// в этом Netlify-деплое
+export const dynamic = "force-dynamic"
+
 export async function generateStaticParams() {
   const params = await generateLangParams()
   return params

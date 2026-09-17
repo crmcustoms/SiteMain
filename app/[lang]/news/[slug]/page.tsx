@@ -9,15 +9,13 @@ import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../../blog/components/ErrorBoundary';
 
-// Кешируем на час вместо force-dynamic — раньше каждый визит новости
-// заново дёргал n8n/Notion API вместо отдачи из кеша (см. wiki/sitemain.md,
-// диагностика скорости сайта 2026-09-17)
-export const revalidate = 3600;
-// generateStaticParams ниже намеренно возвращает [] во время build (чтобы
-// сборка не зависела от Notion API) — dynamicParams=true обязателен, иначе
-// ЛЮБОЙ slug 404-ится (наследуется dynamicParams=false от app/[lang]/layout.tsx,
-// который блокирует только некорректный lang, а не slug)
-export const dynamicParams = true;
+// ВАЖНО: пробовали заменить на revalidate+dynamicParams=true (ISR с
+// on-demand рендером для неизвестных на билде slug) — в проде на Netlify
+// это привело к 404 на ВСЕХ новостях. Похоже, on-demand ISR fallback тут
+// не работает как ожидается. Откатили к force-dynamic 2026-09-17 —
+// медленнее, но рабочее. Не трогать без локальной проверки на реальном
+// Netlify-деплое (не просто npm run build).
+export const dynamic = "force-dynamic";
 
 // Статическая генерация путей для всех новостей
 export async function generateStaticParams() {

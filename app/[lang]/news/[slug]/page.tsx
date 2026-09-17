@@ -13,6 +13,11 @@ import ErrorBoundary from '../../blog/components/ErrorBoundary';
 // заново дёргал n8n/Notion API вместо отдачи из кеша (см. wiki/sitemain.md,
 // диагностика скорости сайта 2026-09-17)
 export const revalidate = 3600;
+// generateStaticParams ниже намеренно возвращает [] во время build (чтобы
+// сборка не зависела от Notion API) — dynamicParams=true обязателен, иначе
+// ЛЮБОЙ slug 404-ится (наследуется dynamicParams=false от app/[lang]/layout.tsx,
+// который блокирует только некорректный lang, а не slug)
+export const dynamicParams = true;
 
 // Статическая генерация путей для всех новостей
 export async function generateStaticParams() {

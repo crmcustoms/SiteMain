@@ -4,6 +4,11 @@ import LangBlogDetailPage, {
   generateStaticParams as generateLangParams,
 } from "../../[lang]/blog/[slug]/page"
 
+// force-dynamic: как и /[lang]/blog/[slug] — see его комментарий,
+// on-demand ISR fallback для slug вне generateStaticParams не работает
+// в этом Netlify-деплое
+export const dynamic = "force-dynamic"
+
 export async function generateStaticParams() {
   const params = await generateLangParams()
   return params
@@ -11,12 +16,12 @@ export async function generateStaticParams() {
     .map((p) => ({ slug: p.slug }))
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  return generateLangMetadata({ params: Promise.resolve({ slug, lang: i18n.defaultLocale }) })
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  return generateLangMetadata({ params: { slug: params.slug, lang: i18n.defaultLocale } })
 }
 
-export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  return LangBlogDetailPage({ params: Promise.resolve({ slug, lang: i18n.defaultLocale }) })
+export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+  return LangBlogDetailPage({ params: { slug: params.slug, lang: i18n.defaultLocale } })
 }
+
+export const revalidate = 3600

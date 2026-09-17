@@ -150,9 +150,6 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
   }
   
   try {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:138',message:'content_fetch_start',data:{url:new URL(url).origin + new URL(url).pathname,method,hasWebhookSecret:!!webhookSecret},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     const nextOptions =
       (options as RequestInit & { next?: { revalidate?: number } }).next ??
       { revalidate: 3600 };
@@ -175,15 +172,9 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
         url: new URL(url).origin + new URL(url).pathname,
         method,
       });
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:147',message:'content_fetch_not_ok',data:{status:response.status,url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       throw new Error(`Ошибка API: ${response.status}`);
     }
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:151',message:'content_fetch_ok',data:{status:response.status,url:new URL(url).origin + new URL(url).pathname},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-    
+
     return response;
   } catch (error) {
     if (id) clearTimeout(id);
@@ -193,9 +184,6 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}) {
       url: new URL(url).origin + new URL(url).pathname,
       method,
     });
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H1',location:'lib/blog.ts:155',message:'content_fetch_error',data:{errorName:(error as Error)?.name || 'Unknown',errorMessage:(error as Error)?.message || 'Unknown'},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     if ((error as Error).name === 'AbortError') {
       throw new Error('Таймаут запроса');
     }

@@ -2047,9 +2047,6 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
     const webhookUrl = process.env.N8N_ORDERS_URL
     const webhookSecret = process.env.WEBHOOK_SECRET
 
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2047',message:'orders_webhook_env_check',data:{hasWebhookUrl:!!webhookUrl,hasWebhookSecret:!!webhookSecret,formType:params?.formType || 'unknown'},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     if (!webhookUrl) {
       console.error("N8N_ORDERS_URL not configured")
@@ -2077,9 +2074,6 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
     console.log("=======================\n")
 
     // Відправка даних на вебхук
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2066',message:'orders_webhook_request_start',data:{hasWebhookSecret:!!webhookSecret,hasAnswers:!!params?.answers,hasManagerRecommendations:!!params?.managerRecommendations},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
@@ -2097,16 +2091,10 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
       } catch {
         responseText = ""
       }
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2074',message:'orders_webhook_response_error',data:{status:response.status,responseTextLength:responseText.length},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       throw new Error(`Помилка відправки даних: ${response.status} ${response.statusText}`)
     }
 
     const responseData = await response.json().catch(() => ({}))
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'orders-pre',hypothesisId:'H6',location:'lib/actions.ts:2078',message:'orders_webhook_response_ok',data:{status:response.status,hasResponseData:!!responseData && Object.keys(responseData).length > 0},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     console.log("✓ Email запрос успешно отправлен на вебхук")
     console.log("Response status:", response.status)
     console.log("Response data:", responseData)

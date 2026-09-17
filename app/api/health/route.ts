@@ -17,15 +17,9 @@ export async function GET(request: NextRequest) {
       healthRequestTimestamps.shift();
     }
     const requestsLastMinute = healthRequestTimestamps.length;
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'health-pre',hypothesisId:'H1',location:'app/api/health/route.ts:10',message:'health_request_start',data:{cachePresent:!!cachedHealthData,cacheAgeMs:cachedHealthData?now-cachedHealthData.timestamp:null,requestCount:healthRequestCount,requestsLastMinute},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     
     // Используем кеш, если он свежий
     if (cachedHealthData && (now - cachedHealthData.timestamp) < CACHE_TTL) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'health-pre',hypothesisId:'H2',location:'app/api/health/route.ts:17',message:'health_cache_hit',data:{cacheAgeMs:now-cachedHealthData.timestamp,ttlMs:CACHE_TTL,elapsedMs:Date.now()-startTime},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.json(cachedHealthData.data, {
         status: 200,
         headers: {
@@ -61,9 +55,6 @@ export async function GET(request: NextRequest) {
       timestamp: now
     };
 
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'health-pre',hypothesisId:'H3',location:'app/api/health/route.ts:45',message:'health_cache_miss_computed',data:{memUsedMb:healthData.memory.used,memTotalMb:healthData.memory.total,elapsedMs:Date.now()-startTime},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     return NextResponse.json(healthData, {
       status: 200,
@@ -74,9 +65,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     // Ошибки логируем только в случае реальной проблемы
     console.error('[HEALTH] Error in health check:', error);
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'health-pre',hypothesisId:'H4',location:'app/api/health/route.ts:59',message:'health_error',data:{errorType:error instanceof Error ? error.name : 'unknown',errorMessage:error instanceof Error ? error.message : 'unknown'},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     return NextResponse.json({
       status: 'unhealthy',

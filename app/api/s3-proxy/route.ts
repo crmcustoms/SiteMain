@@ -66,9 +66,6 @@ export async function GET(request: NextRequest) {
     // Если URL начинается с http:// или https://, используем его напрямую
     if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
       console.error('S3 Proxy: Неверный формат URL', imageUrl.substring(0, 100));
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H1',location:'app/api/s3-proxy/route.ts:53',message:'s3_proxy_invalid_url',data:{requestsLastMinute,requestCount:s3ProxyRequestCount},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.redirect(new URL(PLACEHOLDER_PATH, request.nextUrl.origin));
     }
 
@@ -78,14 +75,8 @@ export async function GET(request: NextRequest) {
     const hostname = url.hostname;
     const isIp = /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname);
     const isPrivateIp = isIp ? isPrivateIPv4(hostname) : false;
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H1',location:'app/api/s3-proxy/route.ts:61',message:'s3_proxy_request',data:{hostname,isIp,isPrivateIp,isPresigned,isNotion,requestsLastMinute,requestCount:s3ProxyRequestCount},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     if (isPrivateIp || !isAllowedHost(hostname)) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H3',location:'app/api/s3-proxy/route.ts:66',message:'s3_proxy_blocked_host',data:{hostname,isIp,isPrivateIp,allowed:false,requestsLastMinute,requestCount:s3ProxyRequestCount},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
     

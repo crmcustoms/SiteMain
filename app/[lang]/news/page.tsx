@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import { getBlogPostsFromAPI, sortBlogPostsByDate } from "@/lib/blog"
 import { getDictionary } from "@/lib/dictionaries"
 import { getAllContent, ogImageUrl } from "@/lib/content"
 import TypedStaticCases, { CasePost } from "@/components/landing/typed-static-cases"
@@ -43,40 +42,15 @@ export default async function NewsPage({
 }) {
   const resolvedParams = await params;
   const paramsLang = resolvedParams.lang;
-  // force-dynamic обходит dynamicParams=false родительского layout — валидируем locale явно,
-  // иначе /<любой-текст>/news рендерит дубликат этой страницы
+  // Валидируем locale явно — иначе /<любой-текст>/news рендерит дубликат этой страницы
   if (!paramsLang || !i18n.locales.includes(paramsLang)) {
     notFound();
   }
   const safeLocale = paramsLang;
 
-  try {
-    const articles = await getBlogPostsFromAPI(true).catch(() => []) || [];
-    const sortedArticles = sortBlogPostsByDate(articles);
-
-    const newsArticles = Array.isArray(sortedArticles)
-      ? sortedArticles.filter((article: any) => article?.property_categorytext === NEWS_CATEGORY)
-      : [];
-
-    const adaptedPosts: CasePost[] = newsArticles.map((article: any): CasePost => {
-      const title = article.name || article.property_title || 'Без назви';
-      return {
-        id: article.id || Math.random().toString(36).substring(7),
-        title,
-        slug: article.property_link_name || 'untitled',
-        excerpt: article.property_description || '',
-        date: article.property_ || '',
-        image: ogImageUrl(title, NEWS_CATEGORY),
-        tags: [],
-        services: [] as string[],
-        categories: [NEWS_CATEGORY],
-        likes: 0,
-        comments: 0,
-      };
-    });
-
-    // Новини про власні сервіси, опубліковані локально через markdown (content/news/uk/*.md)
-    const markdownPosts: CasePost[] = getAllContent("news", safeLocale).map((entry) => ({
+  const posts: CasePost[] = getAllContent("news", safeLocale)
+    .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
+    .map((entry) => ({
       id: entry.slug,
       title: entry.title,
       slug: entry.slug,
@@ -88,31 +62,16 @@ export default async function NewsPage({
       categories: entry.tag ? [entry.tag] : [NEWS_CATEGORY],
       likes: 0,
       comments: 0,
-    }))
+    }));
 
-    const allPosts = [...markdownPosts, ...adaptedPosts]
-
-    return (
-      <>
-        <Breadcrumbs items={[{ label: 'Новини' }]} lang={safeLocale} />
-        <TypedStaticCases
-          casesData={allPosts}
-          lang={safeLocale}
-          pageType="news"
-        />
-      </>
-    );
-  } catch (error) {
-    console.error("Ошибка при загрузке новостей:", error);
-    return (
-      <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="text-3xl font-bold mb-4">Новини</h1>
-        <p className="text-gray-500">Помилка завантаження новин. Спробуйте пізніше.</p>
-      </div>
-    );
-  }
+  return (
+    <>
+      <Breadcrumbs items={[{ label: 'Новини' }]} lang={safeLocale} />
+      <TypedStaticCases
+        casesData={posts}
+        lang={safeLocale}
+        pageType="news"
+      />
+    </>
+  );
 }
-
-// Кешируем на час — раньше было revalidate=0 + force-dynamic, то есть
-// список новостей рендерился и дёргал n8n API заново на каждый визит
-export const revalidate = 3600;

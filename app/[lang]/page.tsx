@@ -1,8 +1,7 @@
 import { getDictionary } from "@/lib/dictionaries"
 import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
-import { getBlogArticles, sortArticlesByDate } from "@/lib/blog"
-import { getContentBySlug } from "@/lib/content"
+import { getAllContent, getContentBySlug } from "@/lib/content"
 import { notFound } from "next/navigation"
 
 import StaticFinalCta from "@/components/landing/static-final-cta"
@@ -46,13 +45,14 @@ export default async function Home({
     date: string
   }> = [];
   try {
-    const articles = await getBlogArticles(true).catch(() => []) || [];
-    const sortedArticles = sortArticlesByDate(articles);
-    recentCases = sortedArticles.slice(0, 3).map((article: any) => ({
-      title: article.property_name || 'Без названия',
-      slug: article.property_slug || 'untitled',
-      tags: article.property_tags || [],
-      date: article.property_format_date || article.property_date || '',
+    const sortedCases = getAllContent("cases", safeLocale).sort(
+      (a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime(),
+    );
+    recentCases = sortedCases.slice(0, 3).map((entry) => ({
+      title: entry.title,
+      slug: entry.slug,
+      tags: entry.tags || [],
+      date: entry.date,
     }));
 
     // Заміняємо другий кейс на MeetLogNet (за проханням власника)

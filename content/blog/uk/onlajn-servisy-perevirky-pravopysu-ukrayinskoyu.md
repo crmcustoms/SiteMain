@@ -1,6 +1,6 @@
 ---
 title: Сервіс для перевірки правопису
-date: '2026-09-17'
+date: '2026-05-12'
 slug: onlajn-servisy-perevirky-pravopysu-ukrayinskoyu
 excerpt: >-
   Огляд зручного сервісу для перевірки правопису українською: розширення

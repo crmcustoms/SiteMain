@@ -1,6 +1,6 @@
 ---
 title: 'Новина: Огляд оновлень Planfix за липень-серпень 2025'
-date: '2026-09-17'
+date: '2025-09-05'
 slug: onovlennya-planfix-lypen-serpen-2025
 excerpt: >-
   Ключові оновлення Planfix за липень-серпень 2025: нові AI-агенти,

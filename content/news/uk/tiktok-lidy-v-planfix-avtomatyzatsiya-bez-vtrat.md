@@ -1,6 +1,6 @@
 ---
 title: 'TikTok-ліди в Planfix: автоматизація без втрат'
-date: '2026-09-17'
+date: '2026-04-10'
 slug: tiktok-lidy-v-planfix-avtomatyzatsiya-bez-vtrat
 excerpt: >-
   Planfix підключив TikTok Lead Generation: ліди з реклами миттєво

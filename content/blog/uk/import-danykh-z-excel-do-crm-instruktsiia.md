@@ -1,6 +1,6 @@
 ---
 title: Завантаження будь-яких даних у CRM з Excel файлу
-date: '2026-09-17'
+date: '2026-03-05'
 slug: import-danykh-z-excel-do-crm-instruktsiia
 excerpt: >-
   Як налаштувати автоматичне завантаження угод у CRM з Excel-файлів через

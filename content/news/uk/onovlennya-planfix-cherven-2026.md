@@ -1,6 +1,6 @@
 ---
 title: 'Planfix оновлення червня 2026: дошка, донат-діаграма та нові відео'
-date: '2026-09-17'
+date: '2026-07-03'
 slug: onovlennya-planfix-cherven-2026
 excerpt: >-
   Нові фічі Planfix: скрипти та кнопки на Whiteboard, донат-діаграма в

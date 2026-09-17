@@ -1,6 +1,6 @@
 ---
 title: Повторювані задачі в шаблонах проєктів Planfix
-date: '2026-09-17'
+date: '2026-03-20'
 slug: povtoryuvani-zadachi-v-shablonakh-proektiv-planfix
 excerpt: >-
   Planfix додав повторювані задачі прямо в шаблони проєктів. Налаштуйте

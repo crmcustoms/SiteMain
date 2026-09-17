@@ -1,6 +1,6 @@
 ---
 title: 'Проект «DIY CRM» — частина 1'
-date: '2026-09-17'
+date: '2026-01-15'
 slug: diy-crm-stvorennia-vlasnoi-crm-z-nulia-chastyna-1
 excerpt: >-
   Як самостійно зібрати CRM-систему без розробників: які сервіси я

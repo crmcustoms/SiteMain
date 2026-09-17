@@ -1,6 +1,6 @@
 ---
 title: Planfix — серед найкращих інструментів управління задачами 2026
-date: '2026-09-17'
+date: '2026-06-08'
 slug: planfix-u-topi-task-management-instrumentiv-2026
 excerpt: >-
   Planfix потрапив до огляду найкращих інструментів управління задачами

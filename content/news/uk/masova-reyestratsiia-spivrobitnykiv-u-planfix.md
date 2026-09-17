@@ -1,6 +1,6 @@
 ---
 title: Масове додавання співробітників у Planfix через посилання самореєстрації
-date: '2026-09-17'
+date: '2026-02-25'
 slug: masova-reyestratsiia-spivrobitnykiv-u-planfix
 excerpt: >-
   Planfix додав масову реєстрацію співробітників через посилання. Адмін

@@ -1,6 +1,6 @@
 ---
 title: 'Planfix — №1 серед Agile-інструментів: що це означає для вас'
-date: '2026-09-17'
+date: '2026-05-15'
 slug: planfix-ocholyv-reytnh-agile-instrumentiv
 excerpt: >-
   Planfix визнано найкращим інструментом для Agile-команд. Scrum, Kanban,

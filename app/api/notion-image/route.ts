@@ -38,14 +38,8 @@ export async function GET(request: NextRequest) {
     try {
       hostname = new URL(imageUrl).hostname;
     } catch {}
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H2',location:'app/api/notion-image/route.ts:20',message:'notion_image_request',data:{hasUrl:!!imageUrl,isPresigned,hostname,requestsLastMinute,requestCount:notionImageRequestCount},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     if (!hostname || !isAllowedHost(hostname)) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H3',location:'app/api/notion-image/route.ts:30',message:'notion_image_blocked_host',data:{hostname,allowed:false,requestsLastMinute,requestCount:notionImageRequestCount},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return new NextResponse('Forbidden', { status: 403 });
     }
     
@@ -79,9 +73,6 @@ export async function GET(request: NextRequest) {
     }
     
     // Для обычных URL выполняем редирект на S3-прокси
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H2',location:'app/api/notion-image/route.ts:52',message:'notion_image_redirect_s3',data:{hostname,isPresigned,requestsLastMinute,requestCount:notionImageRequestCount},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     return NextResponse.redirect(`/api/s3-proxy/${imageUrl}`);
   } catch (error) {
     console.error('Ошибка при доступе к изображению Notion:', error);

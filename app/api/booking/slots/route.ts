@@ -9,17 +9,11 @@ export async function GET(request: NextRequest) {
       "unknown"
     const rate = await checkRateLimit(`booking:slots:${clientIp}`)
     if (!rate.ok) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/slots/route.ts:8',message:'booking_slots_rate_limited',data:{clientIp,remaining:rate.remaining},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.json({ error: "Too many requests" }, { status: 429 })
     }
 
     const secret = request.headers.get("x-webhook-secret")
     if (secret && secret !== process.env.WEBHOOK_SECRET) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'probe-pre',hypothesisId:'H4',location:'app/api/booking/slots/route.ts:16',message:'booking_slots_unauthorized',data:{hasSecret:true},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -71,9 +65,6 @@ export async function GET(request: NextRequest) {
     url.searchParams.set('endDate', endDate)
 
     // Запрос к n8n webhook через GET
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:72',message:'booking_slots_webhook_request',data:{url:url.origin + url.pathname,hasWebhookSecret:!!webhookSecret},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
@@ -83,21 +74,12 @@ export async function GET(request: NextRequest) {
     })
 
     if (!response.ok) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:80',message:'booking_slots_webhook_not_ok',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       throw new Error(`n8n webhook returned ${response.status}`)
     }
 
     const contentType = response.headers.get('content-type') || ''
     const responseText = await response.text()
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:82',message:'booking_slots_webhook_response_meta',data:{status:response.status,contentType,responseTextLength:responseText.length},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     if (!responseText.trim()) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:84',message:'booking_slots_empty_body',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       return NextResponse.json(
         { success: true, slots: [], slotsByDate: {}, totalSlots: 0 },
         { status: 200 }
@@ -107,9 +89,6 @@ export async function GET(request: NextRequest) {
     try {
       data = JSON.parse(responseText)
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:90',message:'booking_slots_json_parse_failed',data:{status:response.status},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       throw error
     }
 
@@ -118,9 +97,6 @@ export async function GET(request: NextRequest) {
     const slotsArray = isArray ? payload : payload?.slots
     const hasSlotsByDate = !!payload?.slotsByDate
     const hasSlotsArray = Array.isArray(slotsArray)
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:101',message:'booking_slots_payload_shape',data:{isArray,hasSlotsByDate,hasSlotsArray,keys:payload && !isArray ? Object.keys(payload).slice(0,8) : []},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     if (hasSlotsByDate && hasSlotsArray) {
       return NextResponse.json(
@@ -155,9 +131,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(data, { status: 200 })
   } catch (error) {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/de426b11-629a-4d11-809b-e48b79b36174',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:'debug-session',runId:'services-pre',hypothesisId:'H2',location:'app/api/booking/slots/route.ts:88',message:'booking_slots_error',data:{errorMessage:error instanceof Error ? error.message : 'Unknown'},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     console.error('Error fetching available slots:', error)
     return NextResponse.json(
       {

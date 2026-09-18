@@ -7,8 +7,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import { i18n } from "@/lib/i18n-config"
 import { notFound } from "next/navigation"
 
-export const dynamic = "force-dynamic"
-
 // Динамическая генерация метаданных
 export async function generateMetadata({
   params
@@ -198,5 +196,6 @@ export default async function BlogPage({
   }
 }
 
-// Уменьшаем время ревалидации до 10 минут для частого обновления данных
-export const revalidate = 0;
+// Кешируем на час — раньше было revalidate=0 + force-dynamic, то есть
+// список статей рендерился и дёргал n8n API заново на каждый визит
+export const revalidate = 3600;

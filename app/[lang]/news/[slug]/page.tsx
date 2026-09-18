@@ -9,6 +9,12 @@ import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../../blog/components/ErrorBoundary';
 
+// ВАЖНО: пробовали заменить на revalidate+dynamicParams=true (ISR с
+// on-demand рендером для неизвестных на билде slug) — в проде на Netlify
+// это привело к 404 на ВСЕХ новостях. Похоже, on-demand ISR fallback тут
+// не работает как ожидается. Откатили к force-dynamic 2026-09-17 —
+// медленнее, но рабочее. Не трогать без локальной проверки на реальном
+// Netlify-деплое (не просто npm run build).
 export const dynamic = "force-dynamic";
 
 // Статическая генерация путей для всех новостей

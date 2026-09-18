@@ -10,7 +10,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.implementation?.metaTitle || "Впровадження CRM",
-    description: dict.implementation?.metaDescription || "Вивчимо процеси вашої компанії, налаштуємо воронки продажів, інтеграції та навчимо співробітників роботі з системою."
+    description: dict.implementation?.metaDescription || "Вивчимо процеси вашої компанії, налаштуємо воронки продажів, інтеграції та навчимо співробітників роботі з системою.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/implementation-crm" }
   }
 }
 

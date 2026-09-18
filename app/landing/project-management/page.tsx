@@ -12,7 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.projectManagement?.metaTitle || "Управління проектами",
-    description: dict.projectManagement?.metaDescription || "Професійне управління проектами впровадження та розвитку CRM систем. Точно в строк і в рамках бюджету."
+    description: dict.projectManagement?.metaDescription || "Професійне управління проектами впровадження та розвитку CRM систем. Точно в строк і в рамках бюджету.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/project-management" }
   }
 }
 

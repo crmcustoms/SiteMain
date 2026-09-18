@@ -9,6 +9,13 @@ import { getContentBySlug, getAllContent, ogImageUrl } from "@/lib/content";
 import { ArticleRenderer } from "@/components/article-renderer";
 import ErrorBoundary from '../components/ErrorBoundary';
 
+// ВАЖНО: пробовали заменить на revalidate+dynamicParams=true (ISR с
+// on-demand рендером для неизвестных на билде slug — их тут большинство,
+// см. generateStaticParams ниже) — в проде на Netlify это привело к 404
+// на ВСЕХ статьях, включая markdown. Похоже, on-demand ISR fallback тут
+// не работает как ожидается. Откатили к force-dynamic 2026-09-17 —
+// медленнее, но рабочее. Не трогать без локальной проверки на реальном
+// Netlify-деплое (не просто npm run build).
 export const dynamic = "force-dynamic";
 
 // Статическая генерация путей для всех статей блога
@@ -78,6 +85,7 @@ export async function generateMetadata({
     return {
       title: article.name || article.title || 'Блог',
       description: article.property_description || article.description || '',
+      alternates: { canonical: `https://crmcustoms.com/${safeLocale}/blog/${slug}` },
       openGraph: {
         title: article.name || article.title || 'Блог',
         description: article.property_description || article.description || '',

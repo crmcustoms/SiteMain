@@ -11,7 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.support?.metaTitle || "Технічна підтримка CRM",
-    description: dict.support?.metaDescription || "Отримайте професійну технічну підтримку для вашої CRM системи. Оперативне вирішення проблем і регулярні оновлення."
+    description: dict.support?.metaDescription || "Отримайте професійну технічну підтримку для вашої CRM системи. Оперативне вирішення проблем і регулярні оновлення.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/support-crm" }
   }
 }
 

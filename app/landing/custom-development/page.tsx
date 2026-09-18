@@ -11,7 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: dict.customDev?.metaTitle || "Індивідуальна розробка",
-    description: dict.customDev?.metaDescription || "Розробка індивідуальних рішень для автоматизації бізнесу та інтеграції з іншими системами."
+    description: dict.customDev?.metaDescription || "Розробка індивідуальних рішень для автоматизації бізнесу та інтеграції з іншими системами.",
+    alternates: { canonical: "https://crmcustoms.com/uk/landing/custom-development" }
   }
 }
 

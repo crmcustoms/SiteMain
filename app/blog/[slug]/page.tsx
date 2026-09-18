@@ -4,6 +4,9 @@ import LangBlogDetailPage, {
   generateStaticParams as generateLangParams,
 } from "../../[lang]/blog/[slug]/page"
 
+// force-dynamic: как и /[lang]/blog/[slug] — see его комментарий,
+// on-demand ISR fallback для slug вне generateStaticParams не работает
+// в этом Netlify-деплое
 export const dynamic = "force-dynamic"
 
 export async function generateStaticParams() {
@@ -21,4 +24,4 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
   return LangBlogDetailPage({ params: { slug: params.slug, lang: i18n.defaultLocale } })
 }
 
-export const revalidate = 0
+export const revalidate = 3600

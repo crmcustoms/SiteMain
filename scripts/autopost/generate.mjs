@@ -178,6 +178,43 @@ async function tryAddIllustration(article, cwd) {
   return { body: insertIllustrationsMarkdown(article.body_markdown, placed), added: placed.length }
 }
 
+// One corrective sentence per validation error code, fed back into the
+// single retry attempt. Falls back to a generic "fix this" for any code
+// added to validate.mjs without a specific message here — still strictly
+// better than the old silent blind-retry for unlisted codes.
+function describeErrorForRetry({ code, detail }) {
+  const messages = {
+    MISSING_FIELDS: `у відповіді бракувало обов'язкових полів (${detail}) — цього разу поверни emit_article з усіма полями заповненими.`,
+    TAGS_NOT_ARRAY: `поле tags має бути масивом рядків, а не ${detail} — виправ формат.`,
+    TAGS_COUNT: `tags має 2-4 елементи, було ${detail} — підбери правильну кількість.`,
+    TAGS_INVALID_ITEM: `один з елементів tags некоректний (${detail}) — усі мають бути непорожніми рядками.`,
+    TITLE_LENGTH: `заголовок не в межах 25-90 символів (${detail}) — переформулюй коротше/довше.`,
+    EXCERPT_LENGTH: `excerpt не в межах 80-200 символів (${detail}) — підправ довжину.`,
+    TAG_NOT_IN_VOCABULARY: `tag "${detail}" не входить у затверджений список категорій сайту — візьми один з дозволених.`,
+    BODY_WORD_COUNT: `текст статті ${detail}, потрібно 700-1400 слів — допиши або скороти.`,
+    MIXED_SCRIPT_WORD: `слово "${detail}" змішує кирилицю й латиницю в одному слові — виправ на суцільну кирилицю або суцільну латиницю.`,
+    LOW_CYRILLIC_RATIO: `забагато латинських символів у тексті (кирилиця лише ${detail}) — перепиши українською, залишивши лише дозволені терміни (Planfix, CRM, n8n тощо) латиницею.`,
+    LATIN_RUN: `${detail} підряд — не більше 2 латинських слів підряд поза дозволеним списком термінів, розбий речення.`,
+    RUSSIAN_CHARS: `у тексті трапляються російські літери (${detail}) — це має бути чиста українська, без ы/ъ/ё/э.`,
+    FORBIDDEN_SOURCE: `у тексті згадано заборонене джерело/конкурента (${detail}) — прибери цю згадку повністю.`,
+    UNAPPROVED_STAT: `цифра "${detail}" не підтверджена в BRAND.md APPROVED CLAIMS — прибери цю статистику або переформулюй без конкретного числа, не вигадуй нову.`,
+    FORBIDDEN_HTML_TAG: `у тілі є заборонений HTML-тег (${detail}) — прибери його, лишились дозволені: div/p/strong/em/br/span/ul/ol/li/a/h2/h3.`,
+    HTML_EVENT_HANDLER: `у тілі є обробник подій (${detail}) — прибери його, це заборонено.`,
+    JS_URL: `у тілі є javascript: URL — прибери його.`,
+    DISALLOWED_HTML_TAG: `тег <${detail}> не входить у дозволений список — прибери або заміни на дозволений.`,
+    DISALLOWED_HTML_CLASS: `клас "${detail}" не входить у дозволений список (pullquote/highlight-box/warning/scale-grid/scale-card/scale-label) — прибери або заміни.`,
+    UNBALANCED_DIV: `у тілі не збігається кількість відкритих і закритих <div> — перевір розмітку.`,
+    H1_IN_BODY: `у тілі є заголовок першого рівня (# ...) — заголовки в тілі статті мають бути ## або ###, title йде окремо у frontmatter.`,
+    TITLE_COLLISION: `заголовок надто схожий на вже опубліковане "${detail}" — візьми інший ракурс чи тему.`,
+    SLUG_EXISTS: `slug "${detail}" вже зайнятий — згенеруй інший slug для тієї самої теми.`,
+    TOPIC_KEY_USED: `topicKey "${detail}" вже використаний — якщо це та сама задана тема, зроби інший кут; якщо тему обираєш сам, візьми геть іншу.`,
+    ILLUSTRATIONS_NOT_ARRAY: `поле illustrations було некоректне (${detail}) — цього разу віддай РІВНО 2-3 illustrations, кожна — окрема сцена, з непорожніми "scene" і "alt".`,
+    ILLUSTRATIONS_COUNT: `було ${detail}, а треба рівно 2-3 — додай або прибери сцени.`,
+    ILLUSTRATIONS_INVALID_ITEM: `один з елементів illustrations некоректний (${detail}) — кожен має мати непорожні "scene" і "alt".`,
+  }
+  return messages[code] || `виправ помилку ${code} (${detail}).`
+}
+
 function setOutput(name, value) {
   const outFile = process.env.GITHUB_OUTPUT
   if (!outFile) return
@@ -223,24 +260,18 @@ async function main() {
   let attempt = await runOnce({ slot, seed, topic, corpus, brandMdText })
 
   if (!attempt.result.ok) {
-    // Collisions (topic already covered) and illustration-schema drift
-    // (model returns fewer/malformed illustrations than emit_article asks
-    // for — schema minItems isn't strictly enforced by every provider) are
-    // both retryable with the same one-shot retry: give the model another
-    // pass with a note, since the fix is "try again", not "abort".
-    const retryableCodes = new Set([
-      "TITLE_COLLISION", "SLUG_EXISTS", "TOPIC_KEY_USED",
-      "ILLUSTRATIONS_COUNT", "ILLUSTRATIONS_NOT_ARRAY", "ILLUSTRATIONS_INVALID_ITEM",
-    ])
-    const retryable = attempt.result.errors.find((e) => retryableCodes.has(e.code))
-    if (retryable) {
-      console.error(`[autopost] retryable issue on first attempt (${retryable.code}: ${retryable.detail}) — retrying once`)
-      const isIllustrationIssue = retryable.code.startsWith("ILLUSTRATIONS_")
-      const retryNote = isIllustrationIssue
-        ? `поле illustrations було некоректне (${retryable.code}: ${retryable.detail}). Той самий текст/тема, але цього разу віддай РІВНО 2-3 illustrations, кожна — окрема сцена, з непорожніми "scene" і "alt".`
-        : `тема/заголовок дублює "${retryable.detail}". Візьми інший ракурс чи тему, той самий формат.`
-      attempt = await runOnce({ slot, seed, topic, corpus, brandMdText, retryNote })
-    }
+    // Every validation failure gets one corrective retry — not just the
+    // handful of codes this used to special-case. A blind identical retry
+    // (the old behavior for anything outside that short allowlist) just
+    // burns an attempt and fails differently each time, which is exactly
+    // what left 2026-09-18 stuck needing a manual run: LATIN_RUN on try 1,
+    // TAGS_NOT_ARRAY on try 2, neither retry actually told the model what
+    // to fix. Building one note per error code and retrying always is
+    // strictly more likely to converge than hoping the same prompt lands
+    // differently by chance.
+    const retryNote = attempt.result.errors.map((e) => describeErrorForRetry(e)).join(" ")
+    console.error(`[autopost] validation failed on first attempt (${attempt.result.errors.map((e) => e.code).join(", ")}) — retrying once with corrections`)
+    attempt = await runOnce({ slot, seed, topic, corpus, brandMdText, retryNote })
   }
 
   if (!attempt.result.ok) {

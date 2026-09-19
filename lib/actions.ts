@@ -2040,15 +2040,20 @@ function generateManagerRecommendationsHTML(clientType: string, answers: any, pr
 }
 
 // Функція для відправки email повідомлення
-// НАПРЯМУ: сайт → Planfix (вхідний вебхук) + Telegram менеджеру. Без n8n.
+// В реальному проекті тут буде інтеграція з сервісом відправки email
 async function sendEmailNotification(params: Record<string, any>): Promise<boolean> {
   try {
-    const planfixWebhookUrl = process.env.PLANFIX_WEBHOOK_URL
-    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
-    const telegramChatId = process.env.TELEGRAM_CHAT_ID || process.env.OWNER_TELEGRAM_ID
+    // Всі форми відправляються на один вебхук
+    const webhookUrl = process.env.N8N_ORDERS_URL
+    const webhookSecret = process.env.WEBHOOK_SECRET
 
-    if (!planfixWebhookUrl) {
-      console.error("PLANFIX_WEBHOOK_URL not configured")
+
+    if (!webhookUrl) {
+      console.error("N8N_ORDERS_URL not configured")
+      return false
+    }
+    if (!webhookSecret) {
+      console.error("WEBHOOK_SECRET not configured")
       return false
     }
 
@@ -2058,66 +2063,44 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
       timestamp: new Date().toISOString(),
     }
 
-    console.log("=== DIRECT SEND ===")
+    console.log("=== WEBHOOK REQUEST ===")
     console.log("Form Type:", params.formType)
+    console.log("URL:", webhookUrl)
+    console.log("Has answers:", !!params.answers)
+    console.log("Has clientType:", !!params.clientType)
+    console.log("Has htmlContent:", !!params.htmlContent)
+    console.log("Has managerRecommendations:", !!params.managerRecommendations)
     console.log("Payload keys:", Object.keys(payload))
-    console.log("===================\n")
+    console.log("=======================\n")
 
-    // 1. Заявка в Planfix через вхідний вебхук (той самий, що смикав n8n)
-    let planfixOk = false
-    try {
-      const pfResponse = await fetch(planfixWebhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      if (!pfResponse.ok) {
-        const t = await pfResponse.text().catch(() => "")
-        console.error(`Planfix webhook failed: ${pfResponse.status} ${t.slice(0, 300)}`)
-      } else {
-        planfixOk = true
-        console.log("✓ Заявка відправлена в Planfix напряму")
-      }
-    } catch (e) {
-      console.error("✗ Помилка відправки в Planfix:", e instanceof Error ? e.message : e)
-    }
+    // Відправка даних на вебхук
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-webhook-secret": webhookSecret,
+        "WEBHOOK_SECRET": webhookSecret,
+      },
+      body: JSON.stringify(payload),
+    })
 
-    // 2. Дубль в Telegram менеджеру (best-effort, не валимо заявку якщо впав)
-    if (telegramBotToken && telegramChatId) {
+    if (!response.ok) {
+      let responseText = ""
       try {
-        const lines = [
-          "🔔 Нова заявка з сайту",
-          "",
-          `Ім'я: ${params.name ?? "Не вказано"}`,
-          `Телефон: ${params.phone ?? "Не вказано"}`,
-          `Email: ${params.email ?? "Не вказано"}`,
-          `Тип форми: ${params.formType ?? "contact"}`,
-        ]
-        if (params.message) lines.push(`Повідомлення: ${params.message}`)
-        if (params.clientType) lines.push(`Тип клієнта: ${params.clientType}`)
-        if (params.callTime) lines.push(`Час дзвінка: ${params.callTime}${params.otherTime ? ` (${params.otherTime})` : ""}`)
-
-        const tgResponse = await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: telegramChatId, text: lines.join("\n") }),
-        })
-        if (tgResponse.ok) {
-          console.log("✓ Дубль заявки відправлено в Telegram")
-        } else {
-          const t = await tgResponse.text().catch(() => "")
-          console.error(`Telegram send failed: ${tgResponse.status} ${t.slice(0, 300)}`)
-        }
-      } catch (e) {
-        console.error("✗ Помилка відправки в Telegram:", e instanceof Error ? e.message : e)
+        responseText = await response.text()
+      } catch {
+        responseText = ""
       }
-    } else {
-      console.error("TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not configured, skip Telegram")
+      throw new Error(`Помилка відправки даних: ${response.status} ${response.statusText}`)
     }
 
-    return planfixOk
+    const responseData = await response.json().catch(() => ({}))
+    console.log("✓ Email запрос успешно отправлен на вебхук")
+    console.log("Response status:", response.status)
+    console.log("Response data:", responseData)
+    return true
   } catch (error) {
-    console.error("✗ Помилка прямої відправки заявки:", error)
+    console.error("✗ Помилка відправки email на вебхук:", error)
     if (error instanceof Error) {
       console.error("Error message:", error.message)
       console.error("Error stack:", error.stack)

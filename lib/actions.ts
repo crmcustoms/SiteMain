@@ -2063,28 +2063,13 @@ async function sendEmailNotification(params: Record<string, any>): Promise<boole
     console.log("Payload keys:", Object.keys(payload))
     console.log("===================\n")
 
-    // 1. Заявка в Planfix через вхідний вебхук.
-    // Формат 1-в-1 як раніше відправляв n8n: одне поле message з markdown-текстом
-    // (Code-вузол workflow "Форма заявки сайт новий"). Сценарій Planfix розбирає саме його.
+    // 1. Заявка в Planfix через вхідний вебхук (той самий, що смикав n8n)
     let planfixOk = false
     try {
-      const escapeMd = (s: any) =>
-        s === undefined || s === null || s === ""
-          ? "N/A"
-          : String(s).replace(/[_*[\]()~`>#+=|{}.!-]/g, "\\$&")
-      const ts = new Date().toISOString()
-      const planfixMessage =
-        `*Contact Form Submission*\n\n` +
-        `*Name:* ${escapeMd(params.name)}\n` +
-        `*Email:* ${escapeMd(params.email ?? "Не вказано")}\n` +
-        `*Phone:* ${escapeMd(params.phone)}\n` +
-        `*Message:* ${escapeMd(params.message ?? "Не вказано")}\n` +
-        `*Form Type:* ${escapeMd(params.formType ?? "contact")}\n` +
-        `*Timestamp:* ${escapeMd(ts)}`
       const pfResponse = await fetch(planfixWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: planfixMessage }),
+        body: JSON.stringify(payload),
       })
       if (!pfResponse.ok) {
         const t = await pfResponse.text().catch(() => "")

@@ -13,10 +13,10 @@ on:
   workflow_dispatch:
     inputs:
       video_url:
-        description: 'Post a Reels video for an already-published article (URL of the .mp4)'
+        description: 'Post a Reels video to Facebook for an already-published article (URL of the .mp4)'
         required: false
       image_url:
-        description: 'Post a single image to Facebook + Instagram (URL of the .jpg/.png)'
+        description: 'Post a single image to Facebook (URL of the .jpg/.png)'
         required: false
       article_url:
         description: 'Live article/link URL (required with video_url/image_url)'
@@ -76,16 +76,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - name: Post image to Instagram
-        env:
-          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
-          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
-        run: |
-          node scripts/social/post-instagram.mjs \
-            --title "${{ inputs.title }}" \
-            --excerpt "${{ inputs.excerpt }}" \
-            --url "${{ inputs.article_url }}" \
-            --image "${{ inputs.image_url }}"
       - name: Post image to Facebook Page
         env:
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
@@ -107,16 +97,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - name: Post Reels video to Instagram
-        env:
-          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
-          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
-        run: |
-          node scripts/social/post-instagram.mjs \
-            --title "${{ inputs.title }}" \
-            --excerpt "${{ inputs.excerpt }}" \
-            --url "${{ inputs.article_url }}" \
-            --video "${{ inputs.video_url }}"
       - name: Post video to Facebook Page
         env:
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
@@ -171,7 +151,6 @@ jobs:
     # instead, which IS a valid context in `if:`.
     env:
       HAS_FB_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' }}
-      HAS_IG_ACCOUNT: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -231,32 +210,3 @@ jobs:
             --title "$POST_TITLE" \
             --excerpt "$POST_EXCERPT" \
             --url "$POST_URL"
-
-      - name: Post to Instagram (@crmcustomsua)
-        # Needs an actual illustration — IG doesn't accept link/text-only
-        # posts, and posting the generic OG text-card cover there would
-        # defeat the point of the brighter illustration style. Skipped
-        # (not failed) when this post has none, or when the secrets aren't
-        # set yet.
-        #
-        # continue-on-error: Telegram and Facebook already posted by this
-        # point in the job — an IG-side failure (e.g. a Meta app permission
-        # error) must not turn the whole run red and bury the fact that the
-        # other two channels succeeded. 2026-09-21 did exactly this: IG hit
-        # "(#10) Application does not have permission for this action" and
-        # the run showed as a flat failure even though TG+FB were live.
-        if: ${{ env.HAS_FB_TOKEN == 'true' && env.HAS_IG_ACCOUNT == 'true' && matrix.post.illustrationUrl != '' }}
-        continue-on-error: true
-        env:
-          FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
-          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
-          POST_TITLE: ${{ matrix.post.title }}
-          POST_EXCERPT: ${{ matrix.post.excerpt }}
-          POST_URL: ${{ matrix.post.url }}
-          POST_ILLUSTRATION: ${{ matrix.post.illustrationUrl }}
-        run: |
-          node scripts/social/post-instagram.mjs \
-            --title "$POST_TITLE" \
-            --excerpt "$POST_EXCERPT" \
-            --url "$POST_URL" \
-            --image "$POST_ILLUSTRATION"

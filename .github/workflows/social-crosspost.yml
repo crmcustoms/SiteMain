@@ -238,7 +238,15 @@ jobs:
         # defeat the point of the brighter illustration style. Skipped
         # (not failed) when this post has none, or when the secrets aren't
         # set yet.
+        #
+        # continue-on-error: Telegram and Facebook already posted by this
+        # point in the job — an IG-side failure (e.g. a Meta app permission
+        # error) must not turn the whole run red and bury the fact that the
+        # other two channels succeeded. 2026-09-21 did exactly this: IG hit
+        # "(#10) Application does not have permission for this action" and
+        # the run showed as a flat failure even though TG+FB were live.
         if: ${{ env.HAS_FB_TOKEN == 'true' && env.HAS_IG_ACCOUNT == 'true' && matrix.post.illustrationUrl != '' }}
+        continue-on-error: true
         env:
           FACEBOOK_PAGE_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN }}
           INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}

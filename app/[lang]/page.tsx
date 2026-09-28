@@ -65,6 +65,17 @@ export default async function Home({
         date: meetlognet.date,
       };
     }
+
+    // Третій кейс — Planfix для відеостудії (за проханням власника)
+    const videostudio = getContentBySlug("cases", safeLocale, "planfix-dlya-videoprodakshn-studii");
+    if (videostudio && recentCases.length >= 3) {
+      recentCases[2] = {
+        title: videostudio.title,
+        slug: videostudio.slug,
+        tags: videostudio.tags || [],
+        date: videostudio.date,
+      };
+    }
   } catch (error) {
     console.error("Ошибка при получении кейсов для hero-section:", error);
   }

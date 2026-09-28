@@ -45,6 +45,11 @@ const heroVideos = [
     youtubeUrl: "https://youtu.be/q2yXqcSAyt8",
     cover: "/images/case-studies/meetlognet-cover.jpg",
   },
+  {
+    title: "Planfix для відеопродакшн-студії: етапи, техніка і прибуток в одній системі",
+    youtubeUrl: "https://youtu.be/TAoG8DX7d2w",
+    cover: "/images/case-studies/planfix-dlya-videoprodakshn-studii-cover.png",
+  },
 ]
 
 interface RecentCase {

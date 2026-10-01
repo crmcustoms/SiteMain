@@ -1,15 +1,19 @@
-import { Unbounded, Golos_Text } from "next/font/google"
+import localFont from "next/font/local"
 
-export const unbounded = Unbounded({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "700", "900"],
+// Self-hosted (latin + cyrillic subsets of the Google Fonts variable files)
+// instead of next/font/google: that one downloads the fonts from Google on
+// every build, and a bad response from Google failed the 2026-09-30 Netlify
+// production deploy, so the scheduled article never went live.
+export const unbounded = localFont({
+  src: "../assets/fonts/Unbounded.woff2",
+  weight: "200 900",
   variable: "--font-unbounded",
   display: "swap",
 })
 
-export const golosText = Golos_Text({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600"],
+export const golosText = localFont({
+  src: "../assets/fonts/GolosText.woff2",
+  weight: "400 900",
   variable: "--font-golos",
   display: "swap",
 })

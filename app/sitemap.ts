@@ -1,3 +1,4 @@
+import { automationSitemapEntries } from "@/lib/automations"
 import type { MetadataRoute } from "next"
 import { getAllContent } from "@/lib/content"
 import { i18n } from "@/lib/i18n-config"
@@ -66,5 +67,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
+  entries.push(...automationSitemapEntries())
   return entries
 }

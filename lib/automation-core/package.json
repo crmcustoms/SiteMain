@@ -1,0 +1,24 @@
+{
+  "name": "@crmcustoms/automation-core",
+  "version": "0.1.0-seed.cbeec28cf592",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./preview-store": "./preview-project-store.js"
+  },
+  "description": "Версійоване ядро каталогу й конструктора CRMCUSTOMS",
+  "files": [
+    "catalog.js",
+    "engine.js",
+    "validate.js",
+    "schema-check.js",
+    "data.js",
+    "index.js",
+    "preview-project-store.js",
+    "manifest.json"
+  ],
+  "engines": {
+    "node": ">=20.12"
+  }
+}

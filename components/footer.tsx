@@ -39,6 +39,7 @@ export default function Footer({ dict, lang = 'ua' }: { dict: any; lang?: string
                   {dict.navigation.home}
                 </Link>
               </li>
+              <li><Link href={`/${lang}/automations`} className="text-sm text-muted-foreground hover:text-primary">Автоматизації</Link></li>
               <li>
                 <Link href={`/${lang}/blog`} className="text-sm text-muted-foreground hover:text-primary">
                   {dict.navigation.blog}

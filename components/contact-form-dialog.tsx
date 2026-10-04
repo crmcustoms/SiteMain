@@ -25,6 +25,7 @@ interface ContactFormDialogProps {
   formType?: string
   buttonText: string
   dict: any
+  initialMessage?: string
 }
 
 export function ContactFormDialog({
@@ -34,6 +35,7 @@ export function ContactFormDialog({
   formType = "contact",
   buttonText,
   dict,
+  initialMessage = "",
 }: ContactFormDialogProps) {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,7 +44,7 @@ export function ContactFormDialog({
     name: "",
     email: "",
     phone: "",
-    message: "",
+    message: initialMessage,
   })
 
   const formatPhone = (value: string) => {
@@ -95,7 +97,7 @@ export function ContactFormDialog({
           name: "",
           email: "",
           phone: "",
-          message: "",
+          message: initialMessage,
         })
         // Закриваємо діалог
         setOpen(false)

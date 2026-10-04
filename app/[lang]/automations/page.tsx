@@ -42,7 +42,7 @@ export default async function AutomationsPage({ params, searchParams }: Props) {
     <div className={styles.grid}>{records.map(record => <article className={styles.card} key={record.id}>
       <p className={styles.muted}>{categoryLabels[record.category]}{record.status !== 'published' ? ' · Чернетка' : ''}</p>
       <h2><Link href={`${automationBase}/${record.slug}`}>{record.title}</Link></h2>
-      <p>{record.problem}</p><p>{record.outcome}</p>
+      <p><strong>Проблема</strong>{record.problem}</p><p><strong>Результат</strong>{record.outcome}</p>
       <Link href={`${automationBase}/${record.slug}`}>Варіанти та оцінка</Link>
     </article>)}</div>
   </div></section>

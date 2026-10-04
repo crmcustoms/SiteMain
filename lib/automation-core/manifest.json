@@ -1,0 +1,16 @@
+{
+  "format": 1,
+  "digest": "cbeec28cf592278b59d65eb0093a39bc4ab625e1bee6b4ce0b8f25c002ee54a8",
+  "records": 50,
+  "variants": 59,
+  "published": 0,
+  "source_files": {
+    "src/catalog.js": "143de12134c12e05318c7375bb86ab9042eb674cb43f5f3936ee1d354e86899f",
+    "src/engine.js": "28e32294345255a0314ac22f060d715971644c10c20be7af20fbab5a96ff99c5",
+    "src/schema-check.js": "54f3cae0269fc5dd1856fd439bdd4d0f2ab62ba9a629a5f7ad40524252ec5063",
+    "src/validate.js": "f2718f186459723b808cd785e7360f42d0a5e9caa79085b945cd9f38b63bf0e4",
+    "src/web/project-store.js": "f2df46d81169a5d6f6f5121abeefe23be43d38d56f383f6ae8945b62f22b5f87",
+    "schemas/automation.v1.schema.json": "286805b8e392e5a7d4bce47b36168c3f765d23714050d588623abf0918e4a5a4",
+    "data/labels.uk.json": "cbcecb45b9c8df0a261db3abbc726ec63d8c52032b5099164dc0b4aa7c25154b"
+  }
+}

@@ -69,6 +69,7 @@ export function MobileMenu({ dict, lang }: MobileMenuProps) {
           >
             {dict.navigation.cases || 'Кейси'}
           </Link>
+          <Link href={`/${lang}/automations`} className="text-base font-medium transition-colors hover:text-amber py-2 border-b" onClick={() => setOpen(false)}>Автоматизації</Link>
           <Link
             href={`/${lang}/blog`}
             className="text-base font-medium transition-colors hover:text-amber py-2 border-b"

@@ -19,10 +19,11 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
         {/* flex-1 + justify-center reserves real space for the nav instead of the old
             absolute-centered version, which didn't reserve any width and started
             overlapping the phone/Telegram/CTA block once a 4th link (Новини) was added. */}
-        <nav className="hidden lg:flex flex-1 items-center justify-center gap-6 xl:gap-10 text-base text-black/70 font-medium px-4">
+        <nav className="hidden xl:flex flex-1 items-center justify-center gap-4 xl:gap-6 text-base text-black/70 font-medium px-4">
           <Link href={`/${lang}/cases`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Кейси
           </Link>
+          <Link href={`/${lang}/automations`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">Автоматизації</Link>
           <Link href={`/${lang}/blog`} className="hover:text-[#FFD700] transition-colors whitespace-nowrap">
             Блог
           </Link>
@@ -33,7 +34,7 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
             Про нас
           </Link>
         </nav>
-        <div className="hidden lg:flex items-center gap-3 xl:gap-4 flex-shrink-0">
+        <div className="hidden xl:flex items-center gap-3 xl:gap-4 flex-shrink-0">
           <div className="hidden xl:flex flex-col items-end leading-tight">
             <a href="tel:+380671706703" className="text-lg font-semibold hover:text-[#FFD700] transition-colors whitespace-nowrap">
               +380 67 170 67 03
@@ -46,7 +47,7 @@ export default function Header({ dict, lang = 'ua', hideOnHome = false, pathname
           <div className="flex items-center gap-3">
             {/* Long descriptive sentence only fits comfortably on very wide screens; on
                 narrower desktop widths it's the icon alone, avoiding the previous crowding. */}
-            <div className="hidden xl:block text-xs text-black/60 leading-tight max-w-[220px]">
+            <div className="hidden 2xl:block text-xs text-black/60 leading-tight max-w-[220px]">
               Напишіть нам у Telegram — відповімо одразу, без підключень і перемикань.
             </div>
             <a

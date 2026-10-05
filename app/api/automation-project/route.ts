@@ -4,6 +4,7 @@ import { records, visibleQuestions } from '@/lib/automation-core/index.js'
 import { ProjectError } from '@/lib/automation-core/preview-project-store.js'
 import { requestOrigin, isSameOriginRequest } from '@/lib/automation-core/request-origin.js'
 import { validateContact, createLeadSender } from '@/lib/automation-core/lead-contract.js'
+import { createPlanfixOrderSender } from '@/lib/automation-core/planfix-order.js'
 import { projectBuilderEnabled, projectCookie, projectPath, projectSession, projectStore, type Selection } from '@/lib/automation-project'
 
 export const runtime = 'nodejs'
@@ -41,9 +42,14 @@ export async function POST(request: NextRequest) {
     if (action === 'submit') {
       if (!project || !session) throw new ProjectError('Заявка доступна власнику проєкту.', 403)
       const contact = validateContact(form)
-      const sender = createLeadSender({ url: process.env.N8N_ORDERS_URL, secret: process.env.WEBHOOK_SECRET, projectPath: '/uk/automation-projects' })
+      const direct = process.env.AUTOMATION_PROJECT_LEAD_TRANSPORT === 'planfix'
+      const sender = direct ? createPlanfixOrderSender({ token: process.env.AUTOMATION_PROJECT_PLANFIX_TOKEN,
+        notificationUrl: process.env.AUTOMATION_PROJECT_NOTIFICATION_URL, notificationSecret: process.env.WEBHOOK_SECRET })
+        : createLeadSender({ url: process.env.N8N_ORDERS_URL, secret: process.env.WEBHOOK_SECRET, projectPath: '/uk/automation-projects' })
       if (!sender) throw new ProjectError('Приймання заявок тимчасово недоступне. Зверніться до CRMCUSTOMS.', 503)
-      await store.submit(project.id, session.token, Number(form.get('revision')), (snapshot: unknown, key: string) => sender(snapshot, key, contact, 'https://crmcustoms.com'))
+      await store.submit(project.id, session.token, Number(form.get('revision')), (snapshot: unknown, key: string, checkpoint: (receipt: unknown) => Promise<void>) => direct
+        ? sender(snapshot, key, contact, 'https://crmcustoms.com', checkpoint)
+        : sender(snapshot, key, contact, 'https://crmcustoms.com'))
       return NextResponse.redirect(new URL(projectPath, targetOrigin), { status: 303, headers: responseHeaders })
     }
     const id = form.get('automation_id') || ''

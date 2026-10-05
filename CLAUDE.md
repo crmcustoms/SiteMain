@@ -149,3 +149,9 @@ The builder uses server-only AUTOMATION_PROJECT_STORAGE=supabase and AUTOMATION_
 Project snapshots use a deployed RLS table and three RPC functions. Only service_role may access them. Revoke explicit anon/authenticated default grants as well as PUBLIC grants. HttpOnly owner cookies authorize editing; share links only authorize viewing.
 
 Project leads use the existing N8N_ORDERS_URL and WEBHOOK_SECRET contact contract. Reserve the send atomically before invoking the gateway. Accepted means HTTP acceptance, not proven PlanFix/Telegram delivery. Uncertain sends must never retry automatically. Never send real test leads without explicit owner authorization.
+
+## PlanFix Product Orders Preview
+
+AUTOMATION_PROJECT_LEAD_TRANSPORT=planfix selects the server-only REST adapter. It requires AUTOMATION_PROJECT_PLANFIX_TOKEN and AUTOMATION_PROJECT_NOTIFICATION_URL, plus existing WEBHOOK_SECRET. The dedicated n8n notification workflow uses the existing site Telegram credentials and waits for delivery. The primary contact workflow is preserved.
+
+The owner chose the lower price estimate. Directory 21682 stores automation variants; data tag 12322 adds optional directory field 69452. Preserve numeric snapshot prices; task field 112394 sums the entries. Persist task/comment/entry IDs in lead.receipt before subsequent writes. Unconfirmed partial delivery blocks another submission, even after edits. Never retry external writes automatically. Production remains disabled until the direct API preview is accepted.

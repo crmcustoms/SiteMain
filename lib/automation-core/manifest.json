@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "digest": "9d65ec53b527f24b27ae429a029d831b3a262c355682e15f5fafc48acd8a49dc",
+  "digest": "c05df56239e8e89efb86a401fc22b9e793d9498ea7dc204284da93a422b34aa2",
   "records": 50,
   "variants": 59,
   "published": 0,
@@ -11,12 +11,13 @@
     "src/validate.js": "f2718f186459723b808cd785e7360f42d0a5e9caa79085b945cd9f38b63bf0e4",
     "src/web/project-store.js": "7cf69335d4e44df04494b376e7a32d57d3434e368a0202b6e511b34e3bd51126",
     "src/web/project-snapshot.js": "0ceccd4c306f17a8ff9237d642f15063dcdef44ea37cb10b1cd1ad867f702d25",
-    "src/web/transactional-project-store.js": "c0eb1b6fcb7ff8ae6c61ca41d4c3814f6363321a7c23e841b9d67f3df96e910c",
+    "src/web/transactional-project-store.js": "0c1aff9d54f0b3aab66211b2077d205c2ceb3fda8b651845a53e0e349a484557",
     "src/web/postgres-snapshot-repository.js": "7882306a2e3f56fb54638e6191e4d670c0f492d14fcdedf4256d72dfc136bd5f",
     "src/web/supabase-snapshot-repository.js": "e010644ecc69ce4bf9d5575ea5d1696171ded7c2a0a956d7c090860e39696bc7",
     "src/web/request-origin.js": "f984e182cfdb50e039ee69f166bc9b0f6d195a560830ce09f6f48ce772dc3980",
     "schemas/automation.v1.schema.json": "286805b8e392e5a7d4bce47b36168c3f765d23714050d588623abf0918e4a5a4",
     "data/labels.uk.json": "cbcecb45b9c8df0a261db3abbc726ec63d8c52032b5099164dc0b4aa7c25154b",
-    "src/web/lead-contract.js": "10a88bfb01f54df31c013a843d4f07fa53498fb25449135be6fd5f77cf6ac93c"
+    "src/web/lead-contract.js": "10a88bfb01f54df31c013a843d4f07fa53498fb25449135be6fd5f77cf6ac93c",
+    "src/web/planfix-order.js": "7a7b99af8490f472af39034b0cd8771f03bd526fa3dc41cb7a9a026bc92ddfbe"
   }
 }

@@ -32,6 +32,13 @@ export default async function AutomationPage({ params, searchParams }: Props) {
   const variant = variantId === undefined ? record.variants[0] : record.variants.find(item => item.id === variantId)
   if (!variant) notFound()
   const estimate = automationEstimate(record, variant.id)
+  const planfixSources = record.sources.filter(source => {
+    if (!('url' in source) || typeof source.url !== 'string') return false
+    try {
+      const url = new URL(source.url)
+      return url.protocol === 'https:' && !url.username && !url.password && /(^|\.)planfix\.(com|ru|ua)$/.test(url.hostname)
+    } catch { return false }
+  })
   const project = process.env.NODE_ENV === 'development' ? await ownedProject() : null
   const breadcrumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CRMCUSTOMS', item: `${automationOrigin}/uk` },
@@ -51,7 +58,7 @@ export default async function AutomationPage({ params, searchParams }: Props) {
     <div className={styles.overview}><section className={styles.sectionCard}><h2>Що потрібно для реалізації</h2><ul>{variant.requirements.map((text, index) => <li key={index}>{text}</li>)}</ul></section><section className={styles.sectionCard}><h2>Спосіб реалізації</h2><ul>{variant.implementation_methods.map((text, index) => <li key={index}>{text}</li>)}</ul></section></div>
     <section className={styles.sectionCard}><h2>Обмеження</h2><ul>{variant.limitations.map((text, index) => <li key={index}>{text}</li>)}</ul></section>
     <details className={styles.sectionCard}><summary>Що потрібно уточнити ({record.configurator_questions.length})</summary><ul>{record.configurator_questions.map(question => <li key={question.id}><strong>{question.question}</strong><p className={styles.muted}>{question.help_text}</p></li>)}</ul></details>
-    <details className={styles.sectionCard}><summary>Джерела та межі підтвердження</summary><ul>{record.sources.map((source, index) => <li key={index}><strong>{source.title}</strong><p>{source.supports}</p>{'url' in source && typeof source.url === 'string' && /^https?:\/\//.test(source.url) && !new URL(source.url).username && !new URL(source.url).password && <a href={source.url} rel="noopener noreferrer">Переглянути джерело</a>}</li>)}</ul></details>
+    {!!planfixSources.length && <section className={styles.sectionCard}><h2>Матеріали PlanFix</h2><ul>{planfixSources.map((source, index) => <li key={index}><a href={source.url as string} target="_blank" rel="noopener noreferrer">{source.title}</a></li>)}</ul></section>}
     </div><aside className={styles.estimate}><span className={styles.eyebrow}>Бюджет впровадження</span><h2>Попередня оцінка</h2>
       <p className={styles.price}>{estimate.price_usd_min}–{estimate.price_usd_max} USD</p><p className={styles.hours}>{estimate.hours_min}–{estimate.hours_max} год</p>
       <p>Оцінка включає необхідні залежності; ставка — {estimate.hourly_rate} USD/год. Остаточний обсяг уточнюємо після аудиту.</p>

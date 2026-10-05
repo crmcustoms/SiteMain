@@ -38,7 +38,7 @@ export function AutomationProjectLeadDialog({ revision, className }: { revision:
   }
   return <Dialog open={open} onOpenChange={value => { if (!sending) setOpen(value) }}>
     <DialogTrigger asChild><button type="button" className={className}>Обговорити впровадження</button></DialogTrigger>
-    <DialogContent>
+    <DialogContent className="w-[calc(100%-2rem)] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-sm sm:rounded-sm">
       <DialogHeader><DialogTitle>Заявка на впровадження</DialogTitle><DialogDescription>Надішлемо обрані рішення, налаштування й попередній бюджет вашого проєкту до CRMCUSTOMS.</DialogDescription></DialogHeader>
       <form method="post" action="/api/automation-project" onSubmit={submit} className="space-y-4">
         <input type="hidden" name="action" value="submit" /><input type="hidden" name="revision" value={revision} />

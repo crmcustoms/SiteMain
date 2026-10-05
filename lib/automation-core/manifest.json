@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "digest": "c05df56239e8e89efb86a401fc22b9e793d9498ea7dc204284da93a422b34aa2",
+  "digest": "3182400da78a43c93f6329ec2e42e78584931bf5854524634e0f5555bd228d30",
   "records": 50,
   "variants": 59,
   "published": 0,
@@ -18,6 +18,6 @@
     "schemas/automation.v1.schema.json": "286805b8e392e5a7d4bce47b36168c3f765d23714050d588623abf0918e4a5a4",
     "data/labels.uk.json": "cbcecb45b9c8df0a261db3abbc726ec63d8c52032b5099164dc0b4aa7c25154b",
     "src/web/lead-contract.js": "10a88bfb01f54df31c013a843d4f07fa53498fb25449135be6fd5f77cf6ac93c",
-    "src/web/planfix-order.js": "7a7b99af8490f472af39034b0cd8771f03bd526fa3dc41cb7a9a026bc92ddfbe"
+    "src/web/planfix-order.js": "8740222279458e11b50af2a3d5d026f1c176012029492db5988e91ccf8ee759e"
   }
 }

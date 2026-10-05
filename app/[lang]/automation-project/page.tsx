@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ownedProject, projectSharePath, type Selection } from '@/lib/automation-project'
+import { ownedProject, projectBuilderEnabled, projectSharePath, type Selection } from '@/lib/automation-project'
 import { availableAutomations, automationBase } from '@/lib/automations'
 import { visibleQuestions } from '@/lib/automation-core/index.js'
 import styles from '../automations/catalog.module.css'
+import { AutomationProjectLeadDialog } from '@/components/automation-project-lead-dialog'
 
 export const metadata: Metadata = { title: { absolute: 'Мій проєкт автоматизацій | CRMCUSTOMS' }, robots: { index: false, follow: false, googleBot: { index: false, follow: false } } }
 export const dynamic = 'force-dynamic'
@@ -12,7 +13,7 @@ const endpoint = '/api/automation-project'
 
 export default async function ProjectPage({ params }: { params: Promise<{ lang: string }> }) {
   if ((await params).lang !== 'uk') notFound()
-  if (process.env.NODE_ENV !== 'development') return <section className={styles.catalog}><div className={styles.container}><h1>Конструктор проєкту</h1><p>Готуємо постійне збереження проєктів. <Link href={automationBase}>Переглянути рішення</Link>.</p></div></section>
+  if (!projectBuilderEnabled()) return <section className={styles.catalog}><div className={styles.container}><h1>Конструктор проєкту</h1><p>Готуємо постійне збереження проєктів. <Link href={automationBase}>Переглянути рішення</Link>.</p></div></section>
   const project = await ownedProject()
   const selections: Selection[] = project?.result.selections || []
   const revision = project?.revision || 0
@@ -55,7 +56,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
       })}
       <h2>Припущення та відкриті питання</h2><ul>{[...project.result.assumptions, ...project.result.warnings].map((text: string, index: number) => <li key={index}>{text}</li>)}</ul>
       <h2>Що не входить у бюджет</h2><ul>{project.result.excluded_work.map((text: string, index: number) => <li key={index}>{text}</li>)}</ul>
-      <p>Передача проєкту як заявки ще підключається. Зараз можна <Link href="/uk/landing/implementation-crm">обговорити впровадження з CRMCUSTOMS</Link>.</p>
+      {project.lead?.revision === revision && project.lead.status === 'accepted'
+        ? <p role="status">Заявку надіслано. Ви можете продовжити роботу з проєктом.</p>
+        : project.lead && ['sending', 'unconfirmed'].includes(project.lead.status)
+          ? <p role="status">Прийняття заявки ще не підтверджено. Зверніться до CRMCUSTOMS перед повторним надсиланням.</p>
+          : <AutomationProjectLeadDialog key={revision} revision={revision} className={styles.button} />}
     </>}
   </div></section>
 }

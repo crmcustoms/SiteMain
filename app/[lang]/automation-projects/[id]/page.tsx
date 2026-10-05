@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { projectStore, projectPath } from '@/lib/automation-project'
+import { projectBuilderEnabled, projectStore, projectPath } from '@/lib/automation-project'
 import styles from '../../automations/catalog.module.css'
 export const metadata: Metadata = { title: { absolute: 'Перегляд проєкту | CRMCUSTOMS' }, robots: { index: false, follow: false, googleBot: { index: false, follow: false } } }
 export const dynamic = 'force-dynamic'
 export default async function SharedProject({ params }: { params: Promise<{ lang: string; id: string }> }) {
   const { lang, id } = await params
-  if (lang !== 'uk' || process.env.NODE_ENV !== 'development') notFound()
+  if (lang !== 'uk' || !projectBuilderEnabled()) notFound()
   let project
   try { project = await projectStore().read(id) } catch { notFound() }
   if (!project) notFound()

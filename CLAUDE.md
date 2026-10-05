@@ -139,3 +139,13 @@ docker-compose up -d
 - **ESLint**: `eslint@9.29.0` with Next.js config
 - **Tailwind**: `tailwindcss@3.4.17` with custom config
 - **Component Variants**: Use `class-variance-authority` for flexible UI components
+
+## Automation Project Builder
+
+Communicate with the owner in Ukrainian; write the brand CRMCUSTOMS. The source of catalog data and algorithms is business-automation-platform; regenerate lib/automation-core instead of editing generated files.
+
+The builder uses server-only AUTOMATION_PROJECT_STORAGE=supabase and AUTOMATION_PROJECT_ENABLED=1, plus AUTOMATION_PROJECT_SUPABASE_URL and AUTOMATION_PROJECT_SUPABASE_KEY. Keep it disabled until the target environment passes acceptance. Preserve shared Supabase settings used by other modules. HTTPS and certificate verification are required.
+
+Project snapshots use a deployed RLS table and three RPC functions. Only service_role may access them. Revoke explicit anon/authenticated default grants as well as PUBLIC grants. HttpOnly owner cookies authorize editing; share links only authorize viewing.
+
+Project leads use the existing N8N_ORDERS_URL and WEBHOOK_SECRET contact contract. Reserve the send atomically before invoking the gateway. Accepted means HTTP acceptance, not proven PlanFix/Telegram delivery. Uncertain sends must never retry automatically. Never send real test leads without explicit owner authorization.

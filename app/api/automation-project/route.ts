@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { availableAutomations } from '@/lib/automations'
 import { records, visibleQuestions } from '@/lib/automation-core/index.js'
 import { ProjectError } from '@/lib/automation-core/preview-project-store.js'
-import { projectCookie, projectPath, projectSession, projectStore, type Selection } from '@/lib/automation-project'
+import { requestOrigin, isSameOriginRequest } from '@/lib/automation-core/request-origin.js'
+import { validateContact, createLeadSender } from '@/lib/automation-core/lead-contract.js'
+import { projectBuilderEnabled, projectCookie, projectPath, projectSession, projectStore, type Selection } from '@/lib/automation-project'
 
 export const runtime = 'nodejs'
 const responseHeaders = { 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex, nofollow' }
@@ -27,21 +29,29 @@ async function readForm(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const origin = request.headers.get('origin')
-    if (!origin || origin === 'null' || new URL(origin).origin !== new URL(request.url).origin || request.headers.get('sec-fetch-site') === 'cross-site') throw new ProjectError('Надішліть форму зі сторінки проєкту.', 403)
-    if (process.env.NODE_ENV !== 'development') return NextResponse.json({ error: 'Постійне збереження проєктів ще не підключене.' }, { status: 503, headers: responseHeaders })
+    const targetOrigin = requestOrigin(request)
+    if (!targetOrigin || !isSameOriginRequest(request)) throw new ProjectError('Надішліть форму зі сторінки проєкту.', 403)
+    if (!projectBuilderEnabled()) return NextResponse.json({ error: 'Постійне збереження проєктів ще не підключене.' }, { status: 503, headers: responseHeaders })
     const form = await readForm(request)
     const store = projectStore()
     const session = await projectSession()
     let project = session ? await store.read(session.id) : null
     if (!session || !store.owns(project, session.token)) project = null
     const action = form.get('action')
+    if (action === 'submit') {
+      if (!project || !session) throw new ProjectError('Заявка доступна власнику проєкту.', 403)
+      const contact = validateContact(form)
+      const sender = createLeadSender({ url: process.env.N8N_ORDERS_URL, secret: process.env.WEBHOOK_SECRET, projectPath: '/uk/automation-projects' })
+      if (!sender) throw new ProjectError('Приймання заявок тимчасово недоступне. Зверніться до CRMCUSTOMS.', 503)
+      await store.submit(project.id, session.token, Number(form.get('revision')), (snapshot: unknown, key: string) => sender(snapshot, key, contact, 'https://crmcustoms.com'))
+      return NextResponse.redirect(new URL(projectPath, targetOrigin), { status: 303, headers: responseHeaders })
+    }
     const id = form.get('automation_id') || ''
     if (action === 'copy') {
       const source = await store.read(form.get('project_id'))
       if (!source) throw new ProjectError('Проєкт не знайдено.', 404)
       const created = await store.create(source.records, source.result.selections, source.result.hourly_rate)
-      const response = NextResponse.redirect(new URL(projectPath, request.url), 303)
+      const response = NextResponse.redirect(new URL(projectPath, targetOrigin), 303)
       response.cookies.set(projectCookie, `${created.project.id}.${created.token}`, { httpOnly: true, sameSite: 'strict', secure: request.nextUrl.protocol === 'https:', path: '/', maxAge: 31536000 })
       Object.entries(responseHeaders).forEach(([key, value]) => response.headers.set(key, value))
       return response
@@ -81,7 +91,7 @@ export async function POST(request: NextRequest) {
     let token = session?.token
     if (project) await store.update(project.id, token, revision, snapshot, selections, hourlyRate)
     else { const created = await store.create(snapshot, selections, hourlyRate); project = created.project; token = created.token }
-    const response = NextResponse.redirect(new URL(projectPath, request.url), 303)
+    const response = NextResponse.redirect(new URL(projectPath, targetOrigin), 303)
     response.cookies.set(projectCookie, `${project.id}.${token}`, { httpOnly: true, sameSite: 'strict', secure: request.nextUrl.protocol === 'https:', path: '/', maxAge: 31536000 })
     Object.entries(responseHeaders).forEach(([key, value]) => response.headers.set(key, value))
     return response

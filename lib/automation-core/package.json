@@ -1,11 +1,14 @@
 {
   "name": "@crmcustoms/automation-core",
-  "version": "0.1.0-seed.cbeec28cf592",
+  "version": "0.1.0-seed.9d65ec53b527",
   "private": true,
   "type": "module",
   "exports": {
     ".": "./index.js",
-    "./preview-store": "./preview-project-store.js"
+    "./preview-store": "./preview-project-store.js",
+    "./transactional-store": "./transactional-project-store.js",
+    "./postgres-repository": "./postgres-snapshot-repository.js",
+    "./supabase-repository": "./supabase-snapshot-repository.js"
   },
   "description": "Версійоване ядро каталогу й конструктора CRMCUSTOMS",
   "files": [
@@ -16,6 +19,12 @@
     "data.js",
     "index.js",
     "preview-project-store.js",
+    "project-snapshot.js",
+    "transactional-project-store.js",
+    "postgres-snapshot-repository.js",
+    "supabase-snapshot-repository.js",
+    "request-origin.js",
+    "lead-contract.js",
     "manifest.json"
   ],
   "engines": {

@@ -1,6 +1,6 @@
 {
   "name": "@crmcustoms/automation-core",
-  "version": "0.1.0-seed.7c715a6fde5a",
+  "version": "0.1.0-seed.b366050672fb",
   "private": true,
   "type": "module",
   "exports": {
@@ -13,6 +13,7 @@
   "description": "Версійоване ядро каталогу й конструктора CRMCUSTOMS",
   "files": [
     "catalog.js",
+    "catalog-view.js",
     "engine.js",
     "validate.js",
     "schema-check.js",
@@ -26,8 +27,7 @@
     "request-origin.js",
     "lead-contract.js",
     "planfix-order.js",
-    "manifest.json",
-    "catalog-view.js"
+    "manifest.json"
   ],
   "engines": {
     "node": ">=20.12"

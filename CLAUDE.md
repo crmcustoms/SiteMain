@@ -1,5 +1,9 @@
 # CLAUDE.md
 
+## Catalog publication — 2026-10-06
+
+The owner authorized publishing all 119 draft cards (130 variants) from the shared core. Preserve their review labels and noindex until editorial acceptance. PlanFix directory 21682 now has all 130 variants; order prices remain snapshots from the lower estimate. The core package is generated in business-automation-platform. New Phase 4 cards do not yet have video; do not invent video URLs. Existing site pages and lead transport remain unchanged.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Common Commands

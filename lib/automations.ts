@@ -1,10 +1,19 @@
 import 'server-only'
-import { records, labels, search, composeProject } from '@/lib/automation-core/index.js'
+import { records, labels, composeProject } from '@/lib/automation-core/index.js'
+import { queryCatalog, budgetOptions, sortOptions, pageSize } from '@/lib/automation-core/catalog-view.js'
 
 export type Automation = (typeof records)[number]
 export const automationBase = '/uk/automations'
 export const automationOrigin = 'https://crmcustoms.com'
 export const categoryLabels: Record<string, string> = labels.categories
+export const roleLabels: Record<string, string> = labels.roles
+export const industryLabels: Record<string, string> = labels.industries
+export const complexityLabels: Record<string, string> = labels.complexity
+export const dependencyLabels: Record<string, string> = labels.dependencies
+export { budgetOptions, sortOptions, pageSize }
+const estimates = new Map(records.flatMap(record => record.variants.map(variant => [
+  `${record.id}/${variant.id}`, composeProject(records, [{ automation_id: record.id, variant_id: variant.id }])
+] as const)))
 
 export function previewEnabled() {
   return process.env.AUTOMATIONS_PREVIEW === 'true' && (
@@ -22,15 +31,40 @@ export function findAutomation(slug: string) {
   return availableAutomations().find(record => record.slug === slug)
 }
 
-export function findAutomations(query = '', category = ''): Automation[] {
-  const available = availableAutomations()
-  const matches: string[] = query ? search(available, query, available.length).map((hit: { id: string }) => hit.id) : available.map(record => record.id)
-  const byId = new Map(available.map(record => [record.id, record]))
-  return matches.map(id => byId.get(id)!).filter(record => !category || record.category === category)
+export function findAutomations(params = new URLSearchParams()) {
+  const result = queryCatalog({ records: availableAutomations(), labels, estimates }, params)
+  const view = params.get('view') === 'list' ? 'list' : 'grid'
+  return {
+    ...result,
+    filters: { ...result.filters, view } as Record<string, string>,
+    items: result.items as { record: Automation; variant: Automation['variants'][number]; estimate: ReturnType<typeof automationEstimate>; score: number }[]
+  }
+}
+
+export function catalogUrl(filters: Record<string, string | number>, changes: Record<string, string | number> = {}) {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries({ ...filters, ...changes })) {
+    if (value && !(key === 'sort' && value === 'relevance') && !(key === 'view' && value === 'grid') && !(key === 'page' && Number(value) === 1)) params.set(key, String(value))
+  }
+  return `${automationBase}${params.size ? `?${params}` : ''}`
+}
+
+export const number = (value: number) => value.toLocaleString('uk-UA')
+export function plural(count: number, one: string, few: string, many: string) {
+  const remainder = count % 100
+  return remainder >= 11 && remainder <= 14 ? many : count % 10 === 1 ? one : count % 10 >= 2 && count % 10 <= 4 ? few : many
+}
+
+export function automationRange(record: Automation) {
+  const variants = record.variants.map(variant => automationEstimate(record, variant.id))
+  return {
+    priceMin: Math.min(...variants.map(estimate => estimate.price_usd_min)), priceMax: Math.max(...variants.map(estimate => estimate.price_usd_max)),
+    hoursMin: Math.min(...variants.map(estimate => estimate.hours_min)), hoursMax: Math.max(...variants.map(estimate => estimate.hours_max))
+  }
 }
 
 export function automationEstimate(record: Automation, variantId: string) {
-  return composeProject(records, [{ automation_id: record.id, variant_id: variantId }])
+  return estimates.get(`${record.id}/${variantId}`) || composeProject(records, [{ automation_id: record.id, variant_id: variantId }])
 }
 
 export function automationSitemapEntries() {

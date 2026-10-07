@@ -53,11 +53,11 @@ export default async function AutomationsPage({ params, searchParams }: Props) {
       <h1 className={styles.h1}>Що <span className={styles.hook}>гальмує</span> ваш бізнес?</h1>
       <p className={styles.lead}>Опишіть проблему своїми словами. Покажемо готові рішення, варіанти реалізації та діапазон бюджету.</p>
       <form id={formId} method="get" action={automationBase} className={styles.search}>
-        <label htmlFor="catalog-query" className={styles.searchPrefix}>Пошук /</label><input id="catalog-query" aria-label="Ваша проблема" className={styles.searchInput} type="search" name="q" defaultValue={filters.q} maxLength={200} placeholder="Наприклад: заявки губляться між менеджерами" />
+        <label htmlFor="catalog-query" className={styles.searchPrefix}>Пошук /</label><input key={filters.q} id="catalog-query" aria-label="Ваша проблема" className={styles.searchInput} type="search" name="q" defaultValue={filters.q} maxLength={200} placeholder="Наприклад: заявки губляться між менеджерами" />
         {filters.q && <Link className={styles.searchClear} href={catalogUrl(filters, { q: '', page: 1 })} aria-label="Очистити пошуковий запит">× Очистити</Link>}
         <input type="hidden" name="category" value={filters.category} /><input type="hidden" name="view" value={filters.view} /><button className={styles.searchSubmit} type="submit">Знайти →</button>
       </form>
-      <div className={styles.chips}><span className={styles.label}>Часто шукають</span>{popular.map(([title, query]) => <Link key={title} className={styles.chip} href={catalogUrl(filters, { q: query, page: 1 })}>{title}</Link>)}</div>
+      <div className={styles.chips}><span className={styles.label}>Часто шукають</span>{popular.map(([title, query]) => <Link key={title} className={styles.chip} href={catalogUrl({ view: filters.view }, { q: query, page: 1 })}>{title}</Link>)}</div>
       <p className={styles.note}>Пілотний каталог. Чернетки й попередні оцінки проходять перевірку; обсяг погоджуємо після аудиту.</p>
     </div></header>
     <div className={styles.container}><div className={styles.body}>

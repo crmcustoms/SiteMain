@@ -24,11 +24,13 @@ export function previewEnabled() {
 
 export function availableAutomations(): Automation[] {
   // Public pilot authorized by the owner; draft cards retain noindex and review labels.
-  return records.filter(record => record.status === 'published' || record.status === 'draft' || previewEnabled())
+  return records.filter(record => record.status !== 'retired' && (record.status === 'published' || record.status === 'draft' || previewEnabled()))
 }
 
 export function findAutomation(slug: string) {
-  return availableAutomations().find(record => record.slug === slug)
+  const record = records.find(record => record.slug === slug)
+  const id = record?.status === 'retired' ? record.superseded_by : record?.id
+  return availableAutomations().find(record => record.id === id)
 }
 
 export function findAutomations(params = new URLSearchParams()) {

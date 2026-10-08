@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { availableAutomations, findAutomation, automationEstimate, automationBase, automationOrigin, categoryLabels, complexityLabels, dependencyLabels, number, plural } from '@/lib/automations'
 import { archivo, jetbrains } from '@/lib/automation-catalog-fonts'
 import { ownedProject, projectBuilderEnabled, projectPath } from '@/lib/automation-project'
@@ -21,6 +21,7 @@ export default async function AutomationPage({ params, searchParams }: Props) {
   const { lang, slug } = await params
   const record = lang === 'uk' ? findAutomation(slug) : undefined
   if (!record) notFound()
+  if (record.slug !== slug) permanentRedirect(`${automationBase}/${record.slug}`)
   const variantId = (await searchParams).variant
   const variant = variantId === undefined ? record.variants[0] : record.variants.find(item => item.id === variantId)
   if (!variant) notFound()

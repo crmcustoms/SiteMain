@@ -1,11 +1,8 @@
-Warning: truncated output (original token count: 3552)
-Total output lines: 145
-
 {
   "format": 1,
-  "digest": "1f2140be8c97ad05190c626519b9f17cd8b498b976bed63deaa2497acf19a7f6",
-  "records": 411,
-  "variants": 428,
+  "digest": "dae552dd406000c3eee41372e29e958372a5e2ce704259a75ccbb67450066950",
+  "records": 412,
+  "variants": 429,
   "published": 0,
   "source_files": {
     "src/catalog.js": "be32e8afa59829c258315bd4d303198d2b809878ca2b69962640525993b7dc19",

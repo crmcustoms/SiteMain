@@ -1,11 +1,11 @@
 {
   "format": 1,
-  "digest": "b366050672fb1740360a286b5aee7af167dad7648be8b2bee0af5bb9967e970d",
-  "records": 201,
-  "variants": 212,
+  "digest": "c7f07466115fad07b9b5eea6c1361febf6b06338b178ca80d2494db6a0dbdf69",
+  "records": 317,
+  "variants": 334,
   "published": 0,
   "source_files": {
-    "src/catalog.js": "143de12134c12e05318c7375bb86ab9042eb674cb43f5f3936ee1d354e86899f",
+    "src/catalog.js": "b472dba595250e8771b317dbf2556dfcd90e928cda2cc9d58c5bf9354b04fb4a",
     "src/engine.js": "28e32294345255a0314ac22f060d715971644c10c20be7af20fbab5a96ff99c5",
     "src/schema-check.js": "54f3cae0269fc5dd1856fd439bdd4d0f2ab62ba9a629a5f7ad40524252ec5063",
     "src/validate.js": "f2718f186459723b808cd785e7360f42d0a5e9caa79085b945cd9f38b63bf0e4",
@@ -17,7 +17,7 @@
     "src/web/request-origin.js": "f984e182cfdb50e039ee69f166bc9b0f6d195a560830ce09f6f48ce772dc3980",
     "schemas/automation.v1.schema.json": "286805b8e392e5a7d4bce47b36168c3f765d23714050d588623abf0918e4a5a4",
     "data/labels.uk.json": "cbcecb45b9c8df0a261db3abbc726ec63d8c52032b5099164dc0b4aa7c25154b",
-    "src/web/catalog-view.js": "56fe107f95d825bff7b94ba3b429d05e89fd30a1a2cdef9c4d1b8c95220e975c",
+    "src/web/catalog-view.js": "673b84ee01861d958fe64f59f58a80368d55465f85936016001a365be95417de",
     "src/web/lead-contract.js": "10a88bfb01f54df31c013a843d4f07fa53498fb25449135be6fd5f77cf6ac93c",
     "src/web/planfix-order.js": "1c66a34063c40660a49258abdb9a43c093eb37e3a15c6c00bb27db9a9263ac60"
   }

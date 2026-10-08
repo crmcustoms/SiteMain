@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "digest": "9e9f40d10c57ee2030575ab964d1fb1dfcd4c308bf6d13b09945ffd061ab819d",
-  "records": 409,
-  "variants": 426,
+  "digest": "69f81d0bddec5af66654ee12f1f895f8871d6c0bad41deb9220148bc667b4072",
+  "records": 410,
+  "variants": 427,
   "published": 0,
   "source_files": {
     "src/catalog.js": "be32e8afa59829c258315bd4d303198d2b809878ca2b69962640525993b7dc19",
@@ -22,3 +22,4 @@
     "src/web/planfix-order.js": "f3c8e6964dd7d083665696ca0a4944ae7fd8f48bbab1bc91e1166429cc2b50f5"
   }
 }
+

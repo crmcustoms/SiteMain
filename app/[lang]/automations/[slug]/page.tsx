@@ -21,7 +21,7 @@ export default async function AutomationPage({ params, searchParams }: Props) {
   const { lang, slug } = await params
   const record = lang === 'uk' ? findAutomation(slug) : undefined
   if (!record) notFound()
-  if (record.slug !== slug) permanentRedirect(`${automationBase}/${record.slug}`)
+  if (record.slug !== slug) permanentRedirect(`${automationBase}/${record.slug}?variant=${record.variants[0].id}`)
   const variantId = (await searchParams).variant
   const variant = variantId === undefined ? record.variants[0] : record.variants.find(item => item.id === variantId)
   if (!variant) notFound()

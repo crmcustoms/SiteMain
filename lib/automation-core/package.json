@@ -1,6 +1,6 @@
 {
   "name": "@crmcustoms/automation-core",
-  "version": "0.1.0-seed.1ff7187ccf2e",
+  "version": "0.1.0-seed.7c165562db05",
   "private": true,
   "type": "module",
   "exports": {
@@ -33,4 +33,3 @@
     "node": ">=20.12"
   }
 }
-

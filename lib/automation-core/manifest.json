@@ -1,8 +1,8 @@
 {
   "format": 1,
-  "digest": "ef897ce5493b2f3705aee192c9ff422edfa8b5b8cfd3c2c98d27f425f2d45c17",
-  "records": 447,
-  "variants": 476,
+  "digest": "d647355058e0447db5f531f2ff1eb112d2a5d27c94a0d22431cea0b0270024b0",
+  "records": 449,
+  "variants": 480,
   "published": 0,
   "source_files": {
     "src/catalog.js": "be32e8afa59829c258315bd4d303198d2b809878ca2b69962640525993b7dc19",

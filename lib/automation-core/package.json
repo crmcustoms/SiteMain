@@ -1,6 +1,6 @@
 {
   "name": "@crmcustoms/automation-core",
-  "version": "0.1.0-seed.18239e1c768d",
+  "version": "0.1.0-seed.93101c0357cb",
   "private": true,
   "type": "module",
   "exports": {
@@ -24,6 +24,7 @@
     "data-phase4-0511-0535.js",
     "data-phase4-0536-0560.js",
     "data-phase4-0561-0585.js",
+    "data-phase4-0586-0610.js",
     "index.js",
     "preview-project-store.js",
     "project-snapshot.js",

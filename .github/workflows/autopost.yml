@@ -175,8 +175,16 @@ jobs:
                 description: process.argv[2] + '\n\nPR: ' + process.argv[3],
                 endDateTime: { date: process.argv[4], time: '10:00' },
                 hasEndDate: true,
-                customFieldData: [{ field: { id: 137394 }, value: process.argv[4] }],
-              }))" "$TITLE" "$EXCERPT" "$PR_URL" "$PF_DATE")
+                // Text + channels let the PlanFix content factory pick this
+                // task up at endDateTime and post it to Instagram/Threads/
+                // LinkedIn (Telegram/Facebook come from social-crosspost.yml).
+                // Empty fields made the factory silently skip every article.
+                customFieldData: [
+                  { field: { id: 137394 }, value: process.argv[4] },
+                  { field: { id: 137392 }, value: ['Instagram', 'Threads', 'Linkedin'] },
+                  { field: { id: 137404 }, value: process.argv[1] + '\n\n' + process.argv[2] + '\n\nЧитати: crmcustoms.com/uk/blog/' + process.argv[5] },
+                ],
+              }))" "$TITLE" "$EXCERPT" "$PR_URL" "$PF_DATE" "$SLUG")
               PF_RESPONSE=$(curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task" \
                 -H "Authorization: Bearer $PLANFIX_TOKEN" \
                 -H "Content-Type: application/json" \

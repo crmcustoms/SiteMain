@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Montserrat } from "next/font/google"
+import localFont from "next/font/local"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/components/language-provider"
 import { Toaster } from "@/components/toaster"
@@ -10,12 +10,14 @@ import { getDictionary } from "@/lib/dictionaries"
 import Script from "next/script"
 
 // Keep Inter for backward compatibility
-const inter = Inter({ subsets: ["latin", "cyrillic"] })
+// Self-hosted (assets/fonts) — next/font/google downloads fonts on every
+// build, and Google's flaky responses kept failing Netlify/autopost builds.
+const inter = localFont({ src: "../assets/fonts/Inter.woff2", weight: "100 900" })
 
 // Add Montserrat font
-const montserrat = Montserrat({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
+const montserrat = localFont({
+  src: "../assets/fonts/Montserrat.woff2",
+  weight: "100 900",
   variable: "--font-montserrat",
 })
 

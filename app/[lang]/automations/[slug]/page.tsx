@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { availableAutomations, findAutomation, automationEstimate, automationBase, automationOrigin, categoryLabels, complexityLabels, dependencyLabels, number, plural } from '@/lib/automations'
+import { availableAutomations, findAutomation, automationIndexable, automationEstimate, automationBase, automationOrigin, categoryLabels, complexityLabels, dependencyLabels, number, plural } from '@/lib/automations'
 import { archivo, jetbrains } from '@/lib/automation-catalog-fonts'
 import { ownedProject, projectBuilderEnabled, projectPath } from '@/lib/automation-project'
 import { ContactFormDialog } from '@/components/contact-form-dialog'
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const record = lang === 'uk' ? findAutomation(slug) : undefined
   if (!record) return { title: { absolute: 'Рішення не знайдено | CRMCUSTOMS' }, robots: { index: false, follow: false } }
   const url = `${automationOrigin}${automationBase}/${record.slug}`
-  const index = record.status === 'published'
+  const index = automationIndexable(record)
   return { title: { absolute: `${record.title} | CRMCUSTOMS` }, description: `${record.problem} ${record.outcome}`, alternates: { canonical: url }, robots: { index, follow: true, googleBot: { index, follow: true } }, openGraph: { title: record.title, description: record.summary, url, siteName: 'CRMCUSTOMS', locale: 'uk_UA', type: 'website' } }
 }
 export default async function AutomationPage({ params, searchParams }: Props) {

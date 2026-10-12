@@ -18,7 +18,7 @@ const popular = [
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams
   const filtered = ['q', 'category', 'role', 'industry', 'complexity', 'budget', 'sort', 'view', 'page'].some(key => !!params[key])
-  const index = availableAutomations().some(record => record.status === 'published') && !filtered
+  const index = availableAutomations().length > 0 && !filtered
   return { title: { absolute: 'Автоматизації бізнесу — каталог рішень | CRMCUSTOMS' }, description: 'Практичні рішення для бізнесу: проблема, результат, варіанти реалізації та попередня оцінка впровадження.', alternates: { canonical: `${automationOrigin}${automationBase}` }, robots: { index, follow: true, googleBot: { index, follow: true } } }
 }
 function Flow({ record }: { record: Automation }) {

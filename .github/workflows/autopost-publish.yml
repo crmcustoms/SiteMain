@@ -40,14 +40,8 @@ jobs:
           echo "Merging PR #$PR (label publish:$TODAY)"
           gh pr merge "$PR" --repo "$GITHUB_REPOSITORY" --merge --delete-branch
 
-          # Best-effort: a failed status update should never fail this
-          # workflow — the article is already live at this point.
-          if [ -n "$PF_TASK_ID" ] && [ -n "$PLANFIX_ACCOUNT" ] && [ -n "$PLANFIX_TOKEN" ]; then
-            curl -s -X POST "https://$PLANFIX_ACCOUNT.planfix.ua/rest/task/$PF_TASK_ID" \
-              -H "Authorization: Bearer $PLANFIX_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d '{"status":{"id":126}}' || echo "::warning::could not set PlanFix task $PF_TASK_ID to Опубліковано (non-fatal)"
-            echo "Marked PlanFix task $PF_TASK_ID as Опубліковано"
-          elif [ -n "$PF_TASK_ID" ]; then
-            echo "::warning::PR #$PR had planfix:$PF_TASK_ID label but PLANFIX_ACCOUNT/PLANFIX_TOKEN aren't set — status not updated"
-          fi
+          # The PlanFix task (planfix:$PF_TASK_ID) is deliberately left in
+          # "Ідея": the PlanFix content factory posts it to Instagram/Threads/
+          # LinkedIn at its endDateTime and sets "Опубліковано" itself. Flipping
+          # it here first made the factory skip the task.
+          [ -n "$PF_TASK_ID" ] && echo "PlanFix task $PF_TASK_ID left for the content factory to publish and close"

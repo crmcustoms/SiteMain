@@ -27,6 +27,10 @@ on:
       excerpt:
         description: 'Post excerpt (optional)'
         required: false
+      channels:
+        description: 'With article_url and no video/image: where to announce (telegram, facebook, or both)'
+        required: false
+        default: 'telegram,facebook'
 
 jobs:
   debug-facebook:
@@ -47,7 +51,7 @@ jobs:
           curl -s "https://graph.facebook.com/v21.0/1588039712873068?fields=id,message,permalink_url,is_published,status_type&access_token=${PAGE_TOKEN}" | jq .
 
   post-facebook:
-    if: ${{ inputs.article_url != '' && inputs.video_url == '' && inputs.image_url == '' }}
+    if: ${{ inputs.article_url != '' && inputs.video_url == '' && inputs.image_url == '' && contains(inputs.channels, 'facebook') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,6 +69,39 @@ jobs:
             --title "${{ inputs.title }}" \
             --excerpt "${{ inputs.excerpt }}" \
             --url "${{ inputs.article_url }}"
+
+  # Manual re-announce of an already-live article. Needed when the merge
+  # didn't trigger the push-based crosspost (a merge done with GITHUB_TOKEN,
+  # e.g. by autopost-publish.yml, never starts other workflows) or the
+  # crosspost gave up because the deploy was late.
+  post-telegram:
+    if: ${{ inputs.article_url != '' && inputs.video_url == '' && inputs.image_url == '' && contains(inputs.channels, 'telegram') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Post to Telegram channel
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_CHAT_ID: ${{ secrets.TELEGRAM_CHANNEL_CHAT_ID }}
+          POST_TITLE: ${{ inputs.title }}
+          POST_EXCERPT: ${{ inputs.excerpt }}
+          POST_URL: ${{ inputs.article_url }}
+        run: |
+          SLUG=$(basename "$POST_URL")
+          IMAGE="https://crmcustoms.com/images/blog/$SLUG-illustration-1.jpg"
+          if [ "$(curl -s -o /dev/null -w '%{http_code}' "$IMAGE")" != "200" ]; then
+            IMAGE="https://crmcustoms.com/api/og?title=$(node -e 'process.stdout.write(encodeURIComponent(process.argv[1]))' "$POST_TITLE")"
+          fi
+          node scripts/social/post-telegram.mjs \
+            --title "$POST_TITLE" \
+            --excerpt "$POST_EXCERPT" \
+            --url "$POST_URL" \
+            --image "$IMAGE"
 
   post-image:
     if: ${{ inputs.image_url != '' }}
@@ -151,6 +188,7 @@ jobs:
     # instead, which IS a valid context in `if:`.
     env:
       HAS_FB_TOKEN: ${{ secrets.FACEBOOK_PAGE_TOKEN != '' }}
+      HAS_TELEGRAM_OWNER_CHAT: ${{ secrets.TELEGRAM_OWNER_CHAT_ID != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -167,6 +205,7 @@ jobs:
       # since deploy time varies; give up after 5 minutes rather than post
       # a dead link.
       - name: Wait for the article to be live before announcing it
+        id: wait_live
         env:
           POST_URL: ${{ matrix.post.url }}
         run: |
@@ -181,6 +220,25 @@ jobs:
           done
           echo "::error::$POST_URL never returned 200 after 5 minutes — deploy likely still running or failed. Skipping social posts rather than announcing a dead link."
           exit 1
+
+      # Without this a failed deploy is silent: the article is merged, never
+      # live, never announced, and nobody notices for days (2026-09-30).
+      # Private chat only — never the public channel.
+      - name: Alert owner that the article did not go live
+        if: ${{ failure() && steps.wait_live.outcome == 'failure' && env.HAS_TELEGRAM_OWNER_CHAT == 'true' }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_OWNER_CHAT_ID: ${{ secrets.TELEGRAM_OWNER_CHAT_ID }}
+          POST_TITLE: ${{ matrix.post.title }}
+          POST_URL: ${{ matrix.post.url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TEXT=$(printf '🚨 <b>Стаття не вийшла на сайт</b>\n%s\n%s\n\nЗа 5 хвилин сторінка не відкрилась — найімовірніше, впав деплой Netlify. Анонс НЕ відправлено.\n\n1. Netlify → crmcustoms → Deploys → Retry deploy\n2. Re-run failed jobs: %s' "$POST_TITLE" "$POST_URL" "$RUN_URL")
+          curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+            -d "chat_id=$TELEGRAM_OWNER_CHAT_ID" \
+            -d "parse_mode=HTML" \
+            -d "disable_web_page_preview=true" \
+            --data-urlencode "text=$TEXT"
 
       - name: Post to Telegram (@prodayslonakume)
         env:

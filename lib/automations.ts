@@ -23,8 +23,12 @@ export function previewEnabled() {
 }
 
 export function availableAutomations(): Automation[] {
-  // Public pilot authorized by the owner; draft cards retain noindex and review labels.
+  // Public drafts retain review labels; the owner authorized their indexing.
   return records.filter(record => record.status !== 'retired' && (record.status === 'published' || record.status === 'draft' || previewEnabled()))
+}
+
+export function automationIndexable(record: Automation) {
+  return record.status === 'published' || record.status === 'draft'
 }
 
 export function findAutomation(slug: string) {
@@ -70,7 +74,7 @@ export function automationEstimate(record: Automation, variantId: string) {
 }
 
 export function automationSitemapEntries() {
-  const published = records.filter(record => record.status === 'published')
+  const published = records.filter(automationIndexable)
   return published.length ? [
     { url: `${automationOrigin}${automationBase}` },
     ...published.map(record => ({ url: `${automationOrigin}${automationBase}/${record.slug}` }))

@@ -65,6 +65,7 @@ export async function generateMetadata({
     
     // Собираем метаданные
     return {
+      alternates: { canonical: `/${safeLocale}/blog` },
       title: dict?.blog?.title || "Блог",
       description: description,
       keywords: Array.from(allKeywords).length > 0 

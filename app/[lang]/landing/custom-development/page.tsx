@@ -16,6 +16,7 @@ export async function generateMetadata({
   const dict = await getDictionary(lang)
 
   return {
+    alternates: { canonical: `/${lang}/landing/custom-development` },
     title: dict.customDev?.metaTitle || "Індивідуальна розробка для CRM",
     description: dict.customDev?.metaDescription || "Якщо базового функціоналу CRM недостатньо, ми розробимо унікальні модулі, які повністю відповідають специфіці вашого бізнесу."
   }

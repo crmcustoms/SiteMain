@@ -16,6 +16,7 @@ export async function generateMetadata({
   const dict = await getDictionary(lang)
 
   return {
+    alternates: { canonical: `/${lang}/landing/project-management` },
     title: dict.projectManagement?.metaTitle || "Управління проектами в CRM",
     description: dict.projectManagement?.metaDescription || "Впровадження проектного управління в CRM: ефективна організація завдань, контроль виконання та підвищення прозорості процесів."
   }

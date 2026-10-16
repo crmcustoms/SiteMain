@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { getDictionary } from "@/lib/dictionaries"
 import dynamic from "next/dynamic"
 import { i18n } from "@/lib/i18n-config"
@@ -18,6 +19,8 @@ const WhyChooseUs = dynamic(() => import("@/components/landing/why-choose-us"), 
 const Faq = dynamic(() => import("@/components/landing/faq"), { ssr: true })
 const Testimonials = dynamic(() => import("@/components/landing/testimonials"), { ssr: true })
 const Pricing = dynamic(() => import("@/components/landing/pricing"), { ssr: true })
+
+export const metadata: Metadata = { alternates: { canonical: 'https://crmcustoms.com' } }
 
 export default async function Home({
   params,

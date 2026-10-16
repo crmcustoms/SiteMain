@@ -70,13 +70,6 @@ export const metadata: Metadata = {
     google: 'your-google-site-verification', // Добавьте код верификации Google
     yandex: 'your-yandex-verification', // Добавьте код верификации Yandex
   },
-  alternates: {
-    canonical: 'https://crmcustoms.com',
-    languages: {
-      'uk-UA': 'https://crmcustoms.com',
-      'en-US': 'https://crmcustoms.com/en',
-    },
-  },
   icons: {
     icon: [
       { url: "/favicons/favicon.ico" },

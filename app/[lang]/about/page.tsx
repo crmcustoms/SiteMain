@@ -15,6 +15,7 @@ export async function generateMetadata({
   await getDictionary(lang)
 
   return {
+    alternates: { canonical: `/${lang}/about` },
     title: "Про нас | CRMCUSTOMS",
     description:
       "CRMCUSTOMS — не підрядник на одну задачу, а технічний партнер: CRM, автоматизація та AI-агенти для бізнесу. Хто ми і як працюємо.",

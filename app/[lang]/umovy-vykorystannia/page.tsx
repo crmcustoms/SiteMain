@@ -3,6 +3,7 @@ import { join } from 'path'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/uk/umovy-vykorystannia' },
   title: 'Умови використання | CRM Customs',
   description: 'Умови використання сайту CRM Customs. Ознайомтесь з правилами користування нашим сервісом.',
 }

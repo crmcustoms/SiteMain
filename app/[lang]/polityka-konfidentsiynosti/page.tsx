@@ -3,6 +3,7 @@ import { join } from 'path'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/uk/polityka-konfidentsiynosti' },
   title: 'Політика конфіденційності | CRM Customs',
   description: 'Політика конфіденційності сайту CRM Customs. Узнайте як ми обробляємо ваші персональні дані.',
 }

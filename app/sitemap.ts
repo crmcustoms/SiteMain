@@ -2,6 +2,7 @@ import { automationSitemapEntries } from "@/lib/automations"
 import type { MetadataRoute } from "next"
 import { getAllContent } from "@/lib/content"
 import { i18n } from "@/lib/i18n-config"
+import { getLibraryEpisodes } from "@/lib/library"
 
 const baseUrl = "https://crmcustoms.com"
 
@@ -25,7 +26,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { url: `${baseUrl}/${locale}/cases`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
       { url: `${baseUrl}/${locale}/news`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
       { url: `${baseUrl}/${locale}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+      { url: `${baseUrl}/${locale}/biblioteka`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     )
+
+    for (const ep of getLibraryEpisodes()) {
+      entries.push({
+        url: `${baseUrl}/${locale}/biblioteka/${ep.slug}`,
+        lastModified: new Date(ep.publishedAt),
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })
+    }
 
     for (const slug of LANDING_SLUGS) {
       entries.push({

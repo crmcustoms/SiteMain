@@ -185,8 +185,6 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 
 Напишіть, розкажіть про свій процес, і ми разом зберемо мінімальну CRM, у якій ви зможете працювати.
 
-Як я працюю з клієнтами, видно з відгуків у [картці партнера Planfix](https://planfix.com/uk/ourpartners/?partner=538&review=) та з [відгуків у Google](https://www.google.com/search?q=CRMCUSTOMS&stick=H4sIAAAAAAAA_-NgU1I1qDAxMUo1M082MzVMTjNOMjC1MqhISzS0MDFMSzOxSEy2MDOzWMTK5Rzk6xwaHOLvGwwAKEREojYAAAA&hl=ru&mat=CexOWAmtRTlTElcBzAmVZoqAuDytnlZHirXbPMr18MKdr9PuPqvAm_Y-WmEAs4wl0n-c6cp5rNXeVoP44UqVVHU8Q9ax4gwlOcBbWl9ULtkHpXcBDhWT0lQuFXMoM_EWKFU&authuser=0&ved=1t:350944).
-
 ---
 
 *Дані про безплатний тариф перевірено на [сторінці тарифів Planfix](https://planfix.com/uk/prices/?lang=uk) 21.10.2026. Ліміти й умови можуть змінюватися.*

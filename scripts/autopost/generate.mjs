@@ -178,6 +178,22 @@ async function tryAddIllustration(article, cwd) {
   return { body: insertIllustrationsMarkdown(article.body_markdown, placed), added: placed.length }
 }
 
+// The model reliably lands ~650-690 words when asked for 800-1200, and a
+// bare "допиши" retry regenerates a fresh article of the same length — that
+// is what skipped 2026-10-21 and 2026-10-23. Give it the exact gap instead.
+function bodyLengthNote(detail) {
+  const n = parseInt(String(detail), 10)
+  const { bodyWordsMin: min, bodyWordsMax: max } = VALIDATION
+  if (Number.isFinite(n) && n < min) {
+    const add = Math.max(250, 1000 - n)
+    return `текст статті ${n} слів — це замало, мінімум ${min}, ціль близько 1000. Напиши статтю наново довшою: щонайменше на ${add} слів більше, ніж минулого разу. Додай ще один розділ ## з конкретним прикладом із практики (хто, що зробив, що змінилось) і розгорни кожен розділ на 2-3 речення. Не скорочуй.`
+  }
+  if (Number.isFinite(n) && n > max) {
+    return `текст статті ${n} слів — це забагато, максимум ${max}, ціль близько 1000. Скороти: прибери повтори й найслабший розділ.`
+  }
+  return `текст статті ${detail}, потрібно ${min}-${max} слів — допиши або скороти.`
+}
+
 // One corrective sentence per validation error code, fed back into the
 // single retry attempt. Falls back to a generic "fix this" for any code
 // added to validate.mjs without a specific message here — still strictly
@@ -191,7 +207,7 @@ function describeErrorForRetry({ code, detail }) {
     TITLE_LENGTH: `заголовок не в межах 25-90 символів (${detail}) — переформулюй коротше/довше.`,
     EXCERPT_LENGTH: `excerpt не в межах 80-200 символів (${detail}) — підправ довжину.`,
     TAG_NOT_IN_VOCABULARY: `tag "${detail}" не входить у затверджений список категорій сайту — візьми один з дозволених.`,
-    BODY_WORD_COUNT: `текст статті ${detail}, потрібно 700-1400 слів — допиши або скороти.`,
+    BODY_WORD_COUNT: bodyLengthNote(detail),
     MIXED_SCRIPT_WORD: `слово "${detail}" змішує кирилицю й латиницю в одному слові — виправ на суцільну кирилицю або суцільну латиницю.`,
     LOW_CYRILLIC_RATIO: `забагато латинських символів у тексті (кирилиця лише ${detail}) — перепиши українською, залишивши лише дозволені терміни (Planfix, CRM, n8n тощо) латиницею.`,
     LATIN_RUN: `${detail} підряд — не більше 2 латинських слів підряд поза дозволеним списком термінів, розбий речення.`,
@@ -269,7 +285,19 @@ async function main() {
     // to fix. Building one note per error code and retrying always is
     // strictly more likely to converge than hoping the same prompt lands
     // differently by chance.
-    const retryNote = attempt.result.errors.map((e) => describeErrorForRetry(e)).join(" ")
+    let retryNote = attempt.result.errors.map((e) => describeErrorForRetry(e)).join(" ")
+    // Too short: a from-scratch rewrite comes back just as short (seen
+    // 646-684 words three times in a row). Hand the model its own draft so
+    // the retry extends it instead of starting over.
+    const short = attempt.result.errors.find((e) => e.code === "BODY_WORD_COUNT" && parseInt(String(e.detail), 10) < VALIDATION.bodyWordsMin)
+    if (short && attempt.article?.body_markdown) {
+      retryNote += `
+
+Твій попередній варіант тіла статті нижче. Не пиши з нуля: візьми його за основу, збережи тему, заголовок і структуру, виправ зазначені помилки й розшир до 950-1100 слів.
+<<<
+${attempt.article.body_markdown}
+>>>`
+    }
     console.error(`[autopost] validation failed on first attempt (${attempt.result.errors.map((e) => e.code).join(", ")}) — retrying once with corrections`)
     attempt = await runOnce({ slot, seed, topic, corpus, brandMdText, retryNote })
   }

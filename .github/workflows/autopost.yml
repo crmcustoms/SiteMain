@@ -83,8 +83,21 @@ jobs:
           : > "$SUMMARY_FILE"
           mkdir -p "$RUNNER_TEMP/generated_blog" "$RUNNER_TEMP/generated_images"
 
+          SKIPPED=0
           for DATE in "${{ steps.dates.outputs.mon }}" "${{ steps.dates.outputs.wed }}" "${{ steps.dates.outputs.fri }}"; do
             echo "::group::Generating for $DATE"
+
+            # Idempotent: a manual workflow_dispatch the same day as the
+            # Sunday cron must not open a second PR for a date that already
+            # has one (n8n merges whichever it finds first; the other would
+            # rot open and trip backlog-guard next week).
+            EXISTING=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --label "publish:$DATE" --json number --jq '.[0].number // empty')
+            if [ -n "$EXISTING" ]; then
+              echo "$DATE already has open PR #$EXISTING — skipping generation"
+              echo "📅 $DATE — вже є PR #$EXISTING" >> "$SUMMARY_FILE"
+              echo "::endgroup::"
+              continue
+            fi
 
             # `git checkout main` at the end of each iteration removes that
             # iteration's now-committed file from the working tree (it's
@@ -110,20 +123,21 @@ jobs:
             # A real validation failure (content-quality, not a bug) is
             # expected occasionally — generate.mjs only self-retries on
             # slug/topic collisions, not on quality misses. Give it 2 tries
-            # here; if both fail, skip this date rather than aborting the
+            # here (3 tries); if all fail, skip this date rather than aborting the
             # whole week's batch over one flaky generation.
             FILE=""
-            for ATTEMPT in 1 2; do
+            for ATTEMPT in 1 2 3; do
               BEFORE=$(ls content/blog/uk/ 2>/dev/null)
               if node scripts/autopost/generate.mjs --date "$DATE"; then
                 FILE="content/blog/uk/$(comm -13 <(echo "$BEFORE" | sort) <(ls content/blog/uk/ | sort))"
                 break
               fi
-              echo "::warning::generate.mjs failed for $DATE (attempt $ATTEMPT/2)"
+              echo "::warning::generate.mjs failed for $DATE (attempt $ATTEMPT/3)"
             done
             if [ -z "$FILE" ]; then
-              echo "::warning::skipping $DATE — generation failed twice, needs a manual workflow_dispatch run"
-              echo "⚠️ $DATE — генерація не пройшла двічі, запусти вручну (workflow_dispatch)" >> "$SUMMARY_FILE"
+              echo "::warning::skipping $DATE — generation failed 3 times, needs a manual workflow_dispatch run"
+              echo "⚠️ $DATE — генерація не пройшла тричі, запусти вручну (workflow_dispatch)" >> "$SUMMARY_FILE"
+              SKIPPED=$((SKIPPED + 1))
               git checkout main
               echo "::endgroup::"
               continue
@@ -215,6 +229,7 @@ jobs:
             cat "$SUMMARY_FILE"
             echo "EOF_DIGEST"
           } >> "$GITHUB_OUTPUT"
+          echo "skipped=$SKIPPED" >> "$GITHUB_OUTPUT"
 
       - name: Notify with preview links (private chat only — NEVER the public channel)
         # Gated on a dedicated secret, not TELEGRAM_CHANNEL_CHAT_ID — that
@@ -233,6 +248,15 @@ jobs:
             -d "parse_mode=HTML" \
             -d "disable_web_page_preview=true" \
             --data-urlencode "text=$TEXT"
+
+      # 2026-10-18: Wed/Fri were skipped (BODY_WORD_COUNT twice) and the run
+      # still went green, so nobody knew until the articles simply never
+      # appeared. A skipped date must turn the run red.
+      - name: Fail if any publish date got no article
+        if: ${{ inputs.dry_run != 'true' && steps.week.outputs.skipped != '0' }}
+        run: |
+          echo "::error::${{ steps.week.outputs.skipped }} publish date(s) got no article — rerun via workflow_dispatch (dates that already have a PR are skipped)"
+          exit 1
 
   backlog-guard:
     if: github.event_name == 'schedule'

@@ -5,6 +5,7 @@ import { availableAutomations, findAutomation, automationIndexable, automationEs
 import { archivo, jetbrains } from '@/lib/automation-catalog-fonts'
 import { ownedProject, projectBuilderEnabled, projectPath } from '@/lib/automation-project'
 import { ContactFormDialog } from '@/components/contact-form-dialog'
+import { automationVideo, youtubeEmbedUrl, youtubeThumbUrl } from '@/lib/automation-videos'
 import styles from '../catalog.module.css'
 
 type Props = { params: Promise<{ lang: string; slug: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }
@@ -41,6 +42,9 @@ export default async function AutomationPage({ params, searchParams }: Props) {
   const requirements = [...new Set([...record.requirements, ...variant.requirements])]
   const limitations = [...new Set([...record.limitations, ...variant.limitations])]
   const add = added ? <Link className={`${styles.btn} ${styles.btnAdded}`} href={projectPath}>✓ У проєкті</Link> : enabled ? <form method="post" action="/api/automation-project"><input type="hidden" name="action" value="add" /><input type="hidden" name="revision" value={project?.revision || 0} /><input type="hidden" name="automation_id" value={record.id} /><input type="hidden" name="variant_id" value={variant.id} /><button type="submit" className={styles.btn}>+ Додати до проєкту</button></form> : null
+  const video = automationVideo(record.id)
+  const videoLd = video ? { '@context': 'https://schema.org', '@type': 'VideoObject', name: video.title, description: video.description || record.summary,
+    thumbnailUrl: youtubeThumbUrl(video), uploadDate: video.publishedAt, embedUrl: youtubeEmbedUrl(video), contentUrl: `https://www.youtube.com/watch?v=${video.youtubeId}` } : null
   const breadcrumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'CRMCUSTOMS', item: `${automationOrigin}/uk` },
     { '@type': 'ListItem', position: 2, name: 'Автоматизації', item: `${automationOrigin}${automationBase}` },
@@ -48,9 +52,11 @@ export default async function AutomationPage({ params, searchParams }: Props) {
   ] }
   return <section className={`${styles.catalog} ${archivo.variable} ${jetbrains.variable}`}><div className={`${styles.container} ${styles.detailContainer}`}>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs).replace(/</g, '\\u003c') }} />
+    {videoLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(videoLd).replace(/</g, '\\u003c') }} />}
     <nav className={styles.breadcrumbs} aria-label="Навігаційний шлях"><Link href="/uk">CRMCUSTOMS</Link><span>/</span><Link href={automationBase}>Автоматизації</Link><span>/</span><span>{record.id}</span></nav>
     <header className={styles.detailHeader}><p className={styles.marker}>{record.id}<span className={styles.muted}>· {categoryLabels[record.category]}</span></p><h1 className={styles.detailTitle}>{record.title}</h1><p className={styles.detailSummary}>{record.summary}</p>{record.status !== 'published' && <p className={styles.note}>Чернетка · Оцінка потребує перевірки</p>}</header>
     <div className={styles.overview}><section className={styles.sectionCard}><h2 className={styles.label}>01 / Проблема</h2><p>{record.problem}</p></section><section className={`${styles.sectionCard} ${styles.resultCard}`}><h2 className={styles.label}>02 / Результат</h2><p>{record.outcome}</p></section></div>
+    {video && <section className={styles.video} aria-label="Відео"><h2 className={styles.label}>Як це виглядає · відео</h2><div className={styles.videoFrame}><iframe src={youtubeEmbedUrl(video)} title={video.title} loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /></div></section>}
     <div className={styles.detailLayout}><div className={styles.detailContent}>
       <section><h2 className={`${styles.label} ${styles.sectionHeading}`}>03 / Процес</h2><div className={styles.step}><span className={`${styles.stepNode} ${styles.stepTrigger}`} aria-hidden="true">T</span><p><span className={styles.triggerLabel}>Тригер</span>{record.triggers.join(' · ')}</p></div><ol className={styles.steps}>{record.workflow_steps.map((step, index) => <li className={styles.step} key={index}><span className={styles.stepNode} aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><p>{step}</p></li>)}</ol></section>
       <section><h2 className={`${styles.label} ${styles.sectionHeading}`}><span>04 / Реалізація</span><span>{record.variants.length} {plural(record.variants.length, 'варіант', 'варіанти', 'варіантів')}</span></h2><nav className={styles.variants} aria-label="Варіанти реалізації">{record.variants.map(item => {

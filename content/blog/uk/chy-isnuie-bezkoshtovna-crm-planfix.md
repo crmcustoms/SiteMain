@@ -57,7 +57,7 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 - **Улюблене й мітки.** Позначаю гарячі угоди, щоб вони були на виду.
 - **Строк.** Коли я обіцяв результат.
 - **Виконавець і учасники.** Виконавець відповідає за результат, учасники допомагають.
-- **Статус.** Нова, в роботі, виконана, завершена, відкладена. Для старту цього достатньо. Нічого не вигадуйте.
+- **Статус.** Нова, в роботі, виконана, завершена, відкладена. Для старту цього достатньо. Нічого не вигадуйте. Свої статуси на безкоштовному тарифі можна створити лише два, а що саме відбувається в угоді, я веду окремим полем: [як це налаштувати](https://crmcustoms.com/uk/blog/pole-stan-ugody-zamist-statusiv-planfix).
 - **Підзадачі.** Якщо угода складається з кількох кроків, розбиваю на підзадачі.
 - **Чекліст.** Для типових речей: бриф, пропозиція, передоплата, матеріали.
 - **Нагадування.** Це вже не папірець на моніторі. Система сама нагадає, що сьогодні треба зателефонувати.
@@ -284,26 +284,17 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 
 - [Як обрати CRM для команди 5-15 людей — на що дивитись, а що не має значення](https://crmcustoms.com/uk/blog/yak-obraty-crm-dlya-malogo-biznesu)
 - [CRM безкоштовно у 2026 році: цілком реально, але є нюанси](https://crmcustoms.com/uk/blog/bezkoshtovna-crm-u-2026-rotsi)
-- [Кейс про старт за три дні](https://crmcustoms.com/uk/cases/prodazh-knyhy-bez-crm)
 
 **Як налаштувати**
 
 - [Як зібрати першу воронку продажів у Planfix з нуля](https://crmcustoms.com/uk/blog/yak-zibraty-pershu-voronku-planfix)
 - [Статуси угод у Planfix: чому я додаю поле «Стан угоди» замість десятка статусів](https://crmcustoms.com/uk/blog/pole-stan-ugody-zamist-statusiv-planfix)
 - [Завантаження будь-яких даних у CRM з Excel файлу](https://crmcustoms.com/uk/blog/import-danykh-z-excel-do-crm-instruktsiia)
-- [Безкоштовна пошта на своєму домені через Zoho: покрокова інструкція (і коли вона вже не підійде)](https://crmcustoms.com/uk/blog/bezkoshtovna-poshta-na-domeni-zoho)
-- [Заявки з сайту в Telegram і CRM без ручного перенесення](https://crmcustoms.com/uk/blog/telegram-bot-dlya-zayavok-z-saytu)
 
 **Як впровадити**
 
 - [Міф: впровадження CRM — це довгий проєкт на пів року](https://crmcustoms.com/uk/blog/mif-vprovadzhennya-crm-zaimaye-misyatsi)
 - [Чому менеджери не користуються CRM навіть після впровадження?](https://crmcustoms.com/uk/blog/chomu-menedzhery-ne-korystuyutsya-crm)
-- [Скільки реально коштує впровадження CRM: розкладаємо ціну по кроках](https://crmcustoms.com/uk/blog/skilky-koshtuye-vprovadzhennya-crm)
-
-**Що автоматизувати далі**
-
-- [Автоматичний тижневий звіт власнику без ручного зведення таблиць](https://crmcustoms.com/uk/blog/yak-avtomatyzuvaty-zvitnist-dlya-vlasnyka)
-- [Як налаштувати автоматичні нагадування клієнтам без спаму](https://crmcustoms.com/uk/blog/yak-nastroity-avtomatychni-nagaduvannya-klientam)
 
 ## Хочете спробувати
 

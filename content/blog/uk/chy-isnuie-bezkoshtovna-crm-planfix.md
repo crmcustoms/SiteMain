@@ -11,7 +11,7 @@ tags:
   - Planfix
   - Безкоштовна CRM
   - Старт бізнесу
-readTime: 16 хвилин читання
+readTime: 17 хвилин читання
 author: CRMCUSTOMS
 ctaTitle: Потрібна допомога зі стартом?
 ctaText: "Допоможу зібрати просту CRM під ваш процес без зайвих полів і складних автоматизацій."
@@ -121,6 +121,8 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 Скільки значень у такому полі? На сторінці тарифів обмеження на кількість значень окремим рядком не вказано. У системах клієнтів, де я веду угоди цим способом уже давно, у такому полі буває 15–20 значень. Поле забирає одне з трьох ваших полів, тож решта двох лишається під «Суму» й ще щось своє.
 
 Заповнювати його можна вручну: після кожної дії додаєте потрібне значення. Автоматику поки не чіпайте. На безкоштовному тарифі лише один сценарій на процес і 50 виконань автоматизацій на місяць.
+
+Налаштування цього поля покроково, з кольоровими плашками, канбаном і планувальниками я розібрав в окремій статті: [Статуси угод у Planfix: чому я додаю поле «Стан угоди» замість десятка статусів](https://crmcustoms.com/uk/blog/pole-stan-ugody-zamist-statusiv-planfix).
 
 ## Сума угоди, яка рахує сама: аналітики
 
@@ -275,6 +277,33 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 Коли ви починаєте з малого, усе навпаки. Ви рухаєтесь від простого до складного. Розібралися з карткою клієнта й угодою. Тоді самі бачите, чого саме не вистачає: більше полів, складніша автоматизація, інша структура. І рухаєтесь уже туди, куди потрібно саме вам, а не туди, куди радить презентація.
 
 Якщо одного дня безкоштовного тарифу стане мало, це хороша проблема. Ви вже знатимете, за що платите.
+
+## Підбірка: з чого почати, як налаштувати, як впровадити
+
+**З чого почати**
+
+- [Як обрати CRM для команди 5-15 людей — на що дивитись, а що не має значення](https://crmcustoms.com/uk/blog/yak-obraty-crm-dlya-malogo-biznesu)
+- [CRM безкоштовно у 2026 році: цілком реально, але є нюанси](https://crmcustoms.com/uk/blog/bezkoshtovna-crm-u-2026-rotsi)
+- [Кейс про старт за три дні](https://crmcustoms.com/uk/cases/prodazh-knyhy-bez-crm)
+
+**Як налаштувати**
+
+- [Як зібрати першу воронку продажів у Planfix з нуля](https://crmcustoms.com/uk/blog/yak-zibraty-pershu-voronku-planfix)
+- [Статуси угод у Planfix: чому я додаю поле «Стан угоди» замість десятка статусів](https://crmcustoms.com/uk/blog/pole-stan-ugody-zamist-statusiv-planfix)
+- [Завантаження будь-яких даних у CRM з Excel файлу](https://crmcustoms.com/uk/blog/import-danykh-z-excel-do-crm-instruktsiia)
+- [Безкоштовна пошта на своєму домені через Zoho: покрокова інструкція (і коли вона вже не підійде)](https://crmcustoms.com/uk/blog/bezkoshtovna-poshta-na-domeni-zoho)
+- [Заявки з сайту в Telegram і CRM без ручного перенесення](https://crmcustoms.com/uk/blog/telegram-bot-dlya-zayavok-z-saytu)
+
+**Як впровадити**
+
+- [Міф: впровадження CRM — це довгий проєкт на пів року](https://crmcustoms.com/uk/blog/mif-vprovadzhennya-crm-zaimaye-misyatsi)
+- [Чому менеджери не користуються CRM навіть після впровадження?](https://crmcustoms.com/uk/blog/chomu-menedzhery-ne-korystuyutsya-crm)
+- [Скільки реально коштує впровадження CRM: розкладаємо ціну по кроках](https://crmcustoms.com/uk/blog/skilky-koshtuye-vprovadzhennya-crm)
+
+**Що автоматизувати далі**
+
+- [Автоматичний тижневий звіт власнику без ручного зведення таблиць](https://crmcustoms.com/uk/blog/yak-avtomatyzuvaty-zvitnist-dlya-vlasnyka)
+- [Як налаштувати автоматичні нагадування клієнтам без спаму](https://crmcustoms.com/uk/blog/yak-nastroity-avtomatychni-nagaduvannya-klientam)
 
 ## Хочете спробувати
 

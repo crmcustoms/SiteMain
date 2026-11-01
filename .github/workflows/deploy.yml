@@ -64,42 +64,14 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
-  deploy:
+  resubmit-sitemap:
+    # The site itself is deployed by Coolify on push; the old SSH deploy step
+    # failed on every run ("missing server host") and was removed.
     needs: build-and-push
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          # Останавливаем старый контейнер
-          docker stop sitemain-app || true
-          docker rm sitemain-app || true
-          
-          # Удаляем старый образ
-          docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest || true
-          
-          # Загружаем новый образ
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          
-          # Запускаем новый контейнер
-          docker run -d \
-            --name sitemain-app \
-            --restart unless-stopped \
-            -p 3000:3000 \
-            -e NODE_ENV=production \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          
-          # Очищаем неиспользуемые образы
-          docker system prune -f
-
     - name: Checkout repository
       uses: actions/checkout@v4
 

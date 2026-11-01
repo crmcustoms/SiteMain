@@ -19,7 +19,9 @@ out
 
 # Documentation
 README.md
-docs/
+docs/*
+!docs/polityka_konfidentsiynosti.md
+!docs/umovy_vykorystannia.md
 *.md
 
 # Development files

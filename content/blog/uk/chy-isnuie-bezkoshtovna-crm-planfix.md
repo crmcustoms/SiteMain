@@ -19,13 +19,13 @@ ctaLabel: Записатись на консультацію
 ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 ---
 
-У [кейсі про старт за три дні](https://crmcustoms.com/uk/cases/prodazh-knyhy-bez-crm) я згадував безплатний тариф Planfix як один з інструментів запуску. Сьогодні хочу зупинитися на ньому детальніше.
+У [кейсі про старт за три дні](https://crmcustoms.com/uk/cases/prodazh-knyhy-bez-crm) я згадував безплатний тариф [Planfix](https://planfix.com/uk/?rid=66016ae0998a) як один з інструментів запуску. Сьогодні хочу зупинитися на ньому детальніше.
 
 Бо відповідь на питання «чи існує безкоштовна CRM» така: так, і в ній реально можна працювати. Не демонструвати, а працювати. Якщо ви починаючий підприємець, стартап або самі продаєте свої послуги, цього тарифу вам вистачить із запасом.
 
 Я не буду переписувати таблицю тарифів. Покажу, як би сам почав у ній працювати: з чого, що куди клав би і де порівняв би з Excel та блокнотом, до яких ви звикли.
 
-Якщо зручніше дивитися, ось те саме відео на 2,5 хвилини:
+Якщо зручніше дивитися, ось те саме відео на 2,5 хвилини. Зареєструватися можна [за моїм посиланням](https://planfix.com/uk/?rid=66016ae0998a):
 
 <div class="my-6"><div class="relative w-full aspect-video"><iframe src="https://www.youtube.com/embed/t_sgXt6OSU8" title="Безкоштовна CRM існує: Planfix Free, відділ продажів покроково" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="w-full h-full rounded-lg"></iframe></div></div>
 

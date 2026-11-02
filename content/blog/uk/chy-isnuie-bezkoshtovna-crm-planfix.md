@@ -25,6 +25,10 @@ ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
 
 Я не буду переписувати таблицю тарифів. Покажу, як би сам почав у ній працювати: з чого, що куди клав би і де порівняв би з Excel та блокнотом, до яких ви звикли.
 
+Якщо зручніше дивитися, ось те саме відео на 2,5 хвилини:
+
+<div class="my-6"><div class="relative w-full aspect-video"><iframe src="https://www.youtube.com/embed/t_sgXt6OSU8" title="Безкоштовна CRM існує: Planfix Free, відділ продажів покроково" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="w-full h-full rounded-lg"></iframe></div></div>
+
 ## Починаємо з п'яти людей
 
 На безплатному тарифі можна додати до п'яти користувачів. Для старту це щедро. Власник, менеджер із продажів, виконавець, бухгалтер і ще одна людина, яка допомагає.

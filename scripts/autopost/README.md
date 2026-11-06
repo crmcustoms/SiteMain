@@ -27,7 +27,7 @@ cron (Пн/Ср/Пт) або workflow_dispatch
 | `generate.mjs` | Точка входу. Оркеструє все нижче |
 | `config.mjs` | **Єдина точка налаштувань**: модель, розклад рубрик, словник тегів, пороги валідації |
 | `corpus.mjs` | Читає `content/blog/uk` + `content/cases/uk` → що вже опубліковано |
-| `slots.mjs` | Вибір рубрики (angle/howto/myth/question) + вибір теми/кута |
+| `slots.mjs` | Вибір рубрики (angle/howto/myth/question/free) + вибір теми/кута |
 | `llm.mjs` | Виклик OpenRouter (forced tool call) |
 | `validate.mjs` | Усі 14 перевірок якості/безпеки |
 | `frontmatter.mjs` | Безпечний запис `.md`-файлу |

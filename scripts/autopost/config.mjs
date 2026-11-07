@@ -14,7 +14,7 @@ export const CONFIG = {
   maxTokens: 8000,
   // Higher temperature for the more "voice"-driven slots, lower for
   // procedural how-to content where consistency matters more than flair.
-  temperature: { angle: 0.9, myth: 0.8, question: 0.7, howto: 0.5 },
+  temperature: { angle: 0.9, myth: 0.8, question: 0.7, howto: 0.5, free: 0.6 },
   retries: 3,
   retryDelaysMs: [2000, 8000, 30000],
 }
@@ -22,7 +22,11 @@ export const CONFIG = {
 // 12-slot rotation cycle. Index = count of already-generated posts (mod
 // length) — see slots.mjs. No two "angle" slots are adjacent; opens on
 // "howto" so the very first automated post (after any seed angles queued
-// ahead of it) is low-risk and procedural.
+// ahead of it) is low-risk and procedural. "free" (the "Безкоштовно"
+// rubric) replaces one of the four "howto" slots, so it lands exactly once
+// per 12-post cycle: 3 howto, 4 angle, 2 myth, 2 question, 1 free. It sits
+// between "question" and "angle", so neither two "free" nor two "angle"
+// slots ever run back to back.
 export const SLOT_CYCLE = [
   "howto",
   "angle",
@@ -30,7 +34,7 @@ export const SLOT_CYCLE = [
   "myth",
   "angle",
   "question",
-  "howto",
+  "free",
   "angle",
   "myth",
   "howto",
@@ -44,8 +48,9 @@ export const SLOT_CYCLE = [
 export const GENERATOR_ID = "autopost-v1"
 export const SEED_GENERATOR_ID = "autopost-seed-v1"
 
-// Closed tag vocabulary — the 16 values actually in use across
-// content/blog/uk and content/cases/uk as of 2026-09. A generated post
+// Closed tag vocabulary — the 17 values actually in use across
+// content/blog/uk and content/cases/uk as of 2026-11 ("Безкоштовно"
+// added for the free-tools rubric). A generated post
 // with a tag outside this list fails validation (keeps the site's tag
 // filter from silently growing one-off chips). Extend by editing this
 // array, not by loosening the validator.
@@ -66,6 +71,7 @@ export const TAG_VOCABULARY = [
   "Документообіг",
   "HR",
   "AI",
+  "Безкоштовно",
 ]
 
 // Product/tool names allowed in Latin script inside otherwise-Ukrainian

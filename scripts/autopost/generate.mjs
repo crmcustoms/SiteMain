@@ -249,6 +249,10 @@ async function runOnce({ slot, seed, topic, corpus, brandMdText, retryNote }) {
   })
 
   const { article, usage, model } = await generateArticle({ system: systemPrompt, user: userPrompt, slot })
+  // The "free" slot is the "Безкоштовно" rubric — pin the tag so the site's
+  // filter chip is always correct regardless of what the model picked from
+  // the vocabulary. Other slots keep the model's own choice.
+  if (slot === "free") article.tag = "Безкоштовно"
   const result = validateArticle(article, { corpus, brandMdText })
   return { article, usage, model, result }
 }

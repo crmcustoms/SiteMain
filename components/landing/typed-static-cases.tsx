@@ -151,7 +151,7 @@ export default function TypedStaticCases({ casesData = [], lang = 'ua', pageType
     if (pageType === 'news') {
       return {
         title: "Новини",
-        description: "Оновлення Planfix та новини CRM Customs.",
+        description: "Оновлення Planfix та новини CRMCUSTOMS.",
         searchPlaceholder: "Пошук новин...",
         linkPrefix: "news"
       };

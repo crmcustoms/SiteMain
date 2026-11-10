@@ -21,7 +21,7 @@ export async function generateMetadata({
     : i18n.defaultLocale;
 
   const dict = await getDictionary(safeLocale).catch(() => ({} as any));
-  const description = dict?.news?.description || "Новини Planfix та CRM Customs.";
+  const description = dict?.news?.description || "Новини Planfix та CRMCUSTOMS.";
 
   return {
     title: dict?.news?.title || "Новини",

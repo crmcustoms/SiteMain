@@ -4,8 +4,8 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/uk/polityka-konfidentsiynosti' },
-  title: 'Політика конфіденційності | CRM Customs',
-  description: 'Політика конфіденційності сайту CRM Customs. Узнайте як ми обробляємо ваші персональні дані.',
+  title: 'Політика конфіденційності | CRMCUSTOMS',
+  description: 'Політика конфіденційності сайту CRMCUSTOMS. Узнайте як ми обробляємо ваші персональні дані.',
 }
 
 // Simple markdown to HTML converter

@@ -38,7 +38,7 @@ export default function TeamSection() {
                 <span className="text-xs font-mono text-black/40 tracking-wider">TEAM.PHOTO</span>
               </div>
               <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src="/images/komanda.png" alt="Команда CRM Customs" fill className="object-cover" />
+                <Image src="/images/komanda.png" alt="Команда CRMCUSTOMS" fill className="object-cover" />
               </div>
               <div className="absolute -bottom-3 right-4 bg-white px-2">
                 <span className="text-xs font-mono text-[#FFD700] tracking-wider">READY_TO_HELP</span>

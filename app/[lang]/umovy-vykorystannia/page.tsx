@@ -4,8 +4,8 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/uk/umovy-vykorystannia' },
-  title: 'Умови використання | CRM Customs',
-  description: 'Умови використання сайту CRM Customs. Ознайомтесь з правилами користування нашим сервісом.',
+  title: 'Умови використання | CRMCUSTOMS',
+  description: 'Умови використання сайту CRMCUSTOMS. Ознайомтесь з правилами користування нашим сервісом.',
 }
 
 // Simple markdown to HTML converter

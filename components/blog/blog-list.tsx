@@ -53,7 +53,7 @@ export default function BlogList({ posts = [], dict = {} }: { posts?: any[]; dic
         const slug = post.property_link_name || `post-${index}`;
         const excerpt = post.property_description || '';
         const image = post.property_2 || post.property_photo1 || '/placeholder.svg';
-        const authorName = 'CRM Customs'; // Статичный автор
+        const authorName = 'CRMCUSTOMS'; // Статичный автор
         const authorAvatar = '/logo.svg'; // Логотип компании
         const date = post.property_ || '';
         const category = post.property_categorytext || '';

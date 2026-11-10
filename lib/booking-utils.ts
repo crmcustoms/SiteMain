@@ -116,7 +116,7 @@ export function generateICSFile(
   const icsContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//CRM Customs//Booking System//UK',
+    'PRODID:-//CRMCUSTOMS//Booking System//UK',
     'BEGIN:VEVENT',
     `DTSTART:${start}`,
     `DTEND:${end}`,

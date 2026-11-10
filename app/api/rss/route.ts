@@ -10,18 +10,18 @@ export async function GET() {
     const rssHeader = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>CRM Customs - Автоматизація бізнесу</title>
+    <title>CRMCUSTOMS - Автоматизація бізнесу</title>
     <description>Професійна автоматизація бізнес-процесів. Налаштування CRM, інтеграція систем, покращення продажів та клієнтського сервісу.</description>
     <link>${baseUrl}</link>
     <language>uk</language>
-    <copyright>© 2024 CRM Customs</copyright>
-    <managingEditor>tm@crmcustoms.com (CRM Customs)</managingEditor>
-    <webMaster>tm@crmcustoms.com (CRM Customs)</webMaster>
+    <copyright>© 2024 CRMCUSTOMS</copyright>
+    <managingEditor>tm@crmcustoms.com (CRMCUSTOMS)</managingEditor>
+    <webMaster>tm@crmcustoms.com (CRMCUSTOMS)</webMaster>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/api/rss" rel="self" type="application/rss+xml" />
     <image>
       <url>${baseUrl}/logo.png</url>
-      <title>CRM Customs</title>
+      <title>CRMCUSTOMS</title>
       <link>${baseUrl}</link>
     </image>`
 
@@ -54,7 +54,7 @@ export async function GET() {
       <pubDate>${pubDate}</pubDate>
       ${image ? `<enclosure url="${image}" type="image/jpeg" />` : ''}
       ${categories.map(cat => `<category><![CDATA[${cat}]]></category>`).join('')}
-      <author>tm@crmcustoms.com (CRM Customs)</author>
+      <author>tm@crmcustoms.com (CRMCUSTOMS)</author>
     </item>`
           })
           .join('')
@@ -80,7 +80,7 @@ export async function GET() {
     const errorRss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>CRM Customs - Автоматизація бізнесу</title>
+    <title>CRMCUSTOMS - Автоматизація бізнесу</title>
     <description>Професійна автоматизація бізнес-процесів</description>
     <link>https://crmcustoms.com</link>
     <language>uk</language>

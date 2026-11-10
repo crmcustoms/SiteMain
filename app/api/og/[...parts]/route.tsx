@@ -31,7 +31,7 @@ export async function GET(
   { params }: { params: Promise<{ parts: string[] }> },
 ) {
   const { parts } = await params
-  const title = (parts[0] ? decodeURIComponent(parts[0]) : "CRM Customs").slice(0, 140)
+  const title = (parts[0] ? decodeURIComponent(parts[0]) : "CRMCUSTOMS").slice(0, 140)
   const tag = parts[1] ? decodeURIComponent(parts[1]) : null
 
   return new ImageResponse(

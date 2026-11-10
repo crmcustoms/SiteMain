@@ -22,7 +22,7 @@ export function BookingSuccess({
     const icsContent = generateICSFile(
       selectedSlot.datetime,
       selectedSlot.endDatetime,
-      'Консультація - CRM Customs',
+      'Консультація - CRMCUSTOMS',
       `Консультація з ${formData.name}\n\nEmail: ${formData.email}\nТелефон: ${formData.phone}\n\n${formData.notes ? `Коментар: ${formData.notes}` : ''}`,
       'Online (посилання узгодимо окремо)'
     )

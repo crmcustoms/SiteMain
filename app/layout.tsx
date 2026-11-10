@@ -24,14 +24,14 @@ const montserrat = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://crmcustoms.com'), // Укажите ваш домен
   title: {
-    default: "Автоматизація бізнесу | CRM Customs - Підвищення ефективності бізнесу",
-    template: "%s | CRM Customs",
+    default: "Автоматизація бізнесу | CRMCUSTOMS - Підвищення ефективності бізнесу",
+    template: "%s | CRMCUSTOMS",
   },
   description: "Автоматизація бізнесу та впровадження CRM систем. Розробка індивідуальних рішень для підвищення ефективності вашого бізнесу.",
   keywords: ["автоматизація бізнесу", "crm системи", "впровадження crm", "розробка crm", "бізнес автоматизація"],
-  authors: [{ name: "CRM Customs" }],
-  creator: "CRM Customs",
-  publisher: "CRM Customs",
+  authors: [{ name: "CRMCUSTOMS" }],
+  creator: "CRMCUSTOMS",
+  publisher: "CRMCUSTOMS",
   robots: {
     index: true,
     follow: true,
@@ -47,21 +47,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'uk_UA',
     url: 'https://crmcustoms.com',
-    siteName: 'CRM Customs',
-    title: 'Автоматизація бізнесу | CRM Customs',
+    siteName: 'CRMCUSTOMS',
+    title: 'Автоматизація бізнесу | CRMCUSTOMS',
     description: 'Професійна автоматизація бізнес-процесів. Налаштування CRM, інтеграція систем, покращення продажів та клієнтського сервісу.',
     images: [
       {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'CRM Customs - Автоматизація бізнесу',
+        alt: 'CRMCUSTOMS - Автоматизація бізнесу',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Автоматизація бізнесу | CRM Customs',
+    title: 'Автоматизація бізнесу | CRMCUSTOMS',
     description: 'Професійна автоматизація бізнес-процесів. Налаштування CRM, інтеграція систем.',
     images: ['/og-image.jpg'],
     creator: '@crmcustoms',
@@ -177,7 +177,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              "name": "CRM Customs",
+              "name": "CRMCUSTOMS",
               "url": "https://crmcustoms.com",
               "logo": "https://crmcustoms.com/logo.png",
               "description": "Професійна автоматизація бізнес-процесів. Налаштування CRM, інтеграція систем, покращення продажів та клієнтського сервісу.",
@@ -209,7 +209,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "CRM Customs",
+              "name": "CRMCUSTOMS",
+              "alternateName": "crmcustoms.com",
               "url": "https://crmcustoms.com",
               "description": "Професійна автоматизація бізнес-процесів",
               "inLanguage": "uk",

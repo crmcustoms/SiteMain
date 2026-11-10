@@ -5,10 +5,10 @@ import Footer from "@/components/footer"
 
 export const metadata: Metadata = {
   title: {
-    default: "CRM Customs - Лендинги",
-    template: "%s | CRM Customs",
+    default: "CRMCUSTOMS - Лендинги",
+    template: "%s | CRMCUSTOMS",
   },
-  description: "Специализированные лендинги по услугам компании CRM Customs",
+  description: "Специализированные лендинги по услугам компании CRMCUSTOMS",
 }
 
 export default async function LandingLayout({

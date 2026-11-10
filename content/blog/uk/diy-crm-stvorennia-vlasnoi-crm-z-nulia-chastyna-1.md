@@ -16,7 +16,7 @@ author: CRMCUSTOMS
 ctaTitle: Є питання по вашому випадку?
 ctaText: '30 хвилин — і зрозумієте, що реально зробити у вашій компанії.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 ---
 Для створення своєї CRM системи я використовував сервіс [Creatium](https://creatium.app/?promo=prodayslona) та сервіс [Make (Integromat)](https://www.integromat.com/?pc=crmcustom). Creatium відповідає за інтерфейс, а Make (Integromat) — за логіку системи. Як базу даних я використав Google Sheets.
 

@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowRight } from "@/components/icons"
@@ -18,21 +17,6 @@ export default function Services({ dict = {}, commonDict = {}, lang = 'ua' }: { 
     return null
   }
   
-  // Определяем URL для каждого сервиса
-  const getServiceUrl = (index: number) => {
-    const serviceMap: Record<number, string> = {
-      0: 'audit-crm',
-      1: 'implementation-crm',
-      2: 'support-crm',
-      3: 'custom-development',
-      4: 'project-management',
-      5: 'industry-solutions'
-    }
-    
-    const slug = serviceMap[index] || `service-${index + 1}`
-    return `/${lang}/landing/${slug}`
-  }
-
   return (
     <section id="services" className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
@@ -71,12 +55,19 @@ export default function Services({ dict = {}, commonDict = {}, lang = 'ua' }: { 
                 </div>
               </CardContent>
               <CardFooter>
-                <Link href={getServiceUrl(index)} passHref className="w-full">
-                  <Button variant="outline" className="w-full group">
-                    {dict.detailsButtonText || "Подробнее"}
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
+                <ContactFormDialog
+                  trigger={
+                    <Button variant="outline" className="w-full group">
+                      Залишити заявку
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                  }
+                  title={service.title}
+                  description="Залиште контактні дані, і наш спеціаліст зв'яжеться з вами протягом робочого дня"
+                  formType={`service_${index + 1}`}
+                  buttonText="Відправити"
+                  dict={commonDict}
+                />
               </CardFooter>
             </Card>
           ))}

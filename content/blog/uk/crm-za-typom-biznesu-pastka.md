@@ -9,7 +9,7 @@ author: "CRMCUSTOMS"
 ctaTitle: "Не знаєте, яка CRM підійде під ваш процес?"
 ctaText: "Розпишемо ваші етапи угоди разом і покажемо, яка система їх реально закриває — без прив'язки до назви галузі."
 ctaLabel: "Записатись на аудит"
-ctaHref: "https://crmcustoms.com/uk/landing/audit-crm"
+ctaHref: "https://crmcustoms.com/uk"
 ---
 
 Нещодавно в одному з бізнес-чатів з'явилося типове питання:

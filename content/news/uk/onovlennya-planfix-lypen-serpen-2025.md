@@ -16,7 +16,7 @@ image: 'https://s3.us-east-1.amazonaws.com/crmcustoms.site/sKQo7i.jpg'
 ctaTitle: Хочете таку ж автоматизацію у себе?
 ctaText: '30 хвилин — і побачите, які процеси варто автоматизувати, а які ні.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 ---
 Ми переглянули офіційний блог Planfix і зібрали всі важливі новинки за липень–серпень 2025. Ось що нового у системі — для твого бізнесу або команди.
 

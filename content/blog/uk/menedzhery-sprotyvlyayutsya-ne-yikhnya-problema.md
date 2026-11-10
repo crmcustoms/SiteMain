@@ -15,7 +15,7 @@ author: CRMCUSTOMS
 ctaTitle: Є питання по вашому випадку?
 ctaText: '30 хвилин — і зрозумієте, що реально зробити у вашій компанії.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 generator: autopost-seed-v1
 slotType: angle
 topicKey: menedzhery-sprotyvlyayutsya-ne-yikhnya-problema

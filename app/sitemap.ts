@@ -6,14 +6,6 @@ import { getLibraryEpisodes } from "@/lib/library"
 
 const baseUrl = "https://crmcustoms.com"
 
-const LANDING_SLUGS = [
-  "audit-crm",
-  "custom-development",
-  "implementation-crm",
-  "industry-solutions",
-  "project-management",
-  "support-crm",
-]
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
@@ -35,15 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(ep.publishedAt),
         changeFrequency: "monthly",
         priority: 0.6,
-      })
-    }
-
-    for (const slug of LANDING_SLUGS) {
-      entries.push({
-        url: `${baseUrl}/${locale}/landing/${slug}`,
-        lastModified: now,
-        changeFrequency: "monthly",
-        priority: 0.7,
       })
     }
 

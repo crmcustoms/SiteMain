@@ -16,7 +16,7 @@ author: CRMCUSTOMS
 ctaTitle: Потрібна допомога зі стартом?
 ctaText: "Допоможу зібрати просту CRM під ваш процес без зайвих полів і складних автоматизацій."
 ctaLabel: Записатись на консультацію
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 ---
 
 У [кейсі про старт за три дні](https://crmcustoms.com/uk/cases/prodazh-knyhy-bez-crm) я згадував безплатний тариф [Planfix](https://planfix.com/uk/?rid=66016ae0998a) як один з інструментів запуску. Сьогодні хочу зупинитися на ньому детальніше.

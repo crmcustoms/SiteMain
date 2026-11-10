@@ -17,7 +17,7 @@ ctaText: >-
   Опишемо ваш процес і підкажемо, що варто автоматизувати першим — без зайвого
   ризику
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 generator: autopost-seed-v1
 slotType: angle
 topicKey: avtomatyzatsiya-bez-protsesu-avtomatyzatsiya-khaosu

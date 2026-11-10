@@ -16,7 +16,7 @@ author: CRMCUSTOMS
 ctaTitle: Розберемо ваш випадок
 ctaText: 'Якщо у вас щодня 100+ листів, заявок чи тикетів — покажу, що з цього можна віддати класифікатору.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 generator: manual
 topicKey: klasyfikatsiya-zamist-llm
 ---

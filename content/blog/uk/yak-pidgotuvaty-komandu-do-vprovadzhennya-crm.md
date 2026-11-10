@@ -15,7 +15,7 @@ author: CRMCUSTOMS
 ctaTitle: Є питання по вашому випадку?
 ctaText: '30 хвилин — і зрозумієте, що реально зробити у вашій компанії.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 generator: autopost-v1
 slotType: howto
 topicKey: yak-pidgotuvaty-komandu-do-vprovadzhennya-crm

@@ -16,7 +16,7 @@ author: CRMCUSTOMS
 ctaTitle: Хочете таку ж автоматизацію у себе?
 ctaText: '30 хвилин — і побачите, які процеси варто автоматизувати, а які ні.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 ---
 ## Planfix — перший у рейтингу Agile-інструментів
 

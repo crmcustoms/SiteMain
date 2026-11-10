@@ -11,7 +11,7 @@ slug: "meetlognet-ai-protokol-zustrichey"
 ctaTitle: "Потрібен схожий інструмент для вашого процесу?"
 ctaText: "Ми будуємо не тільки для себе — можемо зробити подібне рішення під ваш бізнес-процес."
 ctaLabel: "Обговорити задачу"
-ctaHref: "https://crmcustoms.com/uk/landing/custom-development"
+ctaHref: "https://crmcustoms.com/uk"
 ---
 
 ## Задача

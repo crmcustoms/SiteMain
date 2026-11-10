@@ -16,7 +16,7 @@ image: 'https://s.pfx.so/pf/dx/L2qvdR.png'
 ctaTitle: Хочете таку ж автоматизацію у себе?
 ctaText: '30 хвилин — і побачите, які процеси варто автоматизувати, а які ні.'
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 ---
 ## Ліди з TikTok — одразу в CRM, без копіпасту
 

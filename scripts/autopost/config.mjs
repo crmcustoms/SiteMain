@@ -108,13 +108,13 @@ export const VALIDATION = {
   ]),
 }
 
-// Default CTA for auto-generated posts — points at the audit landing page
-// (confirmed live at /uk/landing/audit-crm) rather than the bare homepage.
+// Default CTA for auto-generated posts — points at the homepage
+// (the /landing/* pages were removed until they are properly written).
 export const DEFAULT_CTA = {
   ctaTitle: "Є питання по вашому випадку?",
   ctaText: "30 хвилин — і зрозумієте, що реально зробити у вашій компанії.",
   ctaLabel: "Записатись на аудит",
-  ctaHref: "https://crmcustoms.com/uk/landing/audit-crm",
+  ctaHref: "https://crmcustoms.com/uk",
 }
 
 export const PATHS = {

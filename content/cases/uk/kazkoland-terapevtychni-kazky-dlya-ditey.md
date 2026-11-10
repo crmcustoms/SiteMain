@@ -11,7 +11,7 @@ slug: "kazkoland-terapevtychni-kazky-dlya-ditey"
 ctaTitle: "Потрібен схожий продукт під вашу методику чи курс?"
 ctaText: "Ми вміємо перетворювати чужу експертизу — курс, методику, чек-лист — на робочий сервіс. Можемо зробити подібне під ваш бізнес-процес."
 ctaLabel: "Обговорити задачу"
-ctaHref: "https://crmcustoms.com/uk/landing/custom-development"
+ctaHref: "https://crmcustoms.com/uk"
 ---
 
 ## Задача

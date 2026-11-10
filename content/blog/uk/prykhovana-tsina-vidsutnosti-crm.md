@@ -17,7 +17,7 @@ ctaText: >-
   Розкажіть про свої процеси — подивимось разом, де ховаються втрати і чи
   потрібна вам CRM зараз.
 ctaLabel: Записатись на аудит
-ctaHref: 'https://crmcustoms.com/uk/landing/audit-crm'
+ctaHref: 'https://crmcustoms.com/uk'
 generator: autopost-seed-v1
 slotType: angle
 topicKey: prykhovana-tsina-vidsutnosti-crm
